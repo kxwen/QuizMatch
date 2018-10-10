@@ -1,0 +1,61 @@
+Heading: Sprint 1 Plan
+Pokemon Mystery Tinder App
+Oct. 21st 2018
+Revision 1 Oct 09, 2018
+
+Goal: Design a user system and write a series of questions used to determine the personality of the user. Design an algorithm that assigns you specific Pokemon that corresponds with how you answered the previous questions.
+
+Task listing, organized by user story: 
+User Story 1:
+As a romantic interested individual, I want to meet other romantically interested individuals.
+Task 1: Design the algorithm to match similar people to achieve compatibility(time estimate: 5hrs)
+Total for user story 1: 5 hours 
+
+User Story 2:
+As a romantically uninterested person, I want to meet other people to be my friends.
+Task: Ensure that the app doesn’t overly emphasize romantic relationships, keep it casual.(time: 5 hrs)
+Total for user story: 5hrs
+
+User Story 3:
+As a lonely person, I want to meet other people to hang out and/or to chat with.
+Task: Design functionalities for the app that allow for meaningful interaction between users that are casual.(time: 5hrs)
+Total for user story: 5hrs
+
+User Story 4:
+As a Pokemon Mystery Dungeon Game Fan, I want to see what Pokemon I enspirit as.
+Task: Design the aesthetics of the app to please fans of the series. (time: 5hrs)
+Total for user story: 5 hrs
+
+User Story 5:
+As a person who wants to have fun, I want to enjoy myself with the app.
+Task: Make the app simple but interesting to utilize and fun to interact with. (time: 5hrs)
+Total for user story: 5hrs
+
+Team roles:
+Team member Kevin Wen: Product Owner {Developer} 
+Team member Dennis Nguyen: Scrum Master {Developer}
+Team member Shant Narkizian: Developer
+Team member Richard Torres: Developer
+Team member Anthony Chian: Developer
+
+Initial task assignment:
+
+Team member Kevin Wen: User Story 1, Task: Figure out how to match people based on a questionnaire
+Team member Dennis Nguyen: User Story 4, Task: Figure out the approach for the aesthetics of the app.
+Team member Shant Narkizian: User Story 2, Task: Ensure that the app doesn’t overly emphasize romantic relationships, keep it casual
+
+Team member Richard Torres: User Story 3, Task: Design functionalities for the app that allow for meaningful interaction between users that are casual
+
+Team member Anthony Chian: User Story 5, Task: Make the app simple but interesting to utilize and fun to interact with
+
+
+Initial burnup chart:
+Haven’t been assigned a location in the lab. 
+
+Initial scrum board:
+Haven’t been assigned a location in the lab. 
+
+Scrum times:
+-Monday 3:45pm
+-Wednesday 3:45pm
+-Thursday 4pm (with TA)
