@@ -1,0 +1,15 @@
+<html>
+<body>
+
+<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+Email: <input type = "text" name = "email"><span class="error"><?php echo $emailERR;?></span><br>
+Username: <input type = "text" name = "username"><span class="error"><?php echo $usernameERR;?></span><br>
+First Name: <input type = "text" name = "firstname"> (optional)<br>
+Last Name: <input type = "text" name = "lastname"> (optional)<br>
+Password: <input type = "text" name = "password"><span class="error"><?php echo $passwordERR;?></span><br>
+Confirm Password: <input type = "text" name = "Cpassword"><span class="error"><?php echo $CpasswordERR;?></span><br>
+<input type = "submit">
+</form>
+
+</body>
+</html>
