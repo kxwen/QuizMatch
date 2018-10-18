@@ -1,12 +1,25 @@
 <html>
-<body>
+	<head>
+	<title>Quiz Match</title>
+	<link href="style.css" type="text/css" rel="stylesheet" />
+	</head>
 
-<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-<span class="error"><?php echo $loginERR;?></span><br>
-Email: <input type = "text" name = "email"><br>
-Password: <input type = "text" name = "password"><br>
-<input type = "submit">
-</form>
+<body>
+	<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>
+	<span class="error"><?php echo $loginERR;?></span>
+	<h2><center>Login</center></h2><br>
+		<blockquote>
+		<h3>
+		Email: <input type = "text" name = "email"><br>
+		Password: <input type = "text" name = "password"><br>
+		</h3>
+		<input type="checkbox"> Remember me<br> 
+		<input type = "submit" value="Sign In"/><br><br>
+		Need an account? <a href="signup.html"><b>Sign Up</b></a>
+		</b><br />
+		<a href="forgot.html"><b>Forgot the password?</b></a>
+		</blockquote>
+	</form>
 
 </body>
 </html>
