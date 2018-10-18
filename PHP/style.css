@@ -1,0 +1,50 @@
+body {
+	background: #25274D;
+}
+
+#banner {
+	width: 700px;
+	height: 150px;
+	background: #29648A;
+	margin: 20px auto;
+	border: solid 5px #464866;
+
+	font-family: cursive;
+	font-size: 100;
+	font-weight: 50;
+	text-align: center;
+}
+#banner2 {
+	width: 500px;
+	height: 100px;
+	margin: 20px auto;
+	font-size: 55;
+	font-weight: 10;
+	text-align: center;
+	color: white;
+}
+
+#login {
+	width: 380px;
+	height: 100px;
+	background: #29648A;
+	margin: 50px auto;
+	border: solid 5px #464866;
+
+	font-family: "Trebuchet MS";
+	font-size: 35;
+	font-weight: 50;
+	text-align: center;
+}
+#login2 {
+	width: 450px;
+	height: 150px;
+	background: #25274D;
+	margin: 10px auto;
+
+	font-family: "Trebuchet MS";
+	font-size: 23;
+	font-weight: 50;
+	color: white;
+}
+

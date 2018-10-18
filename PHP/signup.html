@@ -4,18 +4,23 @@
 	<link href="style.css" type="text/css" rel="stylesheet" />
 	</head>
 <body>
-<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>
-<h2><center>Sign Up</center></h2><br>
-<blockquote>
-	Email: <input type = "text" name = "email"><span class="error"><?php echo $emailERR;?></span><br>
-	Username: <input type = "text" name = "username"><span class="error"><?php echo $usernameERR;?></span><br>
-	First Name: <input type = "text" name = "firstname"> (optional)<br>
-	Last Name: <input type = "text" name = "lastname"> (optional)<br>
-	Password: <input type = "text" name = "password"><span class="error"><?php echo $passwordERR;?></span><br>
-	Confirm Password: <input type = "text" name = "Cpassword"><span class="error"><?php echo $CpasswordERR;?></span><br>
-	<input type = "submit" value="Sign Up"/><br><br>
-</blockquote>
-</form>
+	<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>
+	
+	<div id="banner2">Sign Up</div>
+	<div id="login2">
+		<blockquote>
+		Email: <input type = "text" name = "email"><span class="error"><?php echo $emailERR;?></span><br>
+		Username: <input type = "text" name = "username"><span class="error"><?php echo $usernameERR;?></span><br>
+		First Name: <input type = "text" name = "firstname"> (optional)<br>
+		Last Name: <input type = "text" name = "lastname"> (optional)<br>
+		Password: <input type = "text" name = "password"><span class="error"><?php echo $passwordERR;?></span><br>
+		Confirm Password: <input type = "text" name = "Cpassword"><span class="error"><?php echo $CpasswordERR;?></span><br>
+		</blockquote>
+		<center><input type = "submit" value="Sign Up"/></center>
+		
+	</div>
+	
+	</form>
 
 </body>
 </html>
