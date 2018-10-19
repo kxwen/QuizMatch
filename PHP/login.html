@@ -6,13 +6,12 @@
 
 <body>
 	<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>
-	<span class="error"><?php echo $loginERR;?></span>
 	
 	<div id="banner">Quiz Match</div>
 	<br><br>
 	<div id="login">
-		Email: <input type = "text" name = "email" style="height:35px;width:200px; font-size:10pt;">
-		Password: <input type = "password" name = "password" style="height:35px;width:200px; font-size:10pt;">
+		Username or Email: <input type = "text" name = "profile" style="height:35px;width:200px; font-size:10pt;"><span class="error"><?php echo $profile_err;?></span>
+		Password: <input type = "password" name = "password" style="height:35px;width:200px; font-size:10pt;"><span class="error"><?php echo $password_err;?></span>
 	</div>
 	<div id="login2">
 		<center>
@@ -24,6 +23,5 @@
 		</blockquote>
 	</div>
 	</form>
-
 </body>
 </html>
