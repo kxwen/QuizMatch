@@ -5,13 +5,19 @@
  * username, password, and email. Removed fields for
  * First/Last Name; will perhaps move to profile settings.
  *
+ * Redirects to: Login.html/php
+ *
  * Assumes that DB Table contains fields for Username, Email, and Password.
+ *
+ * References to the Database have been commented out, and replaced with writing to
+ * a testing .txt file as a temporary Database.
  */
  
-require_once "config.php";
+//require_once "config.php";
  
 $email = $username = $password = $Cpassword = "";
 $email_err = $username_err = $password_err = $Cpassword_err = "";
+$min_pw_len = 5;
 if($_SERVER["REQUEST_METHOD"] == "POST")
 {
 	// Username Entry and Verification
@@ -20,6 +26,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		//Empty Field Case
 		$username_err = "Please enter a username.";
 	}else{
+		$username = trim($_POST["username"]);
+		/*
 		// Perpare to search DB for existing user
 		$sql = "SELECT id FROM users WHERE username = ?";
 		if($stmt = mysqli_prepare($link, $sql))
@@ -44,6 +52,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 			}
 		}
 		mysqli_stmt_close($stmt);
+		*/
 	}
 	
 	// Email Entry and Verification
@@ -55,6 +64,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		{
 			$email_err = "Please enter a valid email.";
 		}else{
+			$email = trim($_POST["email"]);
+			/*
 			// Prepare tp search DB for existing email
 			$sql = "SELECT id FROM users WHERE email = ?";
 			if($stmt = mysqli_prepare($link, $sql))
@@ -78,8 +89,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 					echo "An error has occurred. Please try again later.";
 				}
 			}
+			mysqli_stmt_close($stmt);*/
 		}
-		mysqli_stmt_close($stmt);
 	}
 	
 	// Password Entry
@@ -92,7 +103,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		$password_err = "Password must be at least " . $min_pw_len . " characters.";
 	}else{
 		// Password meets requirements
-		$password = mysql_escape_string(trim($_POST["password"]));
+		$password = trim($_POST["password"]);
+		//$password = mysql_escape_string(trim($_POST["password"]));
 	}
 	
 	// Confirm Password Entry
@@ -102,7 +114,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		$Cpassword_err = "Please confirm password.";
 	}else{
 		// A String has been submitted
-		$Cpassword = mysql_escape_string(trim($_POST["Cpassword"]));
+		$Cpassword = trim($_POST["Cpassword"]);
+		//$Cpassword = mysql_escape_string(trim($_POST["Cpassword"]));
 		if(empty($password_err) && ($password != $Cpassword))
 		{
 			// Confirmation Field does not match Password Field
@@ -114,7 +127,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	if(empty($username_err) && empty($email_err) && empty($password_err) & empty($Cpassword_err))
 	{
 		// If there are no errors, registers the new profile into database and redirects USER to Login
-		$sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+		$local_file = "Testing_Form.txt";
+		$handle = fopen($local_file, 'a') or die('cannot open file: ' . $local_file);
+		$data = $username." ".$email." ".$password."\n";
+		fwrite($handle, $data);
+		fclose($handle);
+		/*$sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
 		if($stmt = mysqli_prepare($link, $sql))
 		{
 			mysqli_stmt_bind_param($stmt, "sss", $param_username, $param_email, $param_password);
@@ -124,19 +142,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 			if(mysqli_stmt_execute($stmt))
 			{
 				// Emailing for Account Verification needs to be implemented.
-				/*$to = $email;
-				$subject = "QuizMatch Account Verification"
-				$message = "
-				Hello,
-				Thank you for signing up with QuizMatch. Your registration is almost complete.
-				Please click this link to activate your account:"*/
-				header("location: login.php");
+				//$to = $email;
+				//$subject = "QuizMatch Account Verification"
+				//$message = "
+				//Hello,
+				//Thank you for signing up with QuizMatch. Your registration is almost complete.
+				//Please click this link to activate your account:"
+				//header("location: login.html");
 			}else{
 				echo "An Error has occurred. Please try again later.";
 			}
 		}
-		mysqli_close($stmt);
+		mysqli_close($stmt);*/
 	}
-	mysqli_close($link);
+	//mysqli_close($link);
 }
 ?>

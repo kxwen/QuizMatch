@@ -3,6 +3,11 @@
  * Login form for QuizMatch
  * Users should be able to use either their email or username to sign in.
  * Creates a new session and redirects user to profile welcome page (user_welcome.php/html)
+ *
+ * Redirects to User_Welcome.html/php upon completion
+ *
+ * References to Database have been commented out, and replaced with searching a testing .txt file
+ * as a temporary Database
  */
  
  // Checks to see if USER is already signed into an account
@@ -16,7 +21,7 @@ if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true)
 }
  
 // Beginning of True Login process
-require_once "config.php";
+// require_once "config.php";
  
 $profile_err = $password_err = "";
 $profile = $password = "";
@@ -40,7 +45,28 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	if(empty($profile_err) && empty($password_err))
 	{
 		// Check to see if the profile field is an EMAIL. Assumes string is a USERNAME if not an EMAIL. Begins preparation to access Database
-		if(eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", mysql_escape_string(trim($_POST["profile"]))))
+		$local_file = "Testing_Form.txt";
+		$handle = fopen($local_file, 'r') or die('cannot open file: ' . $local_file);
+		while(!feof($handle))
+		{
+			$current_line = fgets($handle);
+			$current_line = str_replace("\n", "", $current_line);
+			list($file_username, $file_email, $file_password) = explode(" ", $current_line);
+			if(($profile == $file_username) or ($profile == $file_email))
+			{
+				if($password == $file_password){
+					echo "Login Successful";
+				}else{
+					$password_err = "Incorrect Password.";
+				}
+				break;
+			}
+		}
+		if(feof($handle))
+		{
+			$profile_err = "Profile with given Username/Email not found.";
+		}
+		/*if(eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", mysql_escape_string(trim($_POST["profile"]))))
 		{
 			// Is an EMAIL
 			$sql = "SELECT id, username, password FROM users WHERE email = ?";
@@ -86,8 +112,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 				echo "An Error has occured. Please try again later.";
 			}
 		}
-		mysqli_stmt_close($stmt);
+		mysqli_stmt_close($stmt);*/
 	}
-	mysqli_close($link);
+	//mysqli_close($link);
 }
 ?>
