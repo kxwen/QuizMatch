@@ -1,0 +1,159 @@
+<!-- 
+Current set of questions held in dummy html file. Will most likely change to another format.
+-->
+<html>
+<head>
+	<title>Quiz Match</title>
+	<!-- <link href="stupid.css" type="text/css" rel="stylesheet" /> -->
+	<style>
+	.form {
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	font-size: 0.8em;
+	width: 55em;
+	padding: 2em;
+	border: 2px solid #ccc;
+	}
+
+	.form fieldset {
+	border: none;
+	padding-left: 20;
+	}
+
+	.form legend,
+	.form label {
+	padding: 5;
+	font-weight: bold;
+	}
+
+	.form label.choice {
+	font-size: 0.9em;
+	font-weight: normal;
+	}
+
+	.form button {
+	padding: 1em;
+	border-radius: 0.5em;
+	background: #eee;
+	border: none;
+	font-weight: bold;
+	margin-top: 1em;
+	}
+
+	</style>
+</head>
+<body>
+	<form class="form" method="get" enctype="application/x-www-form-urlencoded" action="/html/codes/html_form_handler.cfm">
+	<fieldset>
+	<legend>1. Are you the type of person to introduce yourself to someone</legend>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="car">Definitely! I find it easy and comforting to make the first move </label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="van">Rarely, never. I would wait around for them to confront me first</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="tuktuk"> It varies from person to person, and every situation is different </label></p>
+
+	<legend>2. Would do something just out of curiosity?</legend>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="car">Yes! I always seek to discover things</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="van">No. I don't have interest in the unknown</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="tuktuk"> It doesn't matter to me </label></p>
+
+	<legend>3. Are you clean/messy?</legend>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="car">Clean. I am organized and tidy with most things </label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="van">Messy. Everything is a mess, my room, desk, kitchen</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="tuktuk"> I clean from time to time, but am messy once in a while </label></p>
+
+	<legend>4. What makes for a better relationship?</legend>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="car">Romance/Passion </label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="van">Commitment/Dedication</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="tuktuk"> Mutual interests </label></p>
+
+	<legend>5. If you had to describe yourself choosing only these options, which would you relate the most to?</legend>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="car">Lively, sociable, warm-hearted, artistic </label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="van">Egocentric, extroverted, impulsive, task-oriented</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="tuktuk"> Serious, introverted, cautious, moody </label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="tuktuk"> Private, thoughtful, patient, caring </label></p>
+
+	<legend>6. What type of person are you in the relationship?</legend>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="car">Dominant </label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="van">Submissive</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="tuktuk"> Neither </label></p>
+
+	<legend>7. How much does physical appearance matter?</legend>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="car">It is very important</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="van">It is not important at all</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="tuktuk">It is somewhat important</label></p>
+
+	<legend>8. Do you keep promises?</legend>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="car">Whenever possible </label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="van">Not very often</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="tuktuk"> Most of the time </label></p>
+
+	<legend>9. Which would you rather be?</legend>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="car">Strange, weird</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="van">Plain, normal</label></p>
+
+	<legend>10. How open are you with your feelings?</legend>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="car">Very open, I always want to vocalize my thoughts </label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="van">I like to keep thoughts to myself</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="tuktuk">Sometimes I say what is on my mind</label></p>
+
+	<legend>11. Which is more important when it comes to decision making?</legend>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="car">Logic </label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="van">Emotion</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="tuktuk"> Both equally </label></p>
+
+	<legend>12. Do you feel insecure?</legend>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="car">Yes, very often about many things</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="van">Not at all</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="tuktuk"> Sometimes, for certain things </label></p>
+
+	<legend>13. Do you lose things often?</legend>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="car">Yes, I missplace things a lot </label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="van">No, I usually know where everything is</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="tuktuk"> It happens sometimes</label></p>
+
+	<legend>14. Are you calm and relaxed in a social setting?</legend>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="car">Yes, I thrive in social settings </label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="van">No, I am very anxious and nervous</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="tuktuk"> Depends on the situation</label></p>
+
+	<legend>15. Which would you rather be?</legend>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="car"> Kind </label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="van">Powerful</label></p>
+
+	<legend>16. Which type of event sounds more appealing?</legend>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="car">Music Festival</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="van">Tech Convention</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="tuktuk"> TED Talk </label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="tuktuk"> Staying in to sleep </label></p>
+
+	<legend>4. What makes for a better relationship?</legend>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="car">Romance/Passion </label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="van">Commitment/Dedication</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="tuktuk"> Mutual interests </label></p>
+
+	<legend>17. Which type of shape do you identify with the most</legend>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="car">Circle </label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="van">Square</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="tuktuk"> Star </label></p>
+
+	<legend>18. What would you rather do with $1?</legend>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="car">Give it to the homeless/charity </label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="van">Use it to buy something</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="tuktuk"> Deposit it in your bank account </label></p>
+
+	<legend>19. Do you fall suceptible to peer pressure?</legend>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="car">Yes, most of the time</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="van">No, I choose what I want to do, when I want to</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="tuktuk"> Depends on the situation </label></p>
+
+	<legend>20. Which do you identify with the most</legend>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="car"> &#x1F60D; </label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="van"> &#x1F92A;	</label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="tuktuk"> &#x1F620; </label></p>
+	<p><label class="choice"> <input type="radio" name="taxi" required value="tuktuk"> &#x1F60A; </label></p>
+
+	<p><button>Submit</button></p>
+
+	</fieldset>
+</form>
+</body>
+
+</html>
