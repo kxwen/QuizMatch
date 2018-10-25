@@ -66,6 +66,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		{
 			$profile_err = "Profile with given Username/Email not found.";
 		}
+		fclose($handle);
 		/*if(eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", mysql_escape_string(trim($_POST["profile"]))))
 		{
 			// Is an EMAIL
