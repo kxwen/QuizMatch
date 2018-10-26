@@ -14,6 +14,8 @@
  */
  
 //require_once "config.php";
+
+
  
 $email = $username = $password = $Cpassword = "";
 $email_err = $username_err = $password_err = $Cpassword_err = "";
@@ -60,7 +62,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	{
 		$email_err = "Please enter an email.";
 	}else{
-		if(!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", mysql_escape_string(trim($_POST["email"]))))
+		if(!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL))
 		{
 			$email_err = "Please enter a valid email.";
 		}else{
@@ -124,7 +126,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	}
 	
 	
-	if(empty($username_err) && empty($email_err) && empty($password_err) & empty($Cpassword_err))
+	if(empty($username_err) && empty($email_err) && empty($password_err) && empty($Cpassword_err))
 	{
 		// If there are no errors, registers the new profile into database and redirects USER to Login
 		$local_file = "Testing_Form.txt";
@@ -158,3 +160,54 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	//mysqli_close($link);
 }
 ?>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset = "UTF-8">
+		<title>Sign Up</title>
+		<link rel ="stylesheet" href="stupid.css">
+		<style type="text/css">
+			body{ font: 14px sans-serif; }
+			.wrapper{ width: 350px; padding: 20px; }
+		</style>
+	</head>
+	<body>
+		<center>
+			<div class="wrapper">
+				<h2>Sign Up</h2>
+				Please fill out this form to register.
+				<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+					<div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
+						<label>Username</label>
+						<br><span class="help-block"><font color="red"><?php echo $username_err;?></font></span>
+						<input type="text" name="username" class="form-control" value="<?php echo $username; ?>">
+					</div>
+					<div class="form-group <?php echo (!empty($email_err)) ? 'has-error' : ''; ?>">
+						<label>Email</label>
+						<br><span class="help-block"><font color="red"><?php echo $email_err;?></font></span>
+						<input type="text" name="email" class="form-control" value="<?php echo $email; ?>">
+					</div>
+					<div class="form-group <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
+						<label>Password</label>
+						<br><span class="help-block"><font color="red"><?php echo $password_err;?></font></span>
+						<input type="password" name="password" class="form-control" value="<?php echo $password; ?>">
+					</div>
+					<div class="form-group <?php echo (!empty($Cpassword_err)) ? 'has-error' : ''; ?>">
+						<label>Confirm Password</label>
+						<br><span class="help-block"><font color="red"><?php echo $Cpassword_err;?></font></span>
+						<input type="password" name="Cpassword" class="form-control" value="<?php echo $Cpassword; ?>">
+					</div>
+					<!--<div class="form-group <?php echo (!empty($gender_err)) ? 'has-error' : ''; ?>">
+						<label>Gender(M/F)</label>
+						<br><span class="help-block"><font color="red"><?php echo $gender_err;?></font></span>
+						<input type="text" name="gender" class="form-control" value="<?php echo $gender; ?>">
+					</div>-->
+					<div class="form-group">
+						<input type="submit" class="btn btn-primary" value="Submit">
+					</div>
+					Already have an account? <a href="login.php">Login here</a>.
+				</form>
+			</div>
+		</center>
+	</body>
+</html>

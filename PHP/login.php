@@ -32,13 +32,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	{
 		$profile_err = "Please enter your username or email.";
 	}else{
-		$profile = mysql_escape_string(trim($_POST["profile"]));
+		$profile = trim($_POST["profile"]);
 	}
 	if(empty(trim($_POST["password"])))
 	{
 		$password_err = "Please enter your password.";
 	}else{
-		$password = mysql_escape_string(trim($_POST["password"]));
+		$password = trim($_POST["password"]);
 	}
 	
 	// Begins core login if and only if both fields have been filled out.
@@ -51,15 +51,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		{
 			$current_line = fgets($handle);
 			$current_line = str_replace("\n", "", $current_line);
-			list($file_username, $file_email, $file_password) = explode(" ", $current_line);
-			if(($profile == $file_username) or ($profile == $file_email))
-			{
-				if($password == $file_password){
-					echo "Login Successful";
-				}else{
-					$password_err = "Incorrect Password.";
+			if(!empty($current_line)){
+				list($file_username, $file_email, $file_password) = explode(" ", $current_line);
+				if(($profile == $file_username) or ($profile == $file_email))
+				{
+					if($password == $file_password){
+						echo "Login Successful";
+					}else{
+						$password_err = "Incorrect Password.";
+					}
+					break;
 				}
-				break;
 			}
 		}
 		if(feof($handle))
@@ -118,3 +120,39 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	//mysqli_close($link);
 }
 ?>
+<!DOCTYPE html>
+<html lang = "en">
+	<head>
+		<meta charset="UTF-8"/>
+		<title>Quiz Match</title>
+		<link rel="stylesheet" href="stupid.css">
+		<style type="text/css">
+			body{ font: 14px sans-serif; }
+			.wrapper{ width: 350px; padding: 20px; }
+		</style>
+	</head>
+	<body>
+		<center>
+			<div class="wrapper">
+				<h2>Login</h2>
+				<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="post">
+					<div class="form-group <?php echo (!empty($profile_err)) ? 'has-error' : ''; ?>">
+						<label>Username or Email</label>
+						<br><span class="help-block"><font color="red"><?php echo $profile_err;?></font></span>
+						<input type="text" name="profile" class="form-control" value="<?php echo $profile; ?>">
+					</div>
+					<div class="form-group <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
+						<label>Password</label>
+						<br><span class="help-block"><font color="red"><?php echo $password_err;?></font></span>
+						<input type="password" name="password" class="form-control" value="<?php echo $password; ?>">
+					</div>
+					<div class="form-group">
+						<input type="submit" class="btn btn-primary" value="Submit"><input type="checkbox">Remember me.<br>
+					</div>
+					Need an account? <a href="signup.php"><b>Sign Up</b></a><br>
+					Forgot password? <a href="forgot.html"><b>Reset Password</b></a>
+				</form>
+			</div>
+		</center>
+	</body>
+</html>
