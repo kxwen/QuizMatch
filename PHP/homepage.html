@@ -5,43 +5,44 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 -->
 
 <!DOCTYPE html>
-<html>
-<head>
-	<title>QuizMatch!</title>
-	<link href= "stupid.css" type = "text/css" rel = "stylesheet"/>
-</head>
-<style>
-div.logoCenter
-{
-	margin-top:10%;
-	display:flex;
-	justify-content:center
-}
-div.buttonCenter
-{
-	margin-top:3%;
-	display:flex;
-	justify-content:center
-}
-</style>
-<body>
-<div class ="logoCenter">
-	<div class="card" style="width:30%; height:230px">
-	  <div>
-		<div class="white padded rounded">
-		  <h1 style = "text-align: center;">QuizMatch	&#x1F50D;&#10084;</h1>
+<html lang = "en">
+	<head>
+		<meta charset="utf-8">
+		<title>QuizMatch!</title>
+		<link href= "stupid.css" type = "text/css" rel = "stylesheet"/>
+		<style>
+			div.logoCenter
+			{
+				margin-top:10%;
+				display:flex;
+				justify-content:center
+			}
+			div.buttonCenter
+			{
+				margin-top:3%;
+				display:flex;
+				justify-content:center
+			}
+		</style>
+	</head>
+	<body>
+		<div class ="logoCenter">
+			<div class="card" style="width:30%; height:230px">
+			  <div>
+				<div class="white padded rounded">
+				  <h1 style = "text-align: center;">QuizMatch	&#x1F50D;&#10084;</h1>
+				</div>
+				<div class="black padded rounded">
+				  <h3 style = "text-align: center;"> We're almost as forgettable as OkCupid!</h3>
+				</div>
+			  </div>
+			</div>
 		</div>
-		<div class="black padded rounded">
-		  <h3 style = "text-align: center;"> We're almost as forgettable as OkCupid!</h3>
+
+		<div class = "buttonCenter">
+			<a href="login.php" class="btn large pink rounded"><tt>Login</tt></a> 	
+			<a href="signup.php" class="btn large pink rounded"><tt>Get Started</tt></a>
 		</div>
-	  </div>
-	</div>
-</div>
 
-<div class = "buttonCenter">
-	<a href="login.html" class="btn large pink rounded"><tt>Login</tt></a> 	
-	<a href="signup.html" class="btn large pink rounded"><tt>Get Started</tt></a>
-</div>
-
-</body>
+	</body>
 </html>

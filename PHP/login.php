@@ -16,12 +16,12 @@ session_start();
 if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true)
 {
 	// Forces USER back into user welcome page if they are already signed into an account
-	header("location: user_welcome.php");
+	header("location: userprofile.php");
 	exit;
 }
  
 // Beginning of True Login process
-// require_once "config.php";
+require_once "config.php";
  
 $profile_err = $password_err = "";
 $profile = $password = "";
@@ -45,7 +45,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	if(empty($profile_err) && empty($password_err))
 	{
 		// Check to see if the profile field is an EMAIL. Assumes string is a USERNAME if not an EMAIL. Begins preparation to access Database
-		$local_file = "Testing_Form.txt";
+		/*$local_file = "Testing_Form.txt";
 		$handle = fopen($local_file, 'r') or die('cannot open file: ' . $local_file);
 		while(!feof($handle))
 		{
@@ -68,8 +68,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		{
 			$profile_err = "Profile with given Username/Email not found.";
 		}
-		fclose($handle);
-		/*if(eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", mysql_escape_string(trim($_POST["profile"]))))
+		fclose($handle);*/
+		if(filter_var($profile, FILTER_VALIDATE_EMAIL))
 		{
 			// Is an EMAIL
 			$sql = "SELECT id, username, password FROM users WHERE email = ?";
@@ -80,7 +80,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		if($stmt = mysqli_prepare($link, $sql))
 		{
 			mysqli_stmt_bind_param($stmt, "s", $param_profile);
-			$param_profile = $profile;
+			$param_profile = htmlspecialchars($profile);
 			// Access Database
 			if(mysqli_stmt_execute($stmt))
 			{
@@ -100,7 +100,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 							$_SESSION["loggedin"] = true;
 							$_SESSION["id"] = $id;
 							$_SESSION["username"] = $username;
-							header("location: user_welcome.php");
+							header("location: userprofile.php");
 						}else{
 							// Password does not match recorded
 							$password_err = "The password you entered was not valid.";
@@ -115,16 +115,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 				echo "An Error has occured. Please try again later.";
 			}
 		}
-		mysqli_stmt_close($stmt);*/
+		mysqli_stmt_close($stmt);
 	}
-	//mysqli_close($link);
+	mysqli_close($link);
 }
 ?>
 <!DOCTYPE html>
 <html lang = "en">
 	<head>
 		<meta charset="UTF-8"/>
-		<title>Quiz Match</title>
+		<title>QuizMatch: Login</title>
 		<link rel="stylesheet" href="stupid.css">
 		<style type="text/css">
 			body{ font: 14px sans-serif; }
@@ -147,7 +147,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 						<input type="password" name="password" class="form-control" value="<?php echo $password; ?>">
 					</div>
 					<div class="form-group">
-						<input type="submit" class="btn btn-primary" value="Submit"><input type="checkbox">Remember me.<br>
+						<input type="submit" class="btn pink rounded" value="Submit"><input type="checkbox">Remember me.<br>
 					</div>
 					Need an account? <a href="signup.php"><b>Sign Up</b></a><br>
 					Forgot password? <a href="forgot.html"><b>Reset Password</b></a>

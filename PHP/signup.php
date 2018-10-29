@@ -13,7 +13,7 @@
  * a testing .txt file as a temporary Database.
  */
  
-//require_once "config.php";
+require_once "config.php";
 
 
  
@@ -28,14 +28,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		//Empty Field Case
 		$username_err = "Please enter a username.";
 	}else{
-		$username = trim($_POST["username"]);
-		/*
+		//$username = trim($_POST["username"]);
 		// Perpare to search DB for existing user
 		$sql = "SELECT id FROM users WHERE username = ?";
 		if($stmt = mysqli_prepare($link, $sql))
 		{
 			mysqli_stmt_bind_param($stmt, "s", $param_username);
-			$param_username = mysql_escape_string(trim($_POST["username"]));
+			$param_username = htmlspecialchars(trim($_POST["username"]));
 			if(mysqli_stmt_execute($stmt))
 			{
 				// Successful execution
@@ -46,7 +45,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 					$username_err = "This username is already taken.";
 				}else{
 					// Username is available; Profile does not exist
-					$username = mysql_escape_string(trim($_POST["username"]));
+					$username = htmlspecialchars(trim($_POST["username"]));
 				}
 			}else{
 				// Unsuccessful Execution
@@ -54,7 +53,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 			}
 		}
 		mysqli_stmt_close($stmt);
-		*/
 	}
 	
 	// Email Entry and Verification
@@ -66,14 +64,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		{
 			$email_err = "Please enter a valid email.";
 		}else{
-			$email = trim($_POST["email"]);
-			/*
+			//$email = trim($_POST["email"]);
 			// Prepare tp search DB for existing email
 			$sql = "SELECT id FROM users WHERE email = ?";
 			if($stmt = mysqli_prepare($link, $sql))
 			{
 				mysqli_stmt_bind_param($stmt, "s", $param_email);
-				$param_email = mysql_escape_string(trim($_POST["email"]));
+				$param_email = htmlspecialchars(trim($_POST["email"]));
 				if(mysqli_stmt_execute($stmt))
 				{
 					// Successful Execution
@@ -84,14 +81,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 						$email_err = "This email is already taken.";
 					}else{
 						// Email is available
-						$email = mysql_escape_string(trim($_POST["email"]));
+						$email = htmlspecialchars(trim($_POST["email"]));
 					}
 				}else{
 					// Unsuccessful Execution
 					echo "An error has occurred. Please try again later.";
 				}
 			}
-			mysqli_stmt_close($stmt);*/
+			mysqli_stmt_close($stmt);
 		}
 	}
 	
@@ -105,8 +102,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		$password_err = "Password must be at least " . $min_pw_len . " characters.";
 	}else{
 		// Password meets requirements
-		$password = trim($_POST["password"]);
-		//$password = mysql_escape_string(trim($_POST["password"]));
+		$password = htmlspecialchars(trim($_POST["password"]));
 	}
 	
 	// Confirm Password Entry
@@ -116,8 +112,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		$Cpassword_err = "Please confirm password.";
 	}else{
 		// A String has been submitted
-		$Cpassword = trim($_POST["Cpassword"]);
-		//$Cpassword = mysql_escape_string(trim($_POST["Cpassword"]));
+		$Cpassword = htmlspecialchars(trim($_POST["Cpassword"]));
 		if(empty($password_err) && ($password != $Cpassword))
 		{
 			// Confirmation Field does not match Password Field
@@ -129,12 +124,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	if(empty($username_err) && empty($email_err) && empty($password_err) && empty($Cpassword_err))
 	{
 		// If there are no errors, registers the new profile into database and redirects USER to Login
-		$local_file = "Testing_Form.txt";
+		/*$local_file = "Testing_Form.txt";
 		$handle = fopen($local_file, 'a') or die('cannot open file: ' . $local_file);
 		$data = $username." ".$email." ".$password."\n";
 		fwrite($handle, $data);
-		fclose($handle);
-		/*$sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+		fclose($handle);*/
+		$sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
 		if($stmt = mysqli_prepare($link, $sql))
 		{
 			mysqli_stmt_bind_param($stmt, "sss", $param_username, $param_email, $param_password);
@@ -150,21 +145,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 				//Hello,
 				//Thank you for signing up with QuizMatch. Your registration is almost complete.
 				//Please click this link to activate your account:"
-				//header("location: login.html");
+				header("location: login.php");
 			}else{
 				echo "An Error has occurred. Please try again later.";
 			}
 		}
-		mysqli_close($stmt);*/
+		mysqli_close($stmt);
 	}
-	//mysqli_close($link);
+	mysqli_close($link);
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta charset = "UTF-8">
-		<title>Sign Up</title>
+		<title>QuizMatch: Sign Up</title>
 		<link rel ="stylesheet" href="stupid.css">
 		<style type="text/css">
 			body{ font: 14px sans-serif; }
@@ -203,7 +198,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 						<input type="text" name="gender" class="form-control" value="<?php echo $gender; ?>">
 					</div>-->
 					<div class="form-group">
-						<input type="submit" class="btn btn-primary" value="Submit">
+						<input type="submit" class="btn pink rounded" value="Submit">
 					</div>
 					Already have an account? <a href="login.php">Login here</a>.
 				</form>
