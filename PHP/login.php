@@ -32,13 +32,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	{
 		$profile_err = "Please enter your username or email.";
 	}else{
-		$profile = trim($_POST["profile"]);
+		$profile = htmlspecialchars(trim($_POST["profile"]));
 	}
 	if(empty(trim($_POST["password"])))
 	{
 		$password_err = "Please enter your password.";
 	}else{
-		$password = trim($_POST["password"]);
+		$password = htmlspecialchars(trim($_POST["password"]));
 	}
 	
 	// Begins core login if and only if both fields have been filled out.
