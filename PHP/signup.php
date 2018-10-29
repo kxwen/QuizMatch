@@ -19,7 +19,7 @@ require_once "config.php";
  
 $email = $username = $password = $Cpassword = "";
 $email_err = $username_err = $password_err = $Cpassword_err = "";
-$min_pw_len = 5;
+//$min_pw_len = 5;
 if($_SERVER["REQUEST_METHOD"] == "POST")
 {
 	// Username Entry and Verification

@@ -1,5 +1,6 @@
 <?php
 /* create_quiz.php
+ * V2
  * Page Form to create a new quiz
  * Final details subject to change
  *
@@ -12,16 +13,14 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 	header("location: login.php");
 	exit;
 }
- 
  $Q_name_err = "";
  $Q_name = "";
  $DESC = "";
  $S_checked = $M_checked = $L_checked = "";
  $size_err = "";
- $RES_1 = $RES_2 = "";
- $RES_err = "";
- $Q_1 = "";
- $A_1_1 = $A_1_2 = $A_1_3 = $A_1_4 = "";
+ 
+ $Q_1 = $Q_2 = $Q_3 = $Q_4 = $Q_5 = "";
+ 
  if($_SERVER["REQUEST_METHOD"] == "POST")
  {
 	if(empty(trim($_POST["Q_name"])))
@@ -31,89 +30,187 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 		$Q_name = htmlspecialchars(trim($_POST["Q_name"]));
 	}
 	$DESC = htmlspecialchars(trim($_POST["DESC"]));
-	if(isset($_POST["size"]))
-	{
-		if($_POST["size"] == "small")
-		{
-			$S_checked = "checked";
-		}elseif($_POST["size"] == "medium"){
-			$M_checked = "checked";
-		}elseif($_POST["size"] == "large"){
-			$L_checked = "checked";
-		}else{
-			$size_err = "Please select a Questionaire Size.";
-		}
+	if($_POST["size"] == "large"){
+		$L_checked = "checked";
+	}elseif($_POST["size"] == "medium"){
+		$M_checked = "checked";
 	}else{
-		$size_err = "Please select a Questionaire Size.";
-	}
-	if(empty(trim($_POST["res_1"])))
-	{
-		$RES_err = "Please fill out the top two Results.";
-	}else{
-		$RES_1 = htmlspecialchars(trim($_POST["res_1"]));
-		if(empty(trim($_POST["res_2"])))
-		{
-			$RES_err = "Please fill out the top two Results.";
-		}else{
-			$RES_2 = htmlspecialchars(trim($_POST["res_2"]));
-		}
+		$S_checked = "checked";
 	}
  }
+ 
+ if(empty($S_checked) && empty($M_checked) && empty($L_checked)){//This should only be used once; upon arriving to the page.
+	 $S_checked = "checked";
+ }
+ 
 ?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
-		<title>Create Quiz</title>
-		<link rel ="stylesheet" href="stupid.css">
-		<style type="text/css">
-			body{ font: 14px sans-serif; }
-			.wrapper{ width: 350px; padding: 20px; }
-		</style>
+		<title>Create a Questionaire</title>
+		<link rel="stylesheet" href="stupid.css">
+		<style type="text/css"></style>
 	</head>
 	<body>
 		<center>
 			<div class="wrapper">
-				<h2>Create a Questionaire</h2>
-				<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-					<div class="form-group <?php echo (!empty($Q_name_err)) ? 'has-error' : ''; ?>">
-						<label>Questionaire Name</label>
-						<span class="help-block"><font color="red"><br><?php echo $Q_name_err;?></font></span>
-						<input type="text" name="Q_name" class="form-control" value="<?php echo $Q_name; ?>"><br>
+				<form id="quizForm" action="">
+					<h2>Create a Questionaire:</h2>
+					Number of Questions: <button type="button" class="btn small pink rounded" id="num_Qs"></button>
+					<div class="tab"><h3>Theme and Details:</h3>
+						<b>Questionaire Name:</b> <input type="text" name="Q_name" class="form-control" value="<?php echo $Q_name; ?>"><br><br>
+						<b>Description:</b> <textarea name="DESC" rows="3" cols="33" maxlength="200"><?php echo $DESC;?></textarea><br><br>
+						<b>Size:</b> <input type="radio" name="size" value="small" <?php echo $S_checked;?> onclick="updateQs()">Small 
+							<input type="radio" name="size" value="medium" <?php echo $M_checked;?> onclick="updateQs()">Medium 
+							<input type="radio" name="size" value="large" <?php echo $L_checked;?> onclick="updateQs()">Large<br><br>
 					</div>
-					<div>
-						<label>Description</label>
-						<textarea name="DESC" rows="3" cols="33" maxlength="200"><?php echo $DESC;?></textarea>
+					
+					<div class="tab"><h3>Question #1:</h3>
+						<b>Question:</b> <input type="text" name="Q_1" class="form-control" value="<?php echo $Q_1; ?>"><br><br>
 					</div>
-					<div class="form-group <?php echo (!empty($size_err)) ? 'has-error' : ''; ?>">
-						<br><label>Size:</label><br>
-						<span class="help-block"><font color="red"><?php echo $size_err;?><br></font></span>
-						<input type="radio" name="size" value="small" <?php echo $S_checked;?>>Small  
-						<input type="radio" name="size" value="medium" <?php echo $M_checked;?>>Medium  
-						<input type="radio" name="size" value="large" <?php echo $L_checked;?>>Large<br><br>
+					
+					<div class="tab"><h3>Question #2:</h3>
+						<b>Question:</b> <input type="text" name="Q_2" class="form-control" value="<?php echo $Q_2; ?>"><br><br>
 					</div>
-					<div>
-						<label>Results</label>
-						<span class="help-block"><font color="red"><br><?php echo $RES_err;?></font></span><br>
-						1st Result:<input type="text" name="res_1" class="form-control" value="<?php echo $RES_1; ?>">
-						2nd Result:<input type="text" name="res_2" class="form-control" value="<?php echo $RES_2; ?>"><br>
+
+					<div class="tab"><h3>Question #3:</h3>
+						<b>Question:</b> <input type="text" name="Q_3" class="form-control" value="<?php echo $Q_3; ?>"><br><br>
 					</div>
-					<div>
-						<label>Question 1</label><br>
-						Question:<input type="text" name="Q_1" class="form-control" value="<?php echo $Q_1; ?>">
-						Answer 1:<input type="text" name="A_1_1" class="form-control" value="<?php echo $A_1_1; ?>">
-						Answer 2:<input type="text" name="A_1_2" class="form-control" value="<?php echo $A_1_2; ?>">
-						Answer 3:<input type="text" name="A_1_3" class="form-control" value="<?php echo $A_1_3; ?>"> <!--optional-->
-						Answer 4:<input type="text" name="A_1_4" class="form-control" value="<?php echo $A_1_4; ?>"> <!--optional-->
+
+					<div class="tab"><h3>Question #4:</h3>
+						<b>Question:</b> <input type="text" name="Q_4" class="form-control" value="<?php echo $Q_4; ?>"><br><br>
 					</div>
-					<div class="form-group">
-						<a href="quiz_home.php" class="btn pink rounded"><tt>Cancel</a>
-						<input type="submit" class="btn pink rounded" value="Submit">
-						<input type="reset" class="btn pink rounded" value="Reset">
-						<br>
+					
+					<div class="tab"><h3>Question #5:</h3>
+						<b>Question:</b> <input type="text" name="Q_5" class="form-control" value="<?php echo $Q_5; ?>"><br><br>
+					</div>
+					
+					<div style="overflow:auto;">
+						<div style="float:left;">
+							<a href="quiz_home.php" class="btn pink rounded"><tt>Cancel</a>
+						</div>
+						<div style="float:right;">
+							<button type="button" class ="btn pink rounded" id="prevBtn"
+								onclick="nextPrev(-1)">Previous</button>
+							<button type="button" class ="btn pink rounded" id="nextBtn"
+								onclick="nextPrev(1)">Next</button>
+						</div>
+					</div>
+					<div style="text-align:center;margin-top:40px;">
+						<span class="step"></span>
+						<span class="step"></span>
+						<span class="step"></span>
+						<span class="step"></span>
+						<span class="step"></span>
+						<span class="step"></span>
 					</div>
 				</form>
 			</div>
 		</center>
+		<script>
+			/* Javascript used to manage the page.
+			 * Controls which Tab of the creation is shown and controls
+			 * Transitions. Helpful as to avoid having the page be one long
+			 * visual mess. Also restricts invalid inputs.
+			 */
+			var currentTab = 0; // Current tab is set to be the first tab (0)
+			if(document.querySelector('input[name="size"]:checked').value == "small")
+			{
+				num_Questions = 5;
+				document.getElementById("num_Qs").innerHTML = num_Questions;
+			}else if(document.querySelector('input[name="size"]:checked').value == "medium"){
+				num_Questions = 10;
+				document.getElementById("num_Qs").innerHTML = num_Questions;
+			}else if(document.querySelector('input[name="size"]:checked').value == "large"){
+				num_Questions = 15;
+				document.getElementById("num_Qs").innerHTML = num_Questions;
+			}
+			showTab(currentTab); // Display the current tab
+
+			function showTab(n) {
+			  // This function will display the specified tab of the form ...
+			  var x = document.getElementsByClassName("tab");
+			  x[n].style.display = "block";
+			  // ... and fix the Previous/Next buttons:
+			  if (n == 0) {
+				document.getElementById("prevBtn").style.display = "none";
+			  } else {
+				document.getElementById("prevBtn").style.display = "inline";
+			  }
+			  if (n == (x.length - 1)) {
+				document.getElementById("nextBtn").innerHTML = "Submit";
+			  } else {
+				document.getElementById("nextBtn").innerHTML = "Next";
+			  }
+			  // ... and run a function that displays the correct step indicator:
+			  fixStepIndicator(n)
+			}
+
+			function nextPrev(n) {
+			  // This function will figure out which tab to display
+			  var x = document.getElementsByClassName("tab");
+			  // Exit the function if any field in the current tab is invalid:
+			  //if (n == 1 && !validateForm()) return false;
+			  // Hide the current tab:
+			  x[currentTab].style.display = "none";
+			  // Increase or decrease the current tab by 1:
+			  currentTab = currentTab + n;
+			  // if you have reached the end of the form... :
+			  if (currentTab >= x.length) {
+				//...the form gets submitted:
+				document.getElementById("quizForm").submit();
+				return false;
+			  }
+			  // Otherwise, display the correct tab:
+			  showTab(currentTab);
+			}
+
+			/*function validateForm() {
+			  // This function deals with validation of the form fields
+			  var x, y, i, valid = true;
+			  x = document.getElementsByClassName("tab");
+			  y = x[currentTab].getElementsByTagName("input");
+			  // A loop that checks every input field in the current tab:
+			  for (i = 0; i < y.length; i++) {
+				// If a field is empty...
+				if (y[i].value == "") {
+				  // add an "invalid" class to the field:
+				  y[i].className += " invalid";
+				  // and set the current valid status to false:
+				  valid = false;
+				}
+			  }
+			  // If the valid status is true, mark the step as finished and valid:
+			  if (valid) {
+				document.getElementsByClassName("step")[currentTab].className += " finish";
+			  }
+			  return valid; // return the valid status
+			}*/
+
+			function fixStepIndicator(n) {
+			  // This function removes the "active" class of all steps...
+			  var i, x = document.getElementsByClassName("step");
+			  for (i = 0; i < x.length; i++) {
+				x[i].className = x[i].className.replace(" active", "");
+			  }
+			  //... and adds the "active" class to the current step:
+			  x[n].className += " active";
+			}
+			
+			function updateQs() {
+				if(document.querySelector('input[name="size"]:checked').value == "small")
+				{
+					num_Questions = 5;
+					document.getElementById("num_Qs").innerHTML = num_Questions;
+				}else if(document.querySelector('input[name="size"]:checked').value == "medium"){
+					num_Questions = 10;
+					document.getElementById("num_Qs").innerHTML = num_Questions;
+				}else if(document.querySelector('input[name="size"]:checked').value == "large"){
+					num_Questions = 15;
+					document.getElementById("num_Qs").innerHTML = num_Questions;
+				}
+			}
+		</script>
 	</body>
 </html>
