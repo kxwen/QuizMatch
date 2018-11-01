@@ -15,7 +15,7 @@ $pokemon['30'] = 'Cyndaquil';
 $pokemon['31'] = 'Tododile';
 $pokemon['32'] = 'Chikorita';
 
-/* function to output categorization*/
+/* function to output categorization, assumes input is an array */
 function categorizeUser($traits){
     /* not sure if initializing variables is needed in php */
     $firstMax = 0;
