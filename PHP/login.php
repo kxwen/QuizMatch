@@ -125,30 +125,48 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	<head>
 		<meta charset="UTF-8"/>
 		<title>QuizMatch: Login</title>
-		<link rel="stylesheet" href="stupid.css">
+		<!--<link rel="stylesheet" href="stupid.css">
 		<style type="text/css">
 			body{ font: 14px sans-serif; }
 			.wrapper{ width: 350px; padding: 20px; }
+		</style>-->
+		<link href= "stupid.css" type = "text/css" rel = "stylesheet"/>
+		<style>
+		body
+		{
+			font: 14px sans-serif;
+		}
+		div.inputBar
+		{
+			margin-top:5%;
+			width: 350px;
+			padding: 20px; 
+		}
 		</style>
 	</head>
 	<body>
 		<center>
-			<div class="wrapper">
+			<div class="inputBar">
 				<h2>Login</h2>
 				<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="post">
 					<div class="form-group <?php echo (!empty($profile_err)) ? 'has-error' : ''; ?>">
+					<br>
 						<label>Username or Email</label>
 						<br><span class="help-block"><font color="red"><?php echo $profile_err;?></font></span>
 						<input type="text" name="profile" class="form-control" value="<?php echo $profile; ?>">
 					</div>
 					<div class="form-group <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
+					<br>
 						<label>Password</label>
 						<br><span class="help-block"><font color="red"><?php echo $password_err;?></font></span>
 						<input type="password" name="password" class="form-control" value="<?php echo $password; ?>">
 					</div>
 					<div class="form-group">
-						<input type="submit" class="btn pink rounded" value="Submit"><input type="checkbox">Remember me.<br>
+					<input type="checkbox">Remember me.<br>
+					<br>
+						<a <input type="submit" class="btn pink rounded" value="Submit"><tt>Submit</tt></a>
 					</div>
+					<br>
 					Need an account? <a href="signup.php"><b>Sign Up</b></a><br>
 					Forgot password? <a href="forgot.html"><b>Reset Password</b></a>
 				</form>

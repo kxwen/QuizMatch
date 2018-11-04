@@ -23,14 +23,23 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 				display:flex;
 				justify-content:center
 			}
+			html{
+				height:100%;
+			}
+			body{
+				min-height:100%;
+				background-color: white;
+			}
 		</style>
 	</head>
 	<body>
+	<div class = "containter">
 		<div class ="logoCenter">
-			<div class="card" style="width:30%; height:230px">
+			<div class="card" style="width:400px; height:300px">
 			  <div>
 				<div class="white padded rounded">
-				  <h1 style = "text-align: center;">QuizMatch	&#x1F50D;&#10084;</h1>
+				  <h1 style = "text-align: center;">QuizMatch 
+				  <br>&#x1F50D;&#10084;</h1>
 				</div>
 				<div class="black padded rounded">
 				  <h3 style = "text-align: center;"> We're almost as forgettable as OkCupid!</h3>
@@ -38,9 +47,12 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 			  </div>
 			</div>
 		</div>
+	</div>
+	<div class = "containter">
 		<div class = "buttonCenter">
 			<a href="login.php" class="btn large pink rounded"><tt>Login</tt></a> 	
 			<a href="signup.php" class="btn large pink rounded"><tt>Get Started</tt></a>
 		</div>
+	</div>
 	</body>
 </html>

@@ -20,17 +20,16 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<meta charset="UTF-8">
-		<title>Your Page!</title>
+		<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<title>Your HomePage!</title>
 		<link href= "stupid.css" type = "text/css" rel = "stylesheet"/>
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<style>
 			div.logoCenter
 			{
-				margin-top:20%;
 				display:flex;
 				justify-content:center
-				
 			}
 			div.buttonCenter
 			{
@@ -42,6 +41,9 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 	</head>
 	<body>
 		<center><h2>Welcome, <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>.</h2></center>
+		<br>
+		<center><img src="images/default-user2.png" alt="Default User Profile" width="15%" height="15%"></center>
+		<br>
 		<div class = "logoCenter">
 			<a href="login.php" class="btn large white rounded"><tt>My Profile<i class="material-icons">person</i></tt></a> 	
 		</div>
@@ -49,8 +51,8 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 		<div class = "buttonCenter">
 			<a class="btn large pink rounded"><tt>Matches&#x1F50D;</tt></a> 	
 			<a class="btn large pink rounded"><tt>Messages&#9993;</tt></a>
-			<a href="quiz_home.php" class="btn large pink rounded"><tt>Test Me!&#10004 </tt></a>
-			<a href="logout.php" class="btn large pink rounded"><tt>Logout</tt></a>
+			<a href="quiz_home.php" class="btn large pink rounded"><tt>Create a Quiz!&#10004 </tt></a>
+			<a href="logout.php" class="btn large pink rounded"><tt>Logout <i class="fa fa-sign-out"></i></tt></a>
 		</div>
 	</body>
 </html>

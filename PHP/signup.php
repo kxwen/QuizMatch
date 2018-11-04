@@ -158,36 +158,52 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+	<link href= "stupid.css" type = "text/css" rel = "stylesheet"/>
 		<meta charset = "UTF-8">
 		<title>QuizMatch: Sign Up</title>
-		<link rel ="stylesheet" href="stupid.css">
-		<style type="text/css">
+		<!--<link rel ="stylesheet" href="stupid.css">
+		<!--<style type="text/css">
 			body{ font: 14px sans-serif; }
 			.wrapper{ width: 350px; padding: 20px; }
+		</style>!-->
+		<style>
+		body
+		{
+			font: 14px sans-serif;
+		}
+		div.inputBar
+			{
+			width: 350px;
+			padding: 20px; 
+			}
 		</style>
 	</head>
 	<body>
 		<center>
-			<div class="wrapper">
+			<div class="inputBar">
 				<h2>Sign Up</h2>
 				Please fill out this form to register.
 				<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
 					<div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
+					<br>
 						<label>Username</label>
 						<br><span class="help-block"><font color="red"><?php echo $username_err;?></font></span>
 						<input type="text" name="username" class="form-control" value="<?php echo $username; ?>">
 					</div>
 					<div class="form-group <?php echo (!empty($email_err)) ? 'has-error' : ''; ?>">
+					<br>
 						<label>Email</label>
 						<br><span class="help-block"><font color="red"><?php echo $email_err;?></font></span>
 						<input type="text" name="email" class="form-control" value="<?php echo $email; ?>">
 					</div>
 					<div class="form-group <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
+					<br>
 						<label>Password</label>
 						<br><span class="help-block"><font color="red"><?php echo $password_err;?></font></span>
 						<input type="password" name="password" class="form-control" value="<?php echo $password; ?>">
 					</div>
 					<div class="form-group <?php echo (!empty($Cpassword_err)) ? 'has-error' : ''; ?>">
+					<br>
 						<label>Confirm Password</label>
 						<br><span class="help-block"><font color="red"><?php echo $Cpassword_err;?></font></span>
 						<input type="password" name="Cpassword" class="form-control" value="<?php echo $Cpassword; ?>">
@@ -198,8 +214,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 						<input type="text" name="gender" class="form-control" value="<?php echo $gender; ?>">
 					</div>-->
 					<div class="form-group">
-						<input type="submit" class="btn pink rounded" value="Submit">
+					<br>
+						<a <input type="submit" class="btn pink rounded" value="Submit"><tt>Submit</tt></a>
 					</div>
+					<br>
 					Already have an account? <a href="login.php">Login here</a>.
 				</form>
 			</div>
