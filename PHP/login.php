@@ -164,7 +164,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 					<div class="form-group">
 					<input type="checkbox">Remember me.<br>
 					<br>
-						<a <input type="submit" class="btn pink rounded" value="Submit"><tt>Submit</tt></a>
+						<input type="submit" class="btn pink rounded" value="Submit" style = "font-family: Helvetica";>
 					</div>
 					<br>
 					Need an account? <a href="signup.php"><b>Sign Up</b></a><br>

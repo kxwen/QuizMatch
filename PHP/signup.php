@@ -215,7 +215,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 					</div>-->
 					<div class="form-group">
 					<br>
-						<a <input type="submit" class="btn pink rounded" value="Submit"><tt>Submit</tt></a>
+						<input type="submit" class="btn pink rounded" value = "Submit" style = "font-family: Helvetica";>
 					</div>
 					<br>
 					Already have an account? <a href="login.php">Login here</a>.
