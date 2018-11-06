@@ -60,13 +60,17 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 					<h2>Create a Questionnaire:</h2>
 					Number of Questions: <button type="button" class="btn small pink rounded" id="num_Qs"></button>
 					<div class="tab"><h3>Theme and Details:</h3>
-						<b>Questionnaire Name:</b> <input type="text" name="Q_name" class="form-control" value="<?php echo $Q_name; ?>"><br><br>
-						<b>Description:</b> <textarea name="DESC" rows="5" cols="33" maxlength="200"><?php echo $DESC;?></textarea><br><br>
+						<br><b>Questionnaire Name:</b><br><br> <input type="text" name="Q_name" class="form-control" value="<?php echo $Q_name; ?>"><br><br>
+						<b>Description:</b><br><br> <textarea name="DESC" rows="5" cols="33" maxlength="200"><?php echo $DESC;?></textarea><br><br>
 						<b>Size:</b> <input type="radio" name="size" value="small" <?php echo $S_checked;?> onclick="updateQs()">Small 
 							<input type="radio" name="size" value="medium" <?php echo $M_checked;?> onclick="updateQs()">Medium 
 							<input type="radio" name="size" value="large" <?php echo $L_checked;?> onclick="updateQs()">Large<br><br>
 					</div>
 					
+					<!--Area where the question tabs will be placed by Javascript-->
+					<span id="questions"></span>
+					
+					<!--Area for Final Results-->
 					<div class="tab"><h3>Final Results:</h3>
 						<b>Result #1:</b> <input type="text" name="R_1" class="form-control" value="<?php echo $R_1; ?>"><br><br>
 						<b>Result #2:</b> <input type="text" name="R_2" class="form-control" value="<?php echo $R_2; ?>"><br><br>
@@ -77,9 +81,6 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 						<b>Result #7:</b> <input type="text" name="R_7" class="form-control" value="<?php echo $R_7; ?>"><br><br>
 						<b>Result #8:</b> <input type="text" name="R_8" class="form-control" value="<?php echo $R_8; ?>"><br><br>
 					</div>
-					
-					<!--Area where the question tabs will be placed by Javascript-->
-					<span id="questions"></span>
 					
 					<!--Buttons that control Navigation of page and website-->
 					<div style="float:left;">
@@ -95,7 +96,7 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 					</div>
 					<!--Controls Progress "bar"-->
 					<div style="text-align:center;margin-top:40px;">
-						<span class="step"></span><span class="step"></span><!--Area where page indicators will be placed by Javascript--><span id="num_pages"></span>
+						<span class="step" id="start_tab" value ="Theme & Details"></span><!--Area where page indicators will be placed by Javascript--><span id="num_pages"></span><!--End of Insertion Area--><span class="step" id="end_tab" value="Results"></span>
 					</div>
 				</form>
 			</div>
@@ -225,7 +226,7 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 				
 				// Setting up attributes for Tab DIV
 				local_tab.setAttribute("class", "tab");
-				local_tab.innerHTML = "<h3>Question #"+(num_Questions+1)+":</h3><b>Question:</b>";
+				local_tab.innerHTML = "<h3>Question #"+(num_Questions+1)+":</h3><b>Question:</b><br><br>";
 				
 				// Setting Attributes of the Question Text Field
 				question_input.setAttribute("type", "text");
@@ -254,12 +255,13 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 				rmv_Ans.innerHTML = "Remove Answer";
 				
 				// Adding functionality to the buttons
-				add_Ans.setAttribute("onclick", "addAns(currentTab-2)");
-				rmv_Ans.setAttribute("onclick", "removeAns(currentTab-2)");
+				add_Ans.setAttribute("onclick", "addAns(currentTab-1)");
+				rmv_Ans.setAttribute("onclick", "removeAns(currentTab-1)");
 				
 				// Setting up Attributes for the Page Indicator
 				page_indicator.setAttribute("class", "step");
 				page_indicator.setAttribute("id", "Q_page_"+(num_Questions+1));
+				page_indicator.setAttribute("value", "Question #" + (num_Questions+1));
 				
 				// Providing Sub Span with an ID for ease of Answer Insertion
 				sub_span.setAttribute("id", "add_Ans_field_"+(num_Questions+1));
@@ -292,7 +294,7 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 					var div_answer = document.createElement("DIV");
 					var answer_input = document.createElement("INPUT");
 					div_answer.setAttribute("id", "A_DIV_"+((current_question+1)+"_"+(num_Ans+1)));
-					div_answer.innerHTML="<b>Answer #"+(num_Ans+1)+":</b>";
+					div_answer.innerHTML="<br><b>Answer #"+(num_Ans+1)+":</b><br><br>";
 					answer_input.setAttribute("type", "text");
 					answer_input.setAttribute("Name", "");
 					answer_input.setAttribute("id", ("A_"+(current_question+1)+"_"+(num_Ans+1)));
