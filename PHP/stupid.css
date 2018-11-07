@@ -67,7 +67,7 @@ header, main, footer {display:block; with:100%} /* IE fix */
 /*** forms ***/
 input:not([type]), input:not([type=checkbox]):not([type=radio]):not([type=button]):not([type=submit]), [type=file]:before {outline:none; padding:0.5em 1em; margin:0.5px; border-bottom:1px solid #ddd; width:100%}
 textarea {width:100%; -moz-border-radius: 15px; border-radius: 15px; border:1px solid #ddd; padding:4px 8px; outline:none; outline:none}
-select {-webkit-appearance:none; outline:none; padding:0.5em 1em; border-radius:0; margin:0.5px; border-bottom:1px solid #ddd; width:100%;background-color:transparent}
+select {-webkit-appearance:none; outline:none; padding:0.5em 1em; -moz-border-radius: 15px; border-radius: 15px; border:1px solid #ddd; margin:0.5px; border-bottom:1px solid #ddd; width:100%;background-color:transparent}
 input, textarea, select, button, .btn {font-size:12px}
 input:not([type]):hover, input:not([type=checkbox]):not([type=radio]):not([type=button]):not([type=submit]):hover, select:hover, textarea:hover {background-color:#fbf6d9; transition:background-color 1s ease}
 input:invalid, input.error, textarea:invalid, textarea.error {background: #ffdfdf}
@@ -411,6 +411,39 @@ input.invalid {
   border-radius: 50%;
   display: inline-block;
   opacity: 0.5;
+}
+
+.step.steptext{
+	visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.step.steptext::after {
+	content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.step:hover.steptext{
+	visibility: visible;
+	opacity: 1;
 }
 
 /* Mark the active step: */

@@ -14,8 +14,6 @@
  */
  
 require_once "config.php";
-
-
  
 $email = $username = $password = $Cpassword = "";
 $email_err = $username_err = $password_err = $Cpassword_err = "";
@@ -28,31 +26,34 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		//Empty Field Case
 		$username_err = "Please enter a username.";
 	}else{
-		//$username = trim($_POST["username"]);
-		// Perpare to search DB for existing user
-		$sql = "SELECT id FROM users WHERE username = ?";
-		if($stmt = mysqli_prepare($link, $sql))
-		{
-			mysqli_stmt_bind_param($stmt, "s", $param_username);
-			$param_username = htmlspecialchars(trim($_POST["username"]));
-			if(mysqli_stmt_execute($stmt))
+		if(trim($_POST["username"]) >= $min_username_len && trim($_POST["username"]) <= $max_username_len){
+			// Perpare to search DB for existing user
+			$sql = "SELECT id FROM users WHERE username = ?";
+			if($stmt = mysqli_prepare($link, $sql))
 			{
-				// Successful execution
-				mysqli_stmt_store_result($stmt);
-				if(mysqli_stmt_num_rows($stmt) == 1)
+				mysqli_stmt_bind_param($stmt, "s", $param_username);
+				$param_username = htmlspecialchars(trim($_POST["username"]));
+				if(mysqli_stmt_execute($stmt))
 				{
-					// Username is taken; User already exists
-					$username_err = "This username is already taken.";
+					// Successful execution
+					mysqli_stmt_store_result($stmt);
+					if(mysqli_stmt_num_rows($stmt) == 1)
+					{
+						// Username is taken; User already exists
+						$username_err = "This username is already taken.";
+					}else{
+						// Username is available; Profile does not exist
+						$username = htmlspecialchars(trim($_POST["username"]));
+					}
 				}else{
-					// Username is available; Profile does not exist
-					$username = htmlspecialchars(trim($_POST["username"]));
+					// Unsuccessful Execution
+					echo "An error has occurred. Please try again later.";
 				}
-			}else{
-				// Unsuccessful Execution
-				echo "An error has occurred. Please try again later.";
 			}
+			mysqli_stmt_close($stmt);
+		}else{
+			$username_err = "Username must be ".$min_username_len."-".$max_username_len." characters long.";
 		}
-		mysqli_stmt_close($stmt);
 	}
 	
 	// Email Entry and Verification
