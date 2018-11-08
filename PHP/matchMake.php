@@ -1,6 +1,7 @@
 <?php
 /* associative array(acts like a hashtable) with each index being an array for a 
 given category, all initialized as empty */
+/* this associative multidimensional array might need to be stored elsewhere, separate from the function */
 $categories = array (
     'Charmander' => array(),
     'Squirtle' => array(),
