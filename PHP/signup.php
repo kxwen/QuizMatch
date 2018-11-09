@@ -26,7 +26,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		//Empty Field Case
 		$username_err = "Please enter a username.";
 	}else{
-		if(trim($_POST["username"]) >= $min_username_len && trim($_POST["username"]) <= $max_username_len){
+		if(strlen(trim($_POST["username"])) >= $min_username_len && strlen(trim($_POST["username"])) <= $max_username_len){
 			// Perpare to search DB for existing user
 			$sql = "SELECT id FROM users WHERE username = ?";
 			if($stmt = mysqli_prepare($link, $sql))
