@@ -34,6 +34,11 @@ $answer2 = $_POST['r2']; $answer7 = $_POST['r7'];
 $answer3 = $_POST['r3']; $answer8 = $_POST['r8'];
 $answer4 = $_POST['r4']; $answer9 = $_POST['r9'];
 $answer5 = $_POST['r5']; $answer10 = $_POST['r10'];
+$answer11 = $_POST['r11']; $answer16 = $_POST['r16'];
+$answer12 = $_POST['r12']; $answer17 = $_POST['r17'];
+$answer13 = $_POST['r13']; $answer18 = $_POST['r18'];
+$answer14 = $_POST['r14']; $answer19 = $_POST['r19'];
+$answer15 = $_POST['r15']; $answer20 = $_POST['r20'];
 
 // 0 - SANGUINE, 1 - PHLEGMATIC, 2 - CHOLERIC, 3 - MELANCHOLIC
 
@@ -92,6 +97,28 @@ else if ($answer11 == "B") { $values[0] += 2; }
 else if ($answer11 == "C") { $values[1] += 2; }
 else if ($answer11 == "D") { $values[2] += 2; }
 
+if ($answer12 == "A") { $values[3] += 2; }
+else if ($answer12 == "B") { $values[0] += 2; }
+else if ($answer12 == "C") { $values[1] += 2; }
+else if ($answer12 == "D") { $values[2] += 2; }
+
+if ($answer13 == "A") { $values[0] += 2; }
+
+if ($answer14 == "D") { $values[1] += 2; }
+
+if ($answer15 == "B") { $values[3] += 2; }
+
+if ($answer16 == "A") { $values[2] += 2; }
+
+if ($answer17 == "B") { $values[2] += 2; }
+
+if ($answer18 == "A") { $values[0] += 2; }
+
+if ($answer19 == "C") { $values[1] += 2; }
+
+if ($answer20 == "B") { $values[3] += 2; }
+
+
 
 
 $val = 0;
@@ -113,6 +140,7 @@ for ($i = 0; $i < $num_traits; $i++) {
 
 echo "Your personality values are:  <br><br>";
 echo "SANGUINE +" . $values[0] . "<br>PHLEGMATIC + " . $values[1] . "<br>CHOLERIC +" . $values[2] . "<br>MELANCHOLIC +" . $values[3];
+
 if ($index == 0) 
 	echo "<br><br>Your highest value is: SANGUINE";
 else if ($index == 1) 
