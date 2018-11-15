@@ -70,7 +70,7 @@ textarea {width:100%; -moz-border-radius: 15px; border-radius: 15px; border:1px 
 select {-webkit-appearance:none; outline:none; padding:0.5em 1em; -moz-border-radius: 15px; border-radius: 15px; border:1px solid #ddd; margin:0.5px; border-bottom:1px solid #ddd; width:100%;background-color:transparent}
 input, textarea, select, button, .btn {font-size:12px}
 input:not([type]):hover, input:not([type=checkbox]):not([type=radio]):not([type=button]):not([type=submit]):hover, select:hover, textarea:hover {background-color:#fbf6d9; transition:background-color 1s ease}
-input:invalid, input.error, textarea:invalid, textarea.error {background: #ffdfdf}
+input:invalid, input.error, textarea:invalid, textarea.error, select:invalid, select.error {background: #ffdfdf}
 
 /*** grid ***/
 .container {margin-right:-20px}
@@ -394,6 +394,10 @@ input {
 
 input.invalid {
   background-color: #ffdddd;
+}
+
+select.invalid{
+	background-color: #ffdddd;
 }
 
 /* Hide all steps by default: */

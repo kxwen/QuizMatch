@@ -48,7 +48,18 @@ if($link === false)die("ERROR: Unable to connect. " . mysqli_connect_error());
 			var min_num_Ans = 2; // Minimum number of answers that a question must have
 			var max_num_Ans = 5; // Maximum number of answers that a question may have
 			
+			min_Quiz_Name_Length = 8;
+			max_Quiz_Name_Length = 32;
+			
 			// Functions
+			
+			// Functions for navigation
+			function confirmLeave(path){
+				if(confirm("Do you wish to leave this page?\n You will lose all unsaved data.")){
+					location.href = path;
+				}
+			}
+			
 			// Functions for managing Tab pages
 			function showTab(n) {
 			  // This function will display the specified tab of the form ...

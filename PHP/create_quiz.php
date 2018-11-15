@@ -15,7 +15,6 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 
 require_once "config.php";
 
- $Q_name_err = "";
  $Q_name = "";
  $DESC = "";
  $S_checked = $M_checked = $L_checked = "";
@@ -28,13 +27,6 @@ require_once "config.php";
  
  if($_SERVER["REQUEST_METHOD"] == "POST")
  {
-	if(empty(trim($_POST["Q_name"])))
-	{
-		$Q_name_err = "Please enter a Questionnaire Name.";
-	}else{
-		$Q_name = htmlspecialchars(trim($_POST["Q_name"]));
-	}
-	$DESC = htmlspecialchars(trim($_POST["DESC"]));
 	if($_POST["size"] == "large"){
 		$L_checked = "checked";
 	}elseif($_POST["size"] == "medium"){
@@ -61,10 +53,10 @@ require_once "config.php";
 			<div class="wrapper">
 				<form id="quizForm" action="">
 					<h2>Create a Questionnaire:</h2>
-					Number of Questions: <button type="button" class="btn small pink rounded" id="num_Qs"></button>
+					Number of Questions: <span id="num_Qs"></span>
 					<div class="tab"><h3>Theme and Details:</h3>
-						<br><b>Questionnaire Name:</b><br><br> <input type="text" name="Q_name" class="form-control" value="<?php echo $Q_name; ?>"><br><br>
-						<b>Description:</b><br><br> <textarea name="DESC" rows="5" cols="33" maxlength="200"><?php echo $DESC;?></textarea><br><br>
+						<br><b>Questionnaire Name:</b><br><span class="help-block"><font color="red" id="Q_name_err"></font></span><br> <input type="text" name="Q_name" class="form-control"><br><br>
+						<b>Description:</b><br><br> <textarea name="DESC" rows="5" cols="33" maxlength="200"></textarea><br><br>
 						<b>Size:</b> <input type="radio" name="size" value="small" <?php echo $S_checked;?> onclick="updateQs()">Small 
 							<input type="radio" name="size" value="medium" <?php echo $M_checked;?> onclick="updateQs()">Medium 
 							<input type="radio" name="size" value="large" <?php echo $L_checked;?> onclick="updateQs()">Large<br><br>
@@ -75,23 +67,24 @@ require_once "config.php";
 					
 					<!--Area for Final Results-->
 					<div class="tab" style="white-space:nowrap"><h3>Final Results:</h3>
-						<br><b>Result #1:</b> <input type="text" name="R_1" class="form-control" value="<?php echo $R_1; ?>"><br>
-						<br><b>Result #2:</b> <input type="text" name="R_2" class="form-control" value="<?php echo $R_2; ?>"><br>
-						<br><b>Result #3:</b> <input type="text" name="R_3" class="form-control" value="<?php echo $R_3; ?>"><br>
-						<br><b>Result #4:</b> <input type="text" name="R_4" class="form-control" value="<?php echo $R_4; ?>"><br>
-						<br><b>Result #5:</b> <input type="text" name="R_5" class="form-control" value="<?php echo $R_5; ?>"><br>
-						<br><b>Result #6:</b> <input type="text" name="R_6" class="form-control" value="<?php echo $R_6; ?>"><br>
-						<br><b>Result #7:</b> <input type="text" name="R_7" class="form-control" value="<?php echo $R_7; ?>"><br>
-						<br><b>Result #8:</b> <input type="text" name="R_8" class="form-control" value="<?php echo $R_8; ?>"><br>
-						<br><b>Result #9:</b> <input type="text" name="R_9" class="form-control" value="<?php echo $R_9; ?>"><br>
-						<br><b>Result #10:</b> <input type="text" name="R_10" class="form-control" value="<?php echo $R_10; ?>"><br>
-						<br><b>Result #11:</b> <input type="text" name="R_11" class="form-control" value="<?php echo $R_11; ?>"><br>
-						<br><b>Result #12:</b> <input type="text" name="R_12" class="form-control" value="<?php echo $R_12; ?>"><br><br>
+						<br><b>Result #1:</b> <input type="text" name="R_1" class="form-control" style="width:70%"><span class="help-block"><font color="red" id="R_1_ERR"></font></span><br>
+						<br><b>Result #2:</b> <input type="text" name="R_2" class="form-control" style="width:70%"><span class="help-block"><font color="red" id="R_2_ERR"></font></span><br>
+						<br><b>Result #3:</b> <input type="text" name="R_3" class="form-control" style="width:70%"><span class="help-block"><font color="red" id="R_3_ERR"></font></span><br>
+						<br><b>Result #4:</b> <input type="text" name="R_4" class="form-control" style="width:70%"><span class="help-block"><font color="red" id="R_4_ERR"></font></span><br>
+						<br><b>Result #5:</b> <input type="text" name="R_5" class="form-control" style="width:70%"><span class="help-block"><font color="red" id="R_5_ERR"></font></span><br>
+						<br><b>Result #6:</b> <input type="text" name="R_6" class="form-control" style="width:70%"><span class="help-block"><font color="red" id="R_6_ERR"></font></span><br>
+						<br><b>Result #7:</b> <input type="text" name="R_7" class="form-control" style="width:70%"><span class="help-block"><font color="red" id="R_7_ERR"></font></span><br>
+						<br><b>Result #8:</b> <input type="text" name="R_8" class="form-control" style="width:70%"><span class="help-block"><font color="red" id="R_8_ERR"></font></span><br>
+						<br><b>Result #9:</b> <input type="text" name="R_9" class="form-control" style="width:70%"><span class="help-block"><font color="red" id="R_9_ERR"></font></span><br>
+						<br><b>Result #10:</b> <input type="text" name="R_10" class="form-control" style="width:70%"><span class="help-block"><font color="red" id="R_10_ERR"></font></span><br>
+						<br><b>Result #11:</b> <input type="text" name="R_11" class="form-control" style="width:70%"><span class="help-block"><font color="red" id="R_11_ERR"></font></span><br>
+						<br><b>Result #12:</b> <input type="text" name="R_12" class="form-control" style="width:70%"><span class="help-block"><font color="red" id="R_12_ERR"></font></span><br><br>
 					</div>
 					
 					<!--Buttons that control Navigation of page and website-->
 					<div style="float:left;">
-						<a href="quiz_home.php" class="btn pink rounded"><tt>Cancel</a>
+						<!--<a href="quiz_home.php" class="btn pink rounded"><tt>Cancel</a>-->
+						<button type="button" class="btn pink rounded" onclick="confirmLeave('quiz_home.php')">Cancel</button>
 					</div>
 					<div style="overflow:auto;">
 						<div style="float:right;">
@@ -120,6 +113,119 @@ require_once "config.php";
 			updateQs();
 			showTab(currentTab); // Display the current tab
 			
+			// Used to reset error message regarding field & invalid flag on input field
+			function reset_Validation_Error(input_field, element_id){
+				document.getElementById(element_id).innerHTML = "";
+				input_field.className -= " invalid";
+			}
+			
+			// Assigns error message to element_id's help-block, sets invalid flag on input field, and returns false for "valid" boolean
+			function validationError(input_field, element_id, error_message){
+				document.getElementById(element_id).innerHTML = error_message;
+				input_field.className += " invalid";
+				return false;
+			}
+			
+			// Override of validateForm() of config.php. Specifically for this page
+			function validateForm() {
+			  // This function deals with validation of the form fields
+			  var x, y, i, j, valid = true;
+			  var Tag_err = false;
+			  var prev_questions;
+			  x = document.getElementsByClassName("tab");
+			  y = x[currentTab].getElementsByTagName("input");
+			  z = x[currentTab].getElementsByTagName("select");
+			  
+			  // A loop that checks every input field in the current tab:
+			  for (i = 0; i < y.length; i++) {
+				if(currentTab == 0 && i == 0){
+					reset_Validation_Error(y[i], "Q_name_err");
+					if(y[i].value == ""){
+						valid = validationError(y[i], "Q_name_err", "Please enter a Questionnaire Name.");
+					}else{ 
+						if(y[i].value.length < min_Quiz_Name_Length || y[i].value.length > max_Quiz_Name_Length){
+							valid = validationError(y[i], "Q_name_err", "Questionnaire name must be "+min_Quiz_Name_Length+"-"+max_Quiz_Name_Length+" characters long.");
+						}
+					}
+				}else if(currentTab == (num_Questions + 1)){ // Results Page Verification
+					reset_Validation_Error(y[i], "R_"+(i+1)+"_ERR");
+					// Checks to see if catagory name matches naming criteria
+					if(y[i].value.match(/([A-Za-z0-9]{2,})/) == null){
+						if(y[i].value == ""){
+							// Empty String
+							valid = validationError(y[i], "R_"+(i+1)+"_ERR", "Please enter a catagory name.");
+						}else if(y[i].value.length < 2){
+							// String too short
+							valid = validationError(y[i], "R_"+(i+1)+"_ERR", "Please enter a longer catagory name.");
+						}else{
+							// String contains illegal characters
+							valid = validationError(y[i], "R_"+(i+1)+"_ERR", "Catagory name cannot have special characters.");
+						}
+					}else{
+						// Checks to see if current catagory is a duplicate of a previous one
+						for(j = 0; j < i; j++){
+							if(y[i].value.toLowerCase() === y[j].value.toLowerCase()){
+								valid = validationError(y[i], "R_"+(i+1)+"_ERR", "Duplicate catagory name. Please enter a unique name.");
+							}						
+						}
+					}
+				}else if(currentTab != 0 && currentTab != (num_Questions+1)){
+					if(i==0){
+						reset_Validation_Error(y[i], "Q_"+currentTab+"_ERR");
+						if(y[i].value.match(/^([A-Za-z0-9]+[\.\?\!\-\sA-Za-z0-9]*[\.\?\!A-Za-z0-9])/) == null){
+							if(y[i].value == ""){
+								// Empty String
+								valid = validationError(y[i], "Q_"+currentTab+"_ERR", "Please enter a question.");
+							}else{
+								// String contains illegal characters
+								valid = validationError(y[i], "Q_"+currentTab+"_ERR", "Question can only have '. ! ? -' special characters.");
+							}
+						}else{
+							for(j = 1; j < currentTab ; j++){
+								if(document.getElementById("Q_"+j).value == y[i].value){
+									valid = validationError(y[i], "Q_"+currentTab+"_ERR", "Duplicate Question. Please enter a unique question.");
+								}
+							}
+						}
+					}else{
+						reset_Validation_Error(y[i], "A_"+currentTab+"_"+i+"_ERR");
+						reset_Validation_Error(z[i-1], "A_"+currentTab+"_"+i+"_ERR");
+						if(y[i].value.match(/^([A-Za-z0-9]+[\.\?\!\-\sA-Za-z0-9]*[\.\?\!A-Za-z0-9])/) == null){
+							if(y[i].value == ""){
+								// Empty String
+								valid = validationError(y[i], "A_"+currentTab+"_"+i+"_ERR", "Please enter an answer.");
+							}else{
+								// String contains illegal characters
+								valid = validationError(y[i], "A_"+currentTab+"_"+i+"_ERR", "Answer can only have '. ! ? -' special characters.");
+							}
+						}else{
+							for(j = 1; j < i; j++){
+								// Iterates through all previous answer fields to make sure no two are exactly the same.
+								if(y[i].value.toLowerCase() === y[j].value.toLowerCase()){
+									valid = validationError(y[i], "A_"+currentTab+"_"+i+"_ERR", "Please enter a unique answer.");
+								}	
+							}
+						}
+					}
+				}
+			  }
+			  for(i = 0 ; i < z.length; i++){
+				  for(j = 0 ; j < i; j++){
+					  if(z[i].value == z[j].value){
+						  if(document.getElementById("A_"+currentTab+"_"+(i+1)+"_ERR").innerHTML == ""){
+							  valid = validationError(z[i], "A_"+currentTab+"_"+(i+1)+"_ERR", "Duplicate Tag. Please select another.");
+						  }
+					  }
+				  }
+			  }
+			  
+			  // If the valid status is true, mark the step as finished and valid:
+			  if (valid) {
+				document.getElementsByClassName("step")[currentTab].className += " finish";
+			  }
+			  return valid; // return the valid status
+			}
+			
 			// Automation to fill out code for form dependent on size template
 			function create_Question_fields(){
 				if(num_Questions < target_Questions)
@@ -140,13 +246,13 @@ require_once "config.php";
 			function deleteElement(parentDIV,childDIV){
 				if(parentDIV == childDIV)
 				{
-					alert("Parent cannot be removed.");
+					alert("An Error has occured: Parent cannot be removed.");
 				}else if(document.getElementById(childDIV)){
 					var child = document.getElementById(childDIV);
 					var parent = document.getElementById(parentDIV);
 					parent.removeChild(child);
 				}else{
-					alert("Child div not found");
+					alert("An Error has occured: Child div not found.");
 				}
 			}
 			
@@ -156,6 +262,15 @@ require_once "config.php";
 				var local_tab = document.createElement("DIV");
 				var question_input = document.createElement("INPUT");
 				var page_indicator = document.createElement("DIV");
+				
+				//<span class="help-block"><font color="red" id="R_12_ERR"></font></span>
+				var err_block = document.createElement("SPAN");
+				var err_msg = document.createElement("FONT");
+				
+				err_block.setAttribute("class", "help-block");
+				err_msg.setAttribute("color", "red");
+				err_msg.setAttribute("id", "Q_"+(num_Questions+1)+"_ERR");
+				err_block.appendChild(err_msg);
 				
 				// Setting up attributes for Tab DIV
 				local_tab.setAttribute("class", "tab");
@@ -202,6 +317,7 @@ require_once "config.php";
 				
 				// Appending most Elements into Tab; Preparation for Insertion
 				local_tab.appendChild(question_input);
+				local_tab.appendChild(err_block);
 				local_tab.innerHTML += "<br>";
 				local_tab.appendChild(sub_span);
 				local_tab.innerHTML += "<br>";
@@ -226,21 +342,25 @@ require_once "config.php";
 			// Traits array defined in config.php
 			function createSelect(){
 				var sel_list = document.createElement("SELECT");
+				var Opt_0 = document.createElement("OPTION");
 				var Opt_1 = document.createElement("OPTION");
 				var Opt_2 = document.createElement("OPTION");
 				var Opt_3 = document.createElement("OPTION");
 				var Opt_4 = document.createElement("OPTION");
 				
+				Opt_0.setAttribute("value", "No Trait");
 				Opt_1.setAttribute("value", "<?php echo $traits[0];?>");
 				Opt_2.setAttribute("value", "<?php echo $traits[1];?>");
 				Opt_3.setAttribute("value", "<?php echo $traits[2];?>");
 				Opt_4.setAttribute("value", "<?php echo $traits[3];?>");
 				
+				Opt_0.innerHTML = "No Trait";
 				Opt_1.innerHTML = "<?php echo $traits[0];?>";
 				Opt_2.innerHTML = "<?php echo $traits[1];?>";
 				Opt_3.innerHTML = "<?php echo $traits[2];?>";
 				Opt_4.innerHTML = "<?php echo $traits[3];?>";
 				
+				sel_list.appendChild(Opt_0);
 				sel_list.appendChild(Opt_1);
 				sel_list.appendChild(Opt_2);
 				sel_list.appendChild(Opt_3);
@@ -259,6 +379,14 @@ require_once "config.php";
 					var answer_input = document.createElement("INPUT");
 					var tag_list = createSelect();
 					
+					var err_block = document.createElement("SPAN");
+					var err_msg = document.createElement("FONT");
+				
+					err_block.setAttribute("class", "help-block");
+					err_msg.setAttribute("color", "red");
+					err_msg.setAttribute("id", "A_"+(current_question+1)+"_"+(num_Ans+1)+"_ERR");
+					err_block.appendChild(err_msg);
+					
 					// Assigns DIV attributes needed to reference specific question
 					div_answer.setAttribute("id", "A_DIV_"+((current_question+1)+"_"+(num_Ans+1)));
 					div_answer.setAttribute("style", "white-space:nowrap");
@@ -272,11 +400,13 @@ require_once "config.php";
 					
 					// Assigns id to Select List for reference later
 					tag_list.setAttribute("id", ("A_TAG_"+(current_question+1)+"_"+(num_Ans+1)));
+					tag_list.setAttribute("name", ("A_TAG_"+(current_question+1)+"_"+(num_Ans+1)));
 					tag_list.setAttribute("style", "width:15%");
 					
 					// Append text field and Tag list to DIV
 					div_answer.appendChild(answer_input);
 					div_answer.appendChild(tag_list);
+					div_answer.appendChild(err_block);
 					
 					// Append DIV to Form
 					document.getElementById(("add_Ans_field_"+(current_question+1))).appendChild(div_answer);
