@@ -15,29 +15,38 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 
 require_once "config.php";
 
- $Q_name = "";
- $DESC = "";
- $S_checked = $M_checked = $L_checked = "";
- $size_err = "";
+ $Q_name = $DESC = $size = "";
+ $Results = array(); // Array of Results in the order they appear
+ $Questions = array(); // Array of questions in the order they appear
  
- $Q_1 = $Q_2 = $Q_3 = $Q_4 = $Q_5 = "";
- $Q_6 = $Q_7 = $Q_8 = $Q_9 = $Q_10 = "";
- $Q_11 = $Q_12 = $Q_13 = $Q_14 = $Q_15 = "";
- $R_1 = $R_2 = $R_3 = $R_4 = $R_5 = $R_6 = $R_7 = $R_8 = $R_9 = $R_10 = $R_11 = $R_12 = "";
+ /* Triple array of question answers and their corresponding trait;
+  * [i][j][k] where i is question number, j is answer number, and k is a binary specifying answer or trait
+  */
+ $Question_answers = array();
  
  if($_SERVER["REQUEST_METHOD"] == "POST")
  {
-	if($_POST["size"] == "large"){
-		$L_checked = "checked";
-	}elseif($_POST["size"] == "medium"){
-		$M_checked = "checked";
-	}else{
-		$S_checked = "checked";
+	$Q_name = trim($_POST["Q_name"]);
+	$DESC = htmlspecialchars(trim($_POST["DESC"]));
+	$size = $_POST["size"];
+	for($i = 1; $i <= 15; $i++){ // Iterates through all possible questions
+		if(isset($_POST[("Q_".$i)])){ // Verifies that question exists
+			$Questions[$i] = trim($_POST[("Q_".$i)]);
+			for($j = 1; $j <= 5; $j++){ // Iterates through all possible answers for question i
+				if(isset($_POST[("A_".$i."_".$j)])){ // Verifies that answer exists
+					$Question_answers[$i][$j][0] = trim($_POST[("A_".$i."_".$j)]);
+					$Question_answers[$i][$j][1] = $_POST[("A_TAG_".$i."_".$j)];
+				}
+			}
+		}
 	}
- }
- 
- if(empty($S_checked) && empty($M_checked) && empty($L_checked)){//This should only be used once; upon arriving to the page.
-	 $S_checked = "checked";
+	for($i = 1; $i <=12; $i++){
+		$Results[$i] = trim($_POST[("R_".$i)]);
+	}
+	
+	$sql_quiz = "INSERT INTO quizzes (owner_id, name, description, size) VALUES (?, ?, ?, ?)";
+	$sql_question = "INSERT INTO questions (quiz_id, question, num_ans) VALUES (?, ?, ?)";
+	$sql_answer = "INSERT INTO answers (question_id, answer, trait) VALUES (?, ?, ?)";
  }
 ?>
 <!DOCTYPE html>
@@ -57,9 +66,9 @@ require_once "config.php";
 					<div class="tab"><h3>Theme and Details:</h3>
 						<br><b>Questionnaire Name:</b><br><span class="help-block"><font color="red" id="Q_name_err"></font></span><br> <input type="text" name="Q_name" class="form-control"><br><br>
 						<b>Description:</b><br><br> <textarea name="DESC" rows="5" cols="33" maxlength="200"></textarea><br><br>
-						<b>Size:</b> <input type="radio" name="size" value="small" <?php echo $S_checked;?> onclick="updateQs()">Small 
-							<input type="radio" name="size" value="medium" <?php echo $M_checked;?> onclick="updateQs()">Medium 
-							<input type="radio" name="size" value="large" <?php echo $L_checked;?> onclick="updateQs()">Large<br><br>
+						<b>Size:</b> <input type="radio" name="size" value="small" checked onclick="updateQs()">Small 
+							<input type="radio" name="size" value="medium" onclick="updateQs()">Medium 
+							<input type="radio" name="size" value="large" onclick="updateQs()">Large<br><br>
 					</div>
 					
 					<!--Area where the question tabs will be placed by Javascript-->
@@ -119,7 +128,7 @@ require_once "config.php";
 				input_field.className -= " invalid";
 			}
 			
-			// Assigns error message to element_id's help-block, sets invalid flag on input field, and returns false for "valid" boolean
+			// Assigns error message to error message location (element_id), sets invalid flag on input field, and returns false for "valid" boolean
 			function validationError(input_field, element_id, error_message){
 				document.getElementById(element_id).innerHTML = error_message;
 				input_field.className += " invalid";
@@ -150,7 +159,7 @@ require_once "config.php";
 				}else if(currentTab == (num_Questions + 1)){ // Results Page Verification
 					reset_Validation_Error(y[i], "R_"+(i+1)+"_ERR");
 					// Checks to see if catagory name matches naming criteria
-					if(y[i].value.match(/([A-Za-z0-9]{2,})/) == null){
+					if(y[i].value.trim().match(/^([A-Za-z0-9]+[\sA-Za-z0-9]*)/) == null){
 						if(y[i].value == ""){
 							// Empty String
 							valid = validationError(y[i], "R_"+(i+1)+"_ERR", "Please enter a catagory name.");
@@ -165,15 +174,15 @@ require_once "config.php";
 						// Checks to see if current catagory is a duplicate of a previous one
 						for(j = 0; j < i; j++){
 							if(y[i].value.toLowerCase() === y[j].value.toLowerCase()){
-								valid = validationError(y[i], "R_"+(i+1)+"_ERR", "Duplicate catagory name. Please enter a unique name.");
+								valid = validationError(y[i], "R_"+(i+1)+"_ERR", "Duplicate catagory. Please enter a unique catagory.");
 							}						
 						}
 					}
 				}else if(currentTab != 0 && currentTab != (num_Questions+1)){
 					if(i==0){
 						reset_Validation_Error(y[i], "Q_"+currentTab+"_ERR");
-						if(y[i].value.match(/^([A-Za-z0-9]+[\.\?\!\-\sA-Za-z0-9]*[\.\?\!A-Za-z0-9])/) == null){
-							if(y[i].value == ""){
+						if(y[i].value.trim().match(/^([A-Za-z0-9]+[\.\?\!\-\sA-Za-z0-9]*[\.\?\!\sA-Za-z0-9])/) == null){
+							if(y[i].value.trim() == ""){
 								// Empty String
 								valid = validationError(y[i], "Q_"+currentTab+"_ERR", "Please enter a question.");
 							}else{
@@ -190,8 +199,8 @@ require_once "config.php";
 					}else{
 						reset_Validation_Error(y[i], "A_"+currentTab+"_"+i+"_ERR");
 						reset_Validation_Error(z[i-1], "A_"+currentTab+"_"+i+"_ERR");
-						if(y[i].value.match(/^([A-Za-z0-9]+[\.\?\!\-\sA-Za-z0-9]*[\.\?\!A-Za-z0-9])/) == null){
-							if(y[i].value == ""){
+						if(y[i].value.trim().match(/^([A-Za-z0-9]+[\.\?\!\-\sA-Za-z0-9]*[\.\?\!\sA-Za-z0-9])/) == null){
+							if(y[i].value.trim() == ""){
 								// Empty String
 								valid = validationError(y[i], "A_"+currentTab+"_"+i+"_ERR", "Please enter an answer.");
 							}else{
@@ -394,7 +403,7 @@ require_once "config.php";
 					
 					// Assigns text input field attributes to be referenced when form is submitted
 					answer_input.setAttribute("type", "text");
-					answer_input.setAttribute("Name", "");
+					answer_input.setAttribute("Name", ("A_"+(current_question+1)+"_"+(num_Ans+1)));
 					answer_input.setAttribute("id", ("A_"+(current_question+1)+"_"+(num_Ans+1)));
 					answer_input.setAttribute("style", "width:70%");
 					
