@@ -25,6 +25,7 @@ require_once "config.php";
  
 $profile_err = $password_err = "";
 $profile = $password = "";
+if(isset($_COOKIE["remember_me"])) $profile = $_COOKIE["remember_me"];
 if($_SERVER["REQUEST_METHOD"] == "POST")
 {
 	// Verifies both fields are filled. Will output an error to USER if either are empty
@@ -45,30 +46,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	if(empty($profile_err) && empty($password_err))
 	{
 		// Check to see if the profile field is an EMAIL. Assumes string is a USERNAME if not an EMAIL. Begins preparation to access Database
-		/*$local_file = "Testing_Form.txt";
-		$handle = fopen($local_file, 'r') or die('cannot open file: ' . $local_file);
-		while(!feof($handle))
-		{
-			$current_line = fgets($handle);
-			$current_line = str_replace("\n", "", $current_line);
-			if(!empty($current_line)){
-				list($file_username, $file_email, $file_password) = explode(" ", $current_line);
-				if(($profile == $file_username) or ($profile == $file_email))
-				{
-					if($password == $file_password){
-						echo "Login Successful";
-					}else{
-						$password_err = "Incorrect Password.";
-					}
-					break;
-				}
-			}
-		}
-		if(feof($handle))
-		{
-			$profile_err = "Profile with given Username/Email not found.";
-		}
-		fclose($handle);*/
 		if(filter_var($profile, FILTER_VALIDATE_EMAIL))
 		{
 			// Is an EMAIL
@@ -100,6 +77,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 							$_SESSION["loggedin"] = true;
 							$_SESSION["id"] = $id;
 							$_SESSION["username"] = $username;
+							if($_POST["remember_me"]){
+								$year = time() + 31536000;
+								setcookie("remember_me", $profile, $year);
+							}else if(!$_POST["remember_me"]){
+								if(isset($_COOKIE['remember_me'])) {
+									$past = time() - 100;
+									setcookie("remember_me", "", $past);
+								}
+							}
 							header("location: userprofile.php");
 						}else{
 							// Password does not match recorded
@@ -159,12 +145,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 					<br>
 						<label>Password</label>
 						<br><span class="help-block"><font color="red"><?php echo $password_err;?></font></span>
-						<input type="password" name="password" class="form-control" value="<?php echo $password; ?>">
+						<input type="password" name="password" class="form-control" value="<?php echo $password; ?>"><br><br>
 					</div>
 					<div class="form-group">
-					<input type="checkbox">Remember me.<br>
-					<br>
 						<input type="submit" class="btn pink rounded" value="Submit" style = "font-family: Helvetica";>
+						<input type="checkbox" name="remember_me" value="1" <?php if(isset($_COOKIE['remember_me'])){echo 'checked="checked"';}else {echo '';}?>> Remember me.<br>
 					</div>
 					<br>
 					Need an account? <a href="signup.php"><b>Sign Up</b></a><br>
