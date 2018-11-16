@@ -80,17 +80,17 @@ require_once "config.php";
 					<!--Area for Final Results-->
 					<div class="tab" style="white-space:nowrap"><h3>Final Results:</h3>
 						<br><b>Result #1:</b> <input style = "font-family: Helvetica; width:70%" type="text" name="R_1" class="form-control"><span class="help-block"><font color="red" id="R_1_ERR"></font></span><br>
-						<br><b>Result #2:</b> <input type="text" name="R_2" class="form-control" style="width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_2_ERR"></font></span><br>
-						<br><b>Result #3:</b> <input type="text" name="R_3" class="form-control" style="width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_3_ERR"></font></span><br>
-						<br><b>Result #4:</b> <input type="text" name="R_4" class="form-control" style="width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_4_ERR"></font></span><br>
-						<br><b>Result #5:</b> <input type="text" name="R_5" class="form-control" style="width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_5_ERR"></font></span><br>
-						<br><b>Result #6:</b> <input type="text" name="R_6" class="form-control" style="width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_6_ERR"></font></span><br>
-						<br><b>Result #7:</b> <input type="text" name="R_7" class="form-control" style="width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_7_ERR"></font></span><br>
-						<br><b>Result #8:</b> <input type="text" name="R_8" class="form-control" style="width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_8_ERR"></font></span><br>
-						<br><b>Result #9:</b> <input type="text" name="R_9" class="form-control" style="width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_9_ERR"></font></span><br>
-						<br><b>Result #10:</b> <input type="text" name="R_10" class="form-control" style="width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_10_ERR"></font></span><br>
-						<br><b>Result #11:</b> <input type="text" name="R_11" class="form-control" style="width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_11_ERR"></font></span><br>
-						<br><b>Result #12:</b> <input type="text" name="R_12" class="form-control" style="width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_12_ERR"></font></span><br><br>
+						<br><b>Result #2:</b> <input type="text" name="R_2" class="form-control" style="font-family: Helvetica; width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_2_ERR"></font></span><br>
+						<br><b>Result #3:</b> <input type="text" name="R_3" class="form-control" style="font-family: Helvetica; width:70%"><span class="help-block"><font color="red" id="R_3_ERR"></font></span><br>
+						<br><b>Result #4:</b> <input type="text" name="R_4" class="form-control" style="font-family: Helvetica; width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_4_ERR"></font></span><br>
+						<br><b>Result #5:</b> <input type="text" name="R_5" class="form-control" style="font-family: Helvetica; width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_5_ERR"></font></span><br>
+						<br><b>Result #6:</b> <input type="text" name="R_6" class="form-control" style="font-family: Helvetica; width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_6_ERR"></font></span><br>
+						<br><b>Result #7:</b> <input type="text" name="R_7" class="form-control" style="font-family: Helvetica; width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_7_ERR"></font></span><br>
+						<br><b>Result #8:</b> <input type="text" name="R_8" class="form-control" style="font-family: Helvetica; width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_8_ERR"></font></span><br>
+						<br><b>Result #9:</b> <input type="text" name="R_9" class="form-control" style="font-family: Helvetica; width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_9_ERR"></font></span><br>
+						<br><b>Result #10:</b> <input type="text" name="R_10" class="form-control" style="font-family: Helvetica; width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_10_ERR"></font></span><br>
+						<br><b>Result #11:</b> <input type="text" name="R_11" class="form-control" style="font-family: Helvetica; width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_11_ERR"></font></span><br>
+						<br><b>Result #12:</b> <input type="text" name="R_12" class="form-control" style="font-family: Helvetica; width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_12_ERR"></font></span><br><br>
 					</div>
 					
 					<!--Buttons that control Navigation of page and website-->
