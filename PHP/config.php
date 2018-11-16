@@ -27,6 +27,7 @@ define('DB_PASSWORD', '');
 define('DB_NAME', 'QuizMatch');
 
 $link = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
+if($link === false)die("ERROR: Unable to connect. " . mysqli_connect_error());
 
 $min_username_len = 6;
 $max_username_len = 12;
@@ -38,7 +39,6 @@ $traits[1] = "PHLEGMATIC";
 $traits[2] = "CHOLERIC";
 $traits[3] = "MELANCHOLIC";
 
-if($link === false)die("ERROR: Unable to connect. " . mysqli_connect_error());
 ?>
 <!DOCTYPE html>
 <html>
