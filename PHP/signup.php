@@ -14,9 +14,12 @@
  */
  
 require_once "config.php";
+
+
  
 $email = $username = $password = $Cpassword = "";
 $email_err = $username_err = $password_err = $Cpassword_err = "";
+//$min_pw_len = 5;
 if($_SERVER["REQUEST_METHOD"] == "POST")
 {
 	// Username Entry and Verification
@@ -25,40 +28,31 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		//Empty Field Case
 		$username_err = "Please enter a username.";
 	}else{
-		// Checks to see if username is Alphanumeric
-		if(preg_match('/^[A-Za-z0-9]+$/', trim($_POST["username"]))){
-			// Checks to see if username meets length requirements
-			if(strlen(trim($_POST["username"])) >= $min_username_len){
-				// Perpare to search DB for existing user
-				$sql = "SELECT id FROM users WHERE username = ?";
-				if($stmt = mysqli_prepare($link, $sql))
+		//$username = trim($_POST["username"]);
+		// Perpare to search DB for existing user
+		$sql = "SELECT id FROM users WHERE username = ?";
+		if($stmt = mysqli_prepare($link, $sql))
+		{
+			mysqli_stmt_bind_param($stmt, "s", $param_username);
+			$param_username = htmlspecialchars(trim($_POST["username"]));
+			if(mysqli_stmt_execute($stmt))
+			{
+				// Successful execution
+				mysqli_stmt_store_result($stmt);
+				if(mysqli_stmt_num_rows($stmt) == 1)
 				{
-					mysqli_stmt_bind_param($stmt, "s", $param_username);
-					$param_username = htmlspecialchars(trim($_POST["username"]));
-					if(mysqli_stmt_execute($stmt))
-					{
-						// Successful execution
-						mysqli_stmt_store_result($stmt);
-						if(mysqli_stmt_num_rows($stmt) == 1)
-						{
-							// Username is taken; User already exists
-							$username_err = "This username is already taken.";
-						}else{
-							// Username is available; Profile does not exist
-							$username = htmlspecialchars(trim($_POST["username"]));
-						}
-					}else{
-						// Unsuccessful Execution
-						echo "An error has occurred. Please try again later.";
-					}
+					// Username is taken; User already exists
+					$username_err = "This username is already taken.";
+				}else{
+					// Username is available; Profile does not exist
+					$username = htmlspecialchars(trim($_POST["username"]));
 				}
-				mysqli_stmt_close($stmt);
 			}else{
-				$username_err = "Username must be at least ".$min_username_len." characters long.";
+				// Unsuccessful Execution
+				echo "An error has occurred. Please try again later.";
 			}
-		}else{
-			$username_err = "Username can only have letters and numbers.";
 		}
+		mysqli_stmt_close($stmt);
 	}
 	
 	// Email Entry and Verification
@@ -70,6 +64,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		{
 			$email_err = "Please enter a valid email.";
 		}else{
+			//$email = trim($_POST["email"]);
 			// Prepare tp search DB for existing email
 			$sql = "SELECT id FROM users WHERE email = ?";
 			if($stmt = mysqli_prepare($link, $sql))
@@ -104,7 +99,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		$password_err = "Please enter a password.";
 	}elseif(strlen(trim($_POST["password"])) < $min_pw_len){
 		// Password length is too short for security
-		$password_err = "Password must be at least " . $min_pw_len . " characters long.";
+		$password_err = "Password must be at least " . $min_pw_len . " characters.";
 	}else{
 		// Password meets requirements
 		$password = htmlspecialchars(trim($_POST["password"]));
@@ -129,6 +124,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	if(empty($username_err) && empty($email_err) && empty($password_err) && empty($Cpassword_err))
 	{
 		// If there are no errors, registers the new profile into database and redirects USER to Login
+		/*$local_file = "Testing_Form.txt";
+		$handle = fopen($local_file, 'a') or die('cannot open file: ' . $local_file);
+		$data = $username." ".$email." ".$password."\n";
+		fwrite($handle, $data);
+		fclose($handle);*/
 		$sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
 		if($stmt = mysqli_prepare($link, $sql))
 		{
@@ -161,21 +161,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	<link href= "stupid.css" type = "text/css" rel = "stylesheet"/>
 		<meta charset = "UTF-8">
 		<title>QuizMatch: Sign Up</title>
-		<!--<link rel ="stylesheet" href="stupid.css">
-		<!--<style type="text/css">
-			body{ font: 14px sans-serif; }
-			.wrapper{ width: 350px; padding: 20px; }
-		</style>!-->
 		<style>
 		body
 		{
 			font: 14px sans-serif;
 		}
 		div.inputBar
-			{
+		{
 			width: 350px;
 			padding: 20px; 
-			}
+		}
+		div.userInputText
+		{
+			font-family:Helvetica;
+		}
 		</style>
 	</head>
 	<body>
