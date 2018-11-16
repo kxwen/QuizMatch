@@ -12,37 +12,41 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 	header("location: login.php");
 	exit;
 }
- $Q_name_err = "";
- $Q_name = "";
- $DESC = "";
- $S_checked = $M_checked = $L_checked = "";
- $size_err = "";
+
+require_once "config.php";
+
+ $Q_name = $DESC = $size = "";
+ $Results = array(); // Array of Results in the order they appear
+ $Questions = array(); // Array of questions in the order they appear
  
- $Q_1 = $Q_2 = $Q_3 = $Q_4 = $Q_5 = "";
- $Q_6 = $Q_7 = $Q_8 = $Q_9 = $Q_10 = "";
- $Q_11 = $Q_12 = $Q_13 = $Q_14 = $Q_15 = "";
- $R_1 = $R_2 = $R_3 = $R_4 = $R_5 = $R_6 = $R_7 = $R_8 = "";
+ /* Triple array of question answers and their corresponding trait;
+  * [i][j][k] where i is question number, j is answer number, and k is a binary specifying answer or trait
+  */
+ $Question_answers = array();
  
  if($_SERVER["REQUEST_METHOD"] == "POST")
  {
-	if(empty(trim($_POST["Q_name"])))
-	{
-		$Q_name_err = "Please enter a Questionnaire Name.";
-	}else{
-		$Q_name = htmlspecialchars(trim($_POST["Q_name"]));
-	}
+	$Q_name = trim($_POST["Q_name"]);
 	$DESC = htmlspecialchars(trim($_POST["DESC"]));
-	if($_POST["size"] == "large"){
-		$L_checked = "checked";
-	}elseif($_POST["size"] == "medium"){
-		$M_checked = "checked";
-	}else{
-		$S_checked = "checked";
+	$size = $_POST["size"];
+	for($i = 1; $i <= 15; $i++){ // Iterates through all possible questions
+		if(isset($_POST[("Q_".$i)])){ // Verifies that question exists
+			$Questions[$i] = trim($_POST[("Q_".$i)]);
+			for($j = 1; $j <= 5; $j++){ // Iterates through all possible answers for question i
+				if(isset($_POST[("A_".$i."_".$j)])){ // Verifies that answer exists
+					$Question_answers[$i][$j][0] = trim($_POST[("A_".$i."_".$j)]);
+					$Question_answers[$i][$j][1] = $_POST[("A_TAG_".$i."_".$j)];
+				}
+			}
+		}
 	}
- }
- 
- if(empty($S_checked) && empty($M_checked) && empty($L_checked)){//This should only be used once; upon arriving to the page.
-	 $S_checked = "checked";
+	for($i = 1; $i <=12; $i++){
+		$Results[$i] = trim($_POST[("R_".$i)]);
+	}
+	
+	$sql_quiz = "INSERT INTO quizzes (owner_id, name, description, size) VALUES (?, ?, ?, ?)";
+	$sql_question = "INSERT INTO questions (quiz_id, question, num_ans) VALUES (?, ?, ?)";
+	$sql_answer = "INSERT INTO answers (question_id, answer, trait) VALUES (?, ?, ?)";
  }
 ?>
 <!DOCTYPE html>
@@ -53,17 +57,6 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 		<link rel="stylesheet" href="stupid.css">
 		<style 
 			type="text/css">
-			div.userInputText
-			{
-				font-family:Helvetica;
-			}
-			div.numberOfQs
-			{
-				border-radius:15px;
-				width:30px;
-				background:#ee6e73;
-				font-weight:bold;
-			}
 		</style>
 	</head>
 	<body>
@@ -71,41 +64,39 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 			<div class="wrapper">
 				<form id="quizForm" action="">
 					<h2>Create a Questionnaire</h2>
-					<b>Number of Questions</b> 
-					<div class = numberOfQs>
-						<p id = "num_Qs" style = "text-align:center; color:white;">
-						</p>
-					</div>
-						
+					Number of Questions: 
+					<span style = "border-radius:10px; background:#ee6e73; padding:3px; color: white; font-weight:bold;" id="num_Qs"></span>
 					<div class="tab"><h3>Theme and Details</h3>
-						<div class = "userInputText">
-						<b>Questionnaire Name</b> <input style = "font-family: Helvetica" type="text" name="Q_name" class="form-control" value="<?php echo $Q_name; ?>"><br><br>
-						<b>Description</b> <textarea style = "font-family: Helvetica" name="DESC" rows="5" cols="33" maxlength="200"><?php echo $DESC;?></textarea><br><br>
-						<b>Size:</b> <input type="radio" name="size" value="small" <?php echo $S_checked;?> onclick="updateQs()">Small 
-							<input type="radio" name="size" value="medium" <?php echo $M_checked;?> onclick="updateQs()">Medium 
-							<input type="radio" name="size" value="large" <?php echo $L_checked;?> onclick="updateQs()">Large<br><br>
-						</div>
-					</div>
-					
-					<div class="tab"><h3>Final Results:</h3>
-						<div class = "userInputText">
-							<b>Result #1:</b> <input type="text" name="R_1" class="form-control" value="<?php echo $R_1; ?>"><br><br>
-							<b>Result #2:</b> <input type="text" name="R_2" class="form-control" value="<?php echo $R_2; ?>"><br><br>
-							<b>Result #3:</b> <input type="text" name="R_3" class="form-control" value="<?php echo $R_3; ?>"><br><br>
-							<b>Result #4:</b> <input type="text" name="R_4" class="form-control" value="<?php echo $R_4; ?>"><br><br>
-							<b>Result #5:</b> <input type="text" name="R_5" class="form-control" value="<?php echo $R_5; ?>"><br><br>
-							<b>Result #6:</b> <input type="text" name="R_6" class="form-control" value="<?php echo $R_6; ?>"><br><br>
-							<b>Result #7:</b> <input type="text" name="R_7" class="form-control" value="<?php echo $R_7; ?>"><br><br>
-							<b>Result #8:</b> <input type="text" name="R_8" class="form-control" value="<?php echo $R_8; ?>"><br><br>
-						</div>
+						<br><b>Questionnaire Name</b><br><span class="help-block"><font color="red" id="Q_name_err"></font></span><br> <input style = "font-family: Helvetica" type="text" name="Q_name" class="form-control"><br><br>
+						<b>Description</b><br><br> <textarea style = "font-family: Helvetica" name="DESC" rows="5" cols="33" maxlength="200"></textarea><br><br>
+						<b>Size:</b> <input type="radio" name="size" value="small" checked onclick="updateQs()">Small 
+							<input type="radio" name="size" value="medium" onclick="updateQs()">Medium 
+							<input type="radio" name="size" value="large" onclick="updateQs()">Large<br><br>
 					</div>
 					
 					<!--Area where the question tabs will be placed by Javascript-->
 					<span id="questions"></span>
 					
+					<!--Area for Final Results-->
+					<div class="tab" style="white-space:nowrap"><h3>Final Results:</h3>
+						<br><b>Result #1:</b> <input style = "font-family: Helvetica; width:70%" type="text" name="R_1" class="form-control"><span class="help-block"><font color="red" id="R_1_ERR"></font></span><br>
+						<br><b>Result #2:</b> <input type="text" name="R_2" class="form-control" style="width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_2_ERR"></font></span><br>
+						<br><b>Result #3:</b> <input type="text" name="R_3" class="form-control" style="width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_3_ERR"></font></span><br>
+						<br><b>Result #4:</b> <input type="text" name="R_4" class="form-control" style="width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_4_ERR"></font></span><br>
+						<br><b>Result #5:</b> <input type="text" name="R_5" class="form-control" style="width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_5_ERR"></font></span><br>
+						<br><b>Result #6:</b> <input type="text" name="R_6" class="form-control" style="width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_6_ERR"></font></span><br>
+						<br><b>Result #7:</b> <input type="text" name="R_7" class="form-control" style="width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_7_ERR"></font></span><br>
+						<br><b>Result #8:</b> <input type="text" name="R_8" class="form-control" style="width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_8_ERR"></font></span><br>
+						<br><b>Result #9:</b> <input type="text" name="R_9" class="form-control" style="width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_9_ERR"></font></span><br>
+						<br><b>Result #10:</b> <input type="text" name="R_10" class="form-control" style="width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_10_ERR"></font></span><br>
+						<br><b>Result #11:</b> <input type="text" name="R_11" class="form-control" style="width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_11_ERR"></font></span><br>
+						<br><b>Result #12:</b> <input type="text" name="R_12" class="form-control" style="width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_12_ERR"></font></span><br><br>
+					</div>
+					
 					<!--Buttons that control Navigation of page and website-->
 					<div style="float:left;">
-						<a href="quiz_home.php" class="btn pink rounded"><tt>Cancel</a>
+						<!--<a href="quiz_home.php" class="btn pink rounded"><tt>Cancel</a>-->
+						<button type="button" class="btn pink rounded" onclick="confirmLeave('quiz_home.php')">Cancel</button>
 					</div>
 					<div style="overflow:auto;">
 						<div style="float:right;">
@@ -117,95 +108,134 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 					</div>
 					<!--Controls Progress "bar"-->
 					<div style="text-align:center;margin-top:40px;">
-						<span class="step"></span><span class="step"></span><!--Area where page indicators will be placed by Javascript--><span id="num_pages"></span>
+						<div class="step"></div><!--Area where page indicators will be placed by Javascript--><span id="num_pages"></span><!--End of Insertion Area--><div class="step"></div>
 					</div>
 				</form>
 			</div>
 		</center>
 		<script>
-			/* Javascript used to manage the page.
-			 * Controls which Tab of the creation is shown and controls
-			 * Transitions. Helpful as to avoid having the page be one long
-			 * visual mess. Also restricts invalid inputs.
+			/* Javascript used to manage this specific page.
+			 * Functions used to add and remove questions and answers from page, as well as to increase/decrease progress "bar"
 			 */
 			var currentTab = 0; // Current tab is set to be the first tab (0)
 			var num_Questions = 0; // Current number of questions
 			var target_Questions = 0; // Target number of questions; used to update form size
-			var min_num_Ans = 2; // Minimum number of answers that a question must have
-			var max_num_Ans = 5; // Maximum number of answers that a question may have
 			var Question_num_ANS = [min_num_Ans]; // Records number of Answers for each question.
 			for(var i = 0; i<15; i++)Question_num_ANS[i] = 0;
 			updateQs();
 			showTab(currentTab); // Display the current tab
-
-			function showTab(n) {
-			  // This function will display the specified tab of the form ...
-			  var x = document.getElementsByClassName("tab");
-			  x[n].style.display = "block";
-			  // ... and fix the Previous/Next buttons:
-			  if (n == 0) {
-				document.getElementById("prevBtn").style.display = "none";
-			  } else {
-				document.getElementById("prevBtn").style.display = "inline";
-			  }
-			  if (n == (x.length - 1)) {
-				document.getElementById("nextBtn").innerHTML = "Submit";
-			  } else {
-				document.getElementById("nextBtn").innerHTML = "Next";
-			  }
-			  // ... and run a function that displays the correct step indicator:
-			  fixStepIndicator(n)
+			
+			// Used to reset error message regarding field & invalid flag on input field
+			function reset_Validation_Error(input_field, element_id){
+				document.getElementById(element_id).innerHTML = "";
+				input_field.className -= " invalid";
 			}
-
-			function nextPrev(n) {
-			  // This function will figure out which tab to display
-			  var x = document.getElementsByClassName("tab");
-			  // Exit the function if any field in the current tab is invalid:
-			  if (n == 1 && !validateForm()) return false;
-			  // Hide the current tab:
-			  x[currentTab].style.display = "none";
-			  // Increase or decrease the current tab by 1:
-			  currentTab = currentTab + n;
-			  // if you have reached the end of the form... :
-			  if (currentTab >= x.length) {
-				//...the form gets submitted:
-				document.getElementById("quizForm").submit();
+			
+			// Assigns error message to error message location (element_id), sets invalid flag on input field, and returns false for "valid" boolean
+			function validationError(input_field, element_id, error_message){
+				document.getElementById(element_id).innerHTML = error_message;
+				input_field.className += " invalid";
 				return false;
-			  }
-			  // Otherwise, display the correct tab:
-			  showTab(currentTab);
 			}
-
+			
+			// Override of validateForm() of config.php. Specifically for this page
 			function validateForm() {
 			  // This function deals with validation of the form fields
-			  var x, y, i, valid = true;
+			  var x, y, i, j, valid = true;
+			  var Tag_err = false;
+			  var prev_questions;
 			  x = document.getElementsByClassName("tab");
 			  y = x[currentTab].getElementsByTagName("input");
+			  z = x[currentTab].getElementsByTagName("select");
+			  
 			  // A loop that checks every input field in the current tab:
 			  for (i = 0; i < y.length; i++) {
-				// If a field is empty...
-				if (y[i].value == "") {
-				  // add an "invalid" class to the field:
-				  y[i].className += " invalid";
-				  // and set the current valid status to false:
-				  valid = false;
+				if(currentTab == 0 && i == 0){
+					reset_Validation_Error(y[i], "Q_name_err");
+					if(y[i].value == ""){
+						valid = validationError(y[i], "Q_name_err", "Please enter a Questionnaire Name.");
+					}else{ 
+						if(y[i].value.length < min_Quiz_Name_Length || y[i].value.length > max_Quiz_Name_Length){
+							valid = validationError(y[i], "Q_name_err", "Questionnaire name must be "+min_Quiz_Name_Length+"-"+max_Quiz_Name_Length+" characters long.");
+						}
+					}
+				}else if(currentTab == (num_Questions + 1)){ // Results Page Verification
+					reset_Validation_Error(y[i], "R_"+(i+1)+"_ERR");
+					// Checks to see if catagory name matches naming criteria
+					if(y[i].value.trim().match(/^([A-Za-z0-9]+[\sA-Za-z0-9]*)/) == null){
+						if(y[i].value == ""){
+							// Empty String
+							valid = validationError(y[i], "R_"+(i+1)+"_ERR", "Please enter a catagory name.");
+						}else if(y[i].value.length < 2){
+							// String too short
+							valid = validationError(y[i], "R_"+(i+1)+"_ERR", "Please enter a longer catagory name.");
+						}else{
+							// String contains illegal characters
+							valid = validationError(y[i], "R_"+(i+1)+"_ERR", "Catagory name cannot have special characters.");
+						}
+					}else{
+						// Checks to see if current catagory is a duplicate of a previous one
+						for(j = 0; j < i; j++){
+							if(y[i].value.toLowerCase() === y[j].value.toLowerCase()){
+								valid = validationError(y[i], "R_"+(i+1)+"_ERR", "Duplicate catagory. Please enter a unique catagory.");
+							}						
+						}
+					}
+				}else if(currentTab != 0 && currentTab != (num_Questions+1)){
+					if(i==0){
+						reset_Validation_Error(y[i], "Q_"+currentTab+"_ERR");
+						if(y[i].value.trim().match(/^([A-Za-z0-9]+[\.\?\!\-\sA-Za-z0-9]*[\.\?\!\sA-Za-z0-9])/) == null){
+							if(y[i].value.trim() == ""){
+								// Empty String
+								valid = validationError(y[i], "Q_"+currentTab+"_ERR", "Please enter a question.");
+							}else{
+								// String contains illegal characters
+								valid = validationError(y[i], "Q_"+currentTab+"_ERR", "Question can only have '. ! ? -' special characters.");
+							}
+						}else{
+							for(j = 1; j < currentTab ; j++){
+								if(document.getElementById("Q_"+j).value == y[i].value){
+									valid = validationError(y[i], "Q_"+currentTab+"_ERR", "Duplicate Question. Please enter a unique question.");
+								}
+							}
+						}
+					}else{
+						reset_Validation_Error(y[i], "A_"+currentTab+"_"+i+"_ERR");
+						reset_Validation_Error(z[i-1], "A_"+currentTab+"_"+i+"_ERR");
+						if(y[i].value.trim().match(/^([A-Za-z0-9]+[\.\?\!\-\sA-Za-z0-9]*[\.\?\!\sA-Za-z0-9])/) == null){
+							if(y[i].value.trim() == ""){
+								// Empty String
+								valid = validationError(y[i], "A_"+currentTab+"_"+i+"_ERR", "Please enter an answer.");
+							}else{
+								// String contains illegal characters
+								valid = validationError(y[i], "A_"+currentTab+"_"+i+"_ERR", "Answer can only have '. ! ? -' special characters.");
+							}
+						}else{
+							for(j = 1; j < i; j++){
+								// Iterates through all previous answer fields to make sure no two are exactly the same.
+								if(y[i].value.toLowerCase() === y[j].value.toLowerCase()){
+									valid = validationError(y[i], "A_"+currentTab+"_"+i+"_ERR", "Please enter a unique answer.");
+								}	
+							}
+						}
+					}
 				}
 			  }
+			  for(i = 0 ; i < z.length; i++){
+				  for(j = 0 ; j < i; j++){
+					  if(z[i].value == z[j].value){
+						  if(document.getElementById("A_"+currentTab+"_"+(i+1)+"_ERR").innerHTML == ""){
+							  valid = validationError(z[i], "A_"+currentTab+"_"+(i+1)+"_ERR", "Duplicate Tag. Please select another.");
+						  }
+					  }
+				  }
+			  }
+			  
 			  // If the valid status is true, mark the step as finished and valid:
 			  if (valid) {
 				document.getElementsByClassName("step")[currentTab].className += " finish";
 			  }
 			  return valid; // return the valid status
-			}
-
-			function fixStepIndicator(n) {
-			  // This function removes the "active" class of all steps...
-			  var i, x = document.getElementsByClassName("step");
-			  for (i = 0; i < x.length; i++) {
-				x[i].className = x[i].className.replace(" active", "");
-			  }
-			  //... and adds the "active" class to the current step:
-			  x[n].className += " active";
 			}
 			
 			// Automation to fill out code for form dependent on size template
@@ -224,17 +254,17 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 				}
 			}
 			
-			// Universal Function to be used by deleteQuestion() and removeAns()
+			// Universal Function to be used by deleteQuestion() and removeAns(); assumes inputs are IDs to DIV Elements 
 			function deleteElement(parentDIV,childDIV){
 				if(parentDIV == childDIV)
 				{
-					alert("Parent cannot be removed.");
+					alert("An Error has occured: Parent cannot be removed.");
 				}else if(document.getElementById(childDIV)){
 					var child = document.getElementById(childDIV);
 					var parent = document.getElementById(parentDIV);
 					parent.removeChild(child);
 				}else{
-					alert("Child div not found");
+					alert("An Error has occured: Child div not found.");
 				}
 			}
 			
@@ -243,17 +273,28 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 				// Creation of core components
 				var local_tab = document.createElement("DIV");
 				var question_input = document.createElement("INPUT");
-				var page_indicator = document.createElement('span');
+				var page_indicator = document.createElement("DIV");
+				
+				//<span class="help-block"><font color="red" id="R_12_ERR"></font></span>
+				var err_block = document.createElement("SPAN");
+				var err_msg = document.createElement("FONT");
+				
+				err_block.setAttribute("class", "help-block");
+				err_msg.setAttribute("color", "red");
+				err_msg.setAttribute("id", "Q_"+(num_Questions+1)+"_ERR");
+				err_block.appendChild(err_msg);
 				
 				// Setting up attributes for Tab DIV
 				local_tab.setAttribute("class", "tab");
-				local_tab.innerHTML = "<h3>Question #"+(num_Questions+1)+":</h3><b>Question:</b>";
+				local_tab.setAttribute("style", "white-space:nowrap");
+				local_tab.innerHTML = "<h3>Question #"+(num_Questions+1)+":</h3> <b>Question: </b>";
 				
 				// Setting Attributes of the Question Text Field
 				question_input.setAttribute("type", "text");
 				question_input.setAttribute("class", "form-control");
 				question_input.setAttribute("Name", "Q_"+(num_Questions+1));
 				question_input.setAttribute("id", "Q_"+(num_Questions+1));
+				question_input.setAttribute("style", "width:75%; font-family:Helvetica");
 				
 				// Sub Span used to increase number of answers
 				var sub_span = document.createElement('span');
@@ -262,7 +303,7 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 				// Button to decrease number of answers
 				var rmv_Ans = document.createElement("button");
 				
-				// Setting up Attributes for Add and RMV Buttons
+				// Setting up Attributes for Add and RMV Buttons; RMV button hidden by default
 				add_Ans.setAttribute("type", "button");
 				add_Ans.setAttribute("Name", "add_Ans_"+(num_Questions+1));
 				add_Ans.setAttribute("id", "add_Ans_"+(num_Questions+1));
@@ -276,8 +317,8 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 				rmv_Ans.innerHTML = "Remove Answer";
 				
 				// Adding functionality to the buttons
-				add_Ans.setAttribute("onclick", "addAns(currentTab-2)");
-				rmv_Ans.setAttribute("onclick", "removeAns(currentTab-2)");
+				add_Ans.setAttribute("onclick", "addAns(currentTab-1)");
+				rmv_Ans.setAttribute("onclick", "removeAns(currentTab-1)");
 				
 				// Setting up Attributes for the Page Indicator
 				page_indicator.setAttribute("class", "step");
@@ -288,6 +329,8 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 				
 				// Appending most Elements into Tab; Preparation for Insertion
 				local_tab.appendChild(question_input);
+				local_tab.appendChild(err_block);
+				local_tab.innerHTML += "<br>";
 				local_tab.appendChild(sub_span);
 				local_tab.innerHTML += "<br>";
 				local_tab.appendChild(add_Ans);
@@ -307,23 +350,87 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 				deleteElement("num_pages", ("Q_page_"+num_Questions));
 			}
 			
+			// Helper Function used to create Tag drop down menu for Answers
+			// Traits array defined in config.php
+			function createSelect(){
+				var sel_list = document.createElement("SELECT");
+				var Opt_0 = document.createElement("OPTION");
+				var Opt_1 = document.createElement("OPTION");
+				var Opt_2 = document.createElement("OPTION");
+				var Opt_3 = document.createElement("OPTION");
+				var Opt_4 = document.createElement("OPTION");
+				
+				Opt_0.setAttribute("value", "No Trait");
+				Opt_1.setAttribute("value", "<?php echo $traits[0];?>");
+				Opt_2.setAttribute("value", "<?php echo $traits[1];?>");
+				Opt_3.setAttribute("value", "<?php echo $traits[2];?>");
+				Opt_4.setAttribute("value", "<?php echo $traits[3];?>");
+				
+				Opt_0.innerHTML = "No Trait";
+				Opt_1.innerHTML = "<?php echo $traits[0];?>";
+				Opt_2.innerHTML = "<?php echo $traits[1];?>";
+				Opt_3.innerHTML = "<?php echo $traits[2];?>";
+				Opt_4.innerHTML = "<?php echo $traits[3];?>";
+				
+				sel_list.appendChild(Opt_0);
+				sel_list.appendChild(Opt_1);
+				sel_list.appendChild(Opt_2);
+				sel_list.appendChild(Opt_3);
+				sel_list.appendChild(Opt_4);
+				
+				return sel_list;
+			}
+			
 			// Insertion of new Answer field
 			function addAns(current_question){
 				var num_Ans = Question_num_ANS[current_question];
+				// Adds answer only if current total for current question does not meet maximum.
 				if(num_Ans < max_num_Ans){
+					// Create HTML Elements
 					var div_answer = document.createElement("DIV");
 					var answer_input = document.createElement("INPUT");
+					var tag_list = createSelect();
+					
+					var err_block = document.createElement("SPAN");
+					var err_msg = document.createElement("FONT");
+				
+					err_block.setAttribute("class", "help-block");
+					err_msg.setAttribute("color", "red");
+					err_msg.setAttribute("id", "A_"+(current_question+1)+"_"+(num_Ans+1)+"_ERR");
+					err_block.appendChild(err_msg);
+					
+					// Assigns DIV attributes needed to reference specific question
 					div_answer.setAttribute("id", "A_DIV_"+((current_question+1)+"_"+(num_Ans+1)));
-					div_answer.innerHTML="<b>Answer #"+(num_Ans+1)+":</b>";
+					div_answer.setAttribute("style", "white-space:nowrap");
+					div_answer.innerHTML="<br><b>Answer #"+(num_Ans+1)+": </b>";
+					
+					// Assigns text input field attributes to be referenced when form is submitted
 					answer_input.setAttribute("type", "text");
-					answer_input.setAttribute("Name", "");
+					
+					answer_input.setAttribute("Name", ("A_"+(current_question+1)+"_"+(num_Ans+1)));
 					answer_input.setAttribute("id", ("A_"+(current_question+1)+"_"+(num_Ans+1)));
+					answer_input.setAttribute("style", "width:70%; font-family:Helvetica");
+					
+					// Assigns id to Select List for reference later
+					tag_list.setAttribute("id", ("A_TAG_"+(current_question+1)+"_"+(num_Ans+1)));
+					tag_list.setAttribute("name", ("A_TAG_"+(current_question+1)+"_"+(num_Ans+1)));
+					tag_list.setAttribute("style", "width:15%");
+					
+					// Append text field and Tag list to DIV
 					div_answer.appendChild(answer_input);
+					div_answer.appendChild(tag_list);
+					div_answer.appendChild(err_block);
+					
+					// Append DIV to Form
 					document.getElementById(("add_Ans_field_"+(current_question+1))).appendChild(div_answer);
+					
+					// Update array and determine which buttons need to be hidden/shown if any
 					Question_num_ANS[current_question]++;
 					if(Question_num_ANS[current_question] >= max_num_Ans){
+						// Sets Add Answer button to hidden; button re-revealed in removeAns()
 						document.getElementById("add_Ans_"+(current_question+1)).style.display = "none";
 					}else if(Question_num_ANS[current_question] > min_num_Ans){
+						// Sets Remove Answer button to revealed; button re-hidden in removeAns()
 						document.getElementById("rmv_Ans_"+(current_question+1)).style.display = "inline";
 					}
 				}
@@ -332,12 +439,18 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 			// Remove Answer field from the bottom of the list
 			function removeAns(current_question){
 				var num_Ans = Question_num_ANS[current_question];
+				// Removes only if current total number of answers for the question meets minimum requirements
 				if(num_Ans > min_num_Ans){
+					// Deletes Answer by latest one
 					deleteElement(("add_Ans_field_"+(current_question+1)), ("A_DIV_"+(current_question+1)+"_"+num_Ans));
+					
+					// Update array and determine which buttons need to be hidden/shown if any
 					Question_num_ANS[current_question]--;
 					if(Question_num_ANS[current_question] <= min_num_Ans){
+						// Sets Remove Answer button to hidden; button re-revealed in addAns()
 						document.getElementById("rmv_Ans_"+(current_question+1)).style.display = "none";
 					}else if(Question_num_ANS[current_question] < max_num_Ans){
+						// Sets Add Answer button to revealed; button re-hidden in addAns()
 						document.getElementById("add_Ans_"+(current_question+1)).style.display = "inline";
 					}
 				}
