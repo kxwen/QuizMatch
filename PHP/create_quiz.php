@@ -232,13 +232,13 @@ require_once "config.php";
 			  for (i = 0; i < y.length; i++) {
 				if(currentTab == 0 && i == 0){
 					reset_Validation_Error(y[i], "Q_name_err");
-					if(y[i].value.trim().match(/^([A-Za-z0-9][\.\?\!\-\sA-Za-z0-9]{2,})$/) == null){
+					if(y[i].value.trim().match(/^([A-Za-z0-9][\'\.\?\!\-\sA-Za-z0-9]{2,})$/) == null){
 						if(y[i].value.trim() == ""){
 							valid = validationError(y[i], "Q_name_err", "Please enter a Questionnaire Name.");
 						}else if(y[i].value.trim().length < min_Quiz_Name_Length){
 							valid = validationError(y[i], "Q_name_err", "Questionnaire name must be at least "+min_Quiz_Name_Length+" characters long.");
 						}else{
-							valid = validationError(y[i], "Q_name_err", "Questionnaire Name cannot have any special characters except '. ? ! -'.");
+							valid = validationError(y[i], "Q_name_err", "Questionnaire Name cannot have any special characters except '. ? ! ' -'.");
 						}
 					}
 				}else if(currentTab == (num_Questions + 1)){ // Results Page Verification
@@ -263,13 +263,13 @@ require_once "config.php";
 				}else if(currentTab != 0 && currentTab != (num_Questions+1)){
 					if(i==0){
 						reset_Validation_Error(y[i], "Q_"+currentTab+"_ERR");
-						if(y[i].value.trim().match(/^([A-Za-z0-9]+[\.\?\!\-\sA-Za-z0-9]*)$/) == null){
+						if(y[i].value.trim().match(/^([A-Za-z0-9]+[\'\.\?\!\-\sA-Za-z0-9]*)$/) == null){
 							if(y[i].value.trim() == ""){
 								// Empty String
 								valid = validationError(y[i], "Q_"+currentTab+"_ERR", "Please enter a question.");
 							}else{
 								// String contains illegal characters
-								valid = validationError(y[i], "Q_"+currentTab+"_ERR", "Question cannot have any special characters except '. ? ! -'.");
+								valid = validationError(y[i], "Q_"+currentTab+"_ERR", "Question cannot have any special characters except '. ? ! ' -'.");
 							}
 						}else{
 							for(j = 1; j < currentTab ; j++){
@@ -281,13 +281,13 @@ require_once "config.php";
 					}else{
 						reset_Validation_Error(y[i], "A_"+currentTab+"_"+i+"_ERR");
 						reset_Validation_Error(z[i-1], "A_"+currentTab+"_"+i+"_ERR");
-						if(y[i].value.trim().match(/^([A-Za-z0-9]+[\.\?\!\-\sA-Za-z0-9]*)$/) == null){
+						if(y[i].value.trim().match(/^([A-Za-z0-9]+[\'\.\?\!\-\sA-Za-z0-9]*)$/) == null){
 							if(y[i].value.trim() == ""){
 								// Empty String
 								valid = validationError(y[i], "A_"+currentTab+"_"+i+"_ERR", "Please enter an answer.");
 							}else{
 								// String contains illegal characters
-								valid = validationError(y[i], "A_"+currentTab+"_"+i+"_ERR", "Answer cannot have any special characters except '. ? ! -'.");
+								valid = validationError(y[i], "A_"+currentTab+"_"+i+"_ERR", "Answer cannot have any special characters except '. ? ! ' -'.");
 							}
 						}else{
 							for(j = 1; j < i; j++){
