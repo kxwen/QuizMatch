@@ -279,35 +279,90 @@ a:not(.btn):not(.noeffect):after {
 .modal .close {transition:all 200ms}
 
 /*** tooltips from http://codepen.io/trezy/pen/Khnzy ***/
-[data-tooltip] {position:relative}
-[data-tooltip]:before, [data-tooltip]:after {display:none; position:absolute; top:0}
-[data-tooltip]:hover:after,[data-tooltip]:hover:before {display:block}
-[data-tooltip]:hover:before {
-  border-bottom:.6em solid #111111;
-  border-bottom:.6em solid #111111;
-  border-left:7px solid transparent;
-  border-right:7px solid transparent;
-  content:"";
-  left:0;
-  margin-top:12px;
-  z-index:2000;
+/*** ALTERED ***/
+[data-tooltip] {
+  margin:20px;
+  position: relative;
 }
-[data-tooltip]:hover:after {
-  z-index:2000;
-  background-color:rgba(0,0,0,0.8);
-  border:4px solid rgba(0,0,0,0.8);
-  border-radius:7px;
-  color:white;
-  text-transform:none;
-  font-size: 12px;
-  content:attr(data-tooltip);
-  left:0;
-  top:2px;
-  margin-left:-20px;
-  margin-top:1.5em;
-  padding:5px 15px;
-  white-space:pre-wrap;
-  min-width:100px;
+
+[data-tooltip]:before,
+[data-tooltip]:after {
+  display: none;
+  position: absolute;
+  /*top: 60%;*/
+}
+
+[data-tooltip]:before {
+  content: "";
+    position: absolute;
+    top:-6px;
+    left:50%;
+    transform: translateX(-50%);
+    border-width: 4px 6px 0 6px;
+    border-style: solid;
+    border-color: #ee6e73 transparent transparent     transparent;
+	z-index: 100;
+}
+
+[data-tooltip]:after {
+  content: attr(data-tooltip-message);
+    position: absolute;
+    left:50%;
+    top:-6px;
+    transform: translateX(-50%)   translateY(-100%);
+    background: #ee6e73;
+    text-align: center;
+    color: #fff;
+    padding:5px 10px;
+    font-size: 12px;
+    min-width: 80px;
+    border-radius: 5px;
+}
+
+[data-tooltip-position='left']:before{
+	left:0%;
+	top:50%;
+	margin-left:-12px;
+	transform:translatey(-50%) rotate(-90deg)
+}
+[data-tooltip-position='top']::before{
+  left:50%;
+}
+[data-tooltip-position='bottom']::before{
+  top:100%;
+  margin-top:8px;
+  transform: translateX(-50%) translatey(-100%) rotate(-180deg)
+}
+[data-tooltip-position='right']::before{
+  left:100%;
+  top:50%;
+  margin-left:1px;
+  transform:translatey(-50%) rotate(90deg)
+}
+[data-tooltip-position='left']::after{
+  left:0%;
+  top:50%;
+  margin-left:-8px;
+  transform: translateX(-100%)   translateY(-50%);
+}
+[data-tooltip-position='top']::after{
+  left:50%;
+}
+[data-tooltip-position='bottom']::after{
+  top:100%;
+  margin-top:8px;
+  transform: translateX(-50%) translateY(0%);
+}
+[data-tooltip-position='right']::after{
+  left:100%;
+  top:50%;
+  margin-left:8px;
+  transform: translateX(0%)   translateY(-50%);
+}
+
+[data-tooltip]:hover:after,
+[data-tooltip]:hover:before {
+  display: block;
 }
 
 /*** accordion ***/
@@ -414,7 +469,7 @@ select.invalid{
   border: none;
   border-radius: 50%;
   display: inline-block;
-  opacity: 0.5;
+  opacity: 1;
 }
 
 /* Mark the active step: */
@@ -425,5 +480,7 @@ select.invalid{
 
 /* Mark the steps that are finished and valid: */
 .step.finish {
-  background-color: #F46E73;
+  background-color: #f7a0a2;
 } 
+
+.step.finish:hover {box-shadow:0 0 10px #666; text-decoration:none; cursor:pointer}

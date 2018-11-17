@@ -30,7 +30,6 @@ $link = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
 if($link === false)die("ERROR: Unable to connect. " . mysqli_connect_error());
 
 $min_username_len = 6;
-$max_username_len = 12;
 
 $min_pw_len = 5;
 
@@ -38,6 +37,10 @@ $traits[0] = "SANGUINE";
 $traits[1] = "PHLEGMATIC";
 $traits[2] = "CHOLERIC";
 $traits[3] = "MELANCHOLIC";
+$catagories = array(array("",""),array($traits[0], $traits[1]), array($traits[0], $traits[2]), array($traits[0], $traits[3]),
+								 array($traits[1], $traits[0]), array($traits[1], $traits[2]), array($traits[1], $traits[3]),
+								 array($traits[2], $traits[0]), array($traits[2], $traits[1]), array($traits[2], $traits[3]),
+								 array($traits[3], $traits[0]), array($traits[3], $traits[1]), array($traits[3], $traits[2]));
 
 ?>
 <!DOCTYPE html>
@@ -48,14 +51,14 @@ $traits[3] = "MELANCHOLIC";
 			var min_num_Ans = 2; // Minimum number of answers that a question must have
 			var max_num_Ans = 5; // Maximum number of answers that a question may have
 			
-			min_Quiz_Name_Length = 8;
-			max_Quiz_Name_Length = 32;
+			// Variables for managing Quiz Creation/Edit
+			var min_Quiz_Name_Length = 3;
 			
 			// Functions
 			
 			// Functions for navigation
-			function confirmLeave(path){
-				if(confirm("Do you wish to leave this page?\n You will lose all unsaved data.")){
+			function confirmLeave(msg, path){
+				if(confirm(msg)){
 					location.href = path;
 				}
 			}
@@ -79,16 +82,31 @@ $traits[3] = "MELANCHOLIC";
 			  // ... and run a function that displays the correct step indicator:
 			  fixStepIndicator(n)
 			}
+			
+			function switch_to_Finished_Tab(n){
+				var x = document.getElementsByClassName("tab");
+				var y = document.getElementsByClassName("step");
+				if(n >= currentTab || n < 0) return false;
+				y[currentTab].className += " finish"
+				y[currentTab].setAttribute("onclick", "switch_to_Finished_Tab("+currentTab+")");
+				x[currentTab].style.display = "none";
+				currentTab = n;
+				y[currentTab].className = y[currentTab].className.replace(" finish", "");
+				showTab(currentTab);
+			}
 
 			function nextPrev(n) {
 			  // This function will figure out which tab to display
 			  var x = document.getElementsByClassName("tab");
+			  var y = document.getElementsByClassName("step");
 			  // Exit the function if any field in the current tab is invalid:
 			  if (n == 1 && !validateForm()) return false;
 			  // Hide the current tab:
 			  x[currentTab].style.display = "none";
 			  // Increase or decrease the current tab by 1:
+			  if(n == -1) y[currentTab].className += " finish";
 			  currentTab = currentTab + n;
+			  if(currentTab < num_Questions+1) y[currentTab].className = y[currentTab].className.replace(" finish", "");
 			  // if you have reached the end of the form... :
 			  if (currentTab >= x.length) {
 				//...the form gets submitted:

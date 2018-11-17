@@ -16,37 +16,111 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 require_once "config.php";
 
  $Q_name = $DESC = $size = "";
- $Results = array(); // Array of Results in the order they appear
- $Questions = array(); // Array of questions in the order they appear
+ $Result = "";
+ $Question = "";
+ $Answer = "";
+ $Trait = "";
  
- /* Triple array of question answers and their corresponding trait;
-  * [i][j][k] where i is question number, j is answer number, and k is a binary specifying answer or trait
-  */
- $Question_answers = array();
+ $valid_quiz = $valid_questions = $valid_answers = $valid_results = true;
+ $sql_quiz = "INSERT INTO quizzes (owner_id, name, description, size) VALUES (?, ?, ?, ?)";
+ $sql_question = "INSERT INTO questions (quiz_id, question) VALUES (?, ?)";
+ $sql_result = "INSERT INTO quiz_results (quiz_id, catagory_name, primary_trait, secondary_trait) VALUES (?,?,?,?)";
+ $sql_answer = "INSERT INTO answers (question_id, answer, trait) VALUES (?, ?, ?)";
  
  if($_SERVER["REQUEST_METHOD"] == "POST")
  {
 	$Q_name = trim($_POST["Q_name"]);
 	$DESC = htmlspecialchars(trim($_POST["DESC"]));
 	$size = $_POST["size"];
-	for($i = 1; $i <= 15; $i++){ // Iterates through all possible questions
-		if(isset($_POST[("Q_".$i)])){ // Verifies that question exists
-			$Questions[$i] = trim($_POST[("Q_".$i)]);
-			for($j = 1; $j <= 5; $j++){ // Iterates through all possible answers for question i
-				if(isset($_POST[("A_".$i."_".$j)])){ // Verifies that answer exists
-					$Question_answers[$i][$j][0] = trim($_POST[("A_".$i."_".$j)]);
-					$Question_answers[$i][$j][1] = $_POST[("A_TAG_".$i."_".$j)];
+	// Begin Insertion Preparation of Quiz
+	if($stmt_quiz = mysqli_prepare($link, $sql_quiz)){
+		mysqli_stmt_bind_param($stmt_quiz, "isss", $param_owner_id, $param_Q_name, $param_DESC, $param_size);
+		$param_owner_id = $_SESSION["id"];
+		$param_Q_name = $Q_name;
+		$param_DESC = $DESC;
+		$param_size = $size;
+		// Attempt to insert Quiz
+		if(mysqli_stmt_execute($stmt_quiz)){
+			// Quiz Insertion Success
+			$quiz_id = mysqli_insert_id($link); // Store quiz_id for reference from questions and results
+			for($i = 1; $i <= 15; $i++){ // Iterates through all possible questions
+				if(isset($_POST[("Q_".$i)])){ // Verifies that question exists
+					$Question = trim($_POST[("Q_".$i)]);
+					// Begins Insertion Preparation of Question
+					if($stmt_question = mysqli_prepare($link, $sql_question)){
+						mysqli_stmt_bind_param($stmt_question, "is", $param_quiz_id, $param_Question);
+						$param_quiz_id = $quiz_id;
+						$param_Question = $Question;
+						// Attempt to insert Question
+						if(mysqli_stmt_execute($stmt_question)){
+							// Question Insert Success
+							$question_id = mysqli_insert_id($link);
+							for($j = 1; $j <= 5; $j++){ // Iterates through all possible answers for question i
+								if(isset($_POST[("A_".$i."_".$j)])){ // Verifies that answer exists
+									$Answer = trim($_POST[("A_".$i."_".$j)]);
+									$Trait = $_POST[("A_TAG_".$i."_".$j)];
+									// Begins Insertion Preparation of Answer
+									if($stmt_answer = mysqli_prepare($link, $sql_answer)){
+										mysqli_stmt_bind_param($stmt_answer, "iss", $param_question_id, $param_answer, $param_trait);
+										$param_question_id = $question_id;
+										$param_answer = $Answer;
+										$param_trait = $Trait;
+										// Attempt to insert Answer
+										if(!mysqli_stmt_execute($stmt_answer)){
+											// Answer Insertion Failure
+											echo "An Error has occurred. Please try again later.";
+											$valid_answers = false;
+										}
+									}
+									mysqli_stmt_close($stmt_answer);
+								}else{
+									// If the for loop encounters a non-existent answer, it should have
+									// already reached the last answer.
+									break;
+								}
+							}
+						}else{
+							// Question Insertion Failure
+							echo "An Error has occurred. Please try again later.";
+							$valid_questions = false;
+						}
+					}
+					mysqli_stmt_close($stmt_question);
+				}else{
+					// If the for loop encounters a non-existent question, it should have
+					// already reached the last question.
+					break;
 				}
 			}
+			for($i = 1; $i <=12; $i++){// Itterates through all Results
+				$Result = trim($_POST[("R_".$i)]);
+				// Begin Insertion Preparation of Result
+				if($stmt_result = mysqli_prepare($link, $sql_result)){
+					mysqli_stmt_bind_param($stmt_result, "isss", $param_quiz_id, $param_result, $param_trait_1, $param_trait_2);
+					$param_quiz_id = $quiz_id;
+					$param_result = $Result;
+					$param_trait_1 = $catagories[$i][0];
+					$param_trait_2 = $catagories[$i][1];
+					// Attempts to insert Result
+					if(!mysqli_stmt_execute($stmt_result)){
+						// Result Insertion Failure
+						echo "An Error has occurred. Please try again later.";
+						$valid_results = false;
+					}
+				}
+				mysqli_stmt_close($stmt_result);
+			}
+		}else{
+			// Quiz Insertion Failure
+			echo "An Error has occurred. Please try again later.";
+			$valid_quiz = false;
 		}
+		mysqli_stmt_close($stmt_quiz);
 	}
-	for($i = 1; $i <=12; $i++){
-		$Results[$i] = trim($_POST[("R_".$i)]);
+	if($valid_quiz && $valid_questions && $valid_answers && $valid_results){
+		header("location: quiz_home.php"); // Temporary Destination
 	}
-	
-	$sql_quiz = "INSERT INTO quizzes (owner_id, name, description, size) VALUES (?, ?, ?, ?)";
-	$sql_question = "INSERT INTO questions (quiz_id, question, num_ans) VALUES (?, ?, ?)";
-	$sql_answer = "INSERT INTO answers (question_id, answer, trait) VALUES (?, ?, ?)";
+	mysqli_close($link);
  }
 ?>
 <!DOCTYPE html>
@@ -55,20 +129,17 @@ require_once "config.php";
 		<meta charset="UTF-8">
 		<title>Create a Questionnaire</title>
 		<link rel="stylesheet" href="stupid.css">
-		<style 
-			type="text/css">
-		</style>
+		<style type="text/css"></style>
 	</head>
 	<body>
-		<center>
-			<div class="wrapper">
-				<form id="quizForm" action="">
-					<h2>Create a Questionnaire</h2>
-					Number of Questions: 
-					<span style = "border-radius:10px; background:#ee6e73; padding:3px; color: white; font-weight:bold;" id="num_Qs"></span>
-					<div class="tab"><h3>Theme and Details</h3>
-						<br><b>Questionnaire Name</b><br><span class="help-block"><font color="red" id="Q_name_err"></font></span><br> <input style = "font-family: Helvetica" type="text" name="Q_name" class="form-control"><br><br>
-						<b>Description</b><br><br> <textarea style = "font-family: Helvetica" name="DESC" rows="5" cols="33" maxlength="200"></textarea><br><br>
+			<div class="container">
+			<center>
+				<form id="quizForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+					<h2>Create a Questionnaire:</h2>
+					Number of Questions: <span style = "border-radius:10px; background:#ee6e73; padding:3px; color: white; font-weight:bold;" id="num_Qs"></span>
+					<div class="tab"><h3>Theme and Details:</h3>
+						<br><b>Questionnaire Name:</b><br><span class="help-block"><font color="red" id="Q_name_err"></font></span><br> <input style = "font-family: Helvetica" type="text" name="Q_name" class="form-control"><br><br>
+						<b>Description:</b><br><br> <textarea style = "font-family: Helvetica" name="DESC" rows="5" cols="33" maxlength="200"></textarea><br><br>
 						<b>Size:</b> <input type="radio" name="size" value="small" checked onclick="updateQs()">Small 
 							<input type="radio" name="size" value="medium" onclick="updateQs()">Medium 
 							<input type="radio" name="size" value="large" onclick="updateQs()">Large<br><br>
@@ -78,25 +149,27 @@ require_once "config.php";
 					<span id="questions"></span>
 					
 					<!--Area for Final Results-->
-					<div class="tab" style="white-space:nowrap"><h3>Final Results:</h3>
-						<br><b>Result #1:</b> <input style = "font-family: Helvetica; width:70%" type="text" name="R_1" class="form-control"><span class="help-block"><font color="red" id="R_1_ERR"></font></span><br>
-						<br><b>Result #2:</b> <input type="text" name="R_2" class="form-control" style="font-family: Helvetica; width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_2_ERR"></font></span><br>
-						<br><b>Result #3:</b> <input type="text" name="R_3" class="form-control" style="font-family: Helvetica; width:70%"><span class="help-block"><font color="red" id="R_3_ERR"></font></span><br>
-						<br><b>Result #4:</b> <input type="text" name="R_4" class="form-control" style="font-family: Helvetica; width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_4_ERR"></font></span><br>
-						<br><b>Result #5:</b> <input type="text" name="R_5" class="form-control" style="font-family: Helvetica; width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_5_ERR"></font></span><br>
-						<br><b>Result #6:</b> <input type="text" name="R_6" class="form-control" style="font-family: Helvetica; width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_6_ERR"></font></span><br>
-						<br><b>Result #7:</b> <input type="text" name="R_7" class="form-control" style="font-family: Helvetica; width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_7_ERR"></font></span><br>
-						<br><b>Result #8:</b> <input type="text" name="R_8" class="form-control" style="font-family: Helvetica; width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_8_ERR"></font></span><br>
-						<br><b>Result #9:</b> <input type="text" name="R_9" class="form-control" style="font-family: Helvetica; width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_9_ERR"></font></span><br>
-						<br><b>Result #10:</b> <input type="text" name="R_10" class="form-control" style="font-family: Helvetica; width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_10_ERR"></font></span><br>
-						<br><b>Result #11:</b> <input type="text" name="R_11" class="form-control" style="font-family: Helvetica; width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_11_ERR"></font></span><br>
-						<br><b>Result #12:</b> <input type="text" name="R_12" class="form-control" style="font-family: Helvetica; width:70%" style = "font-family: Helvetica"><span class="help-block"><font color="red" id="R_12_ERR"></font></span><br><br>
+					<div class="tab" style="white-space:nowrap"><h3>Catagory Names:</h3>
+						<br><b>Result #1:</b> <input type="text" name="R_1" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[0].'/'.$traits[1])?>><span class="help-block"><font color="red" id="R_1_ERR"></font></span><br>
+						<br><b>Result #2:</b> <input type="text" name="R_2" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[0].'/'.$traits[2])?>><span class="help-block"><font color="red" id="R_2_ERR"></font></span><br>
+						<br><b>Result #3:</b> <input type="text" name="R_3" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[0].'/'.$traits[3])?>><span class="help-block"><font color="red" id="R_3_ERR"></font></span><br>
+						<br><b>Result #4:</b> <input type="text" name="R_4" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[1].'/'.$traits[0])?>><span class="help-block"><font color="red" id="R_4_ERR"></font></span><br>
+						<br><b>Result #5:</b> <input type="text" name="R_5" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[1].'/'.$traits[2])?>><span class="help-block"><font color="red" id="R_5_ERR"></font></span><br>
+						<br><b>Result #6:</b> <input type="text" name="R_6" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[1].'/'.$traits[3])?>><span class="help-block"><font color="red" id="R_6_ERR"></font></span><br>
+						<br><b>Result #7:</b> <input type="text" name="R_7" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[2].'/'.$traits[0])?>><span class="help-block"><font color="red" id="R_7_ERR"></font></span><br>
+						<br><b>Result #8:</b> <input type="text" name="R_8" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[2].'/'.$traits[1])?>><span class="help-block"><font color="red" id="R_8_ERR"></font></span><br>
+						<br><b>Result #9:</b> <input type="text" name="R_9" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[2].'/'.$traits[3])?>><span class="help-block"><font color="red" id="R_9_ERR"></font></span><br>
+						<br><b>Result #10:</b> <input type="text" name="R_10" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[3].'/'.$traits[0])?>><span class="help-block"><font color="red" id="R_10_ERR"></font></span><br>
+						<br><b>Result #11:</b> <input type="text" name="R_11" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[3].'/'.$traits[1])?>><span class="help-block"><font color="red" id="R_11_ERR"></font></span><br>
+						<br><b>Result #12:</b> <input type="text" name="R_12" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[3].'/'.$traits[2])?>><span class="help-block"><font color="red" id="R_12_ERR"></font></span><br>
 					</div>
 					
 					<!--Buttons that control Navigation of page and website-->
 					<div style="float:left;">
-						<!--<a href="quiz_home.php" class="btn pink rounded"><tt>Cancel</a>-->
-						<button type="button" class="btn pink rounded" onclick="confirmLeave('quiz_home.php')">Cancel</button>
+						<button type="button"
+						        class="btn pink rounded"
+								onclick="confirmLeave('Do you wish to leave this page?\n You will lose all unsaved data.','quiz_home.php')">Cancel
+						</button>
 					</div>
 					<div style="overflow:auto;">
 						<div style="float:right;">
@@ -108,11 +181,18 @@ require_once "config.php";
 					</div>
 					<!--Controls Progress "bar"-->
 					<div style="text-align:center;margin-top:40px;">
-						<div class="step"></div><!--Area where page indicators will be placed by Javascript--><span id="num_pages"></span><!--End of Insertion Area--><div class="step"></div>
+						<div class="step" data-tooltip="" data-tooltip-message="Theme & Details" data-tooltip-position="top"></div><!--Area where page indicators will be placed by Javascript--><span id="num_pages"></span><!--End of Insertion Area--><div class="step" data-tooltip="" data-tooltip-message="Catagory Names" data-tooltip-position="top"></div>
+					</div>
+					<div>
+						<br>Learn about the Traits:<br>
+						<a class ="btn pink rounded" href="https://psychologia.co/sanguine-personality/" target="_blank" data-tooltip="" data-tooltip-position="bottom"</ data-tooltip-message="People with the Sanguine trait are often cheerful, creative, and optimistic. Click this button to learn more.">Sanguine</a>
+						<a class ="btn pink rounded" href="https://psychologia.co/phlegmatic-personality/" target="_blank" data-tooltip="" data-tooltip-position="bottom" data-tooltip-message="People with the Phlegmatic trait are often agreeable, cooperative, and considerate. Click this button to learn more.">Phlegmatic</a>
+						<a class ="btn pink rounded" href="https://psychologia.co/choleric-personality/" target="_blank" data-tooltip="" data-tooltip-position="bottom" data-tooltip-message="People with the Choleric trait are often practical, independent, and tough-minded. Click this button to learn more.">Choleric</a>
+						<a class ="btn pink rounded" href="https://psychologia.co/melancholic-personality/" target="_blank" data-tooltip="" data-tooltip-position="bottom" data-tooltip-message="People with the Melancholic trait are often loyal, calm, and patient. Click this button to learn more.">Melancholic</a>
 					</div>
 				</form>
+				<center>
 			</div>
-		</center>
 		<script>
 			/* Javascript used to manage this specific page.
 			 * Functions used to add and remove questions and answers from page, as well as to increase/decrease progress "bar"
@@ -141,7 +221,7 @@ require_once "config.php";
 			// Override of validateForm() of config.php. Specifically for this page
 			function validateForm() {
 			  // This function deals with validation of the form fields
-			  var x, y, i, j, valid = true;
+			  var x, y, z, i, j, valid = true;
 			  var Tag_err = false;
 			  var prev_questions;
 			  x = document.getElementsByClassName("tab");
@@ -152,23 +232,22 @@ require_once "config.php";
 			  for (i = 0; i < y.length; i++) {
 				if(currentTab == 0 && i == 0){
 					reset_Validation_Error(y[i], "Q_name_err");
-					if(y[i].value == ""){
-						valid = validationError(y[i], "Q_name_err", "Please enter a Questionnaire Name.");
-					}else{ 
-						if(y[i].value.length < min_Quiz_Name_Length || y[i].value.length > max_Quiz_Name_Length){
-							valid = validationError(y[i], "Q_name_err", "Questionnaire name must be "+min_Quiz_Name_Length+"-"+max_Quiz_Name_Length+" characters long.");
+					if(y[i].value.trim().match(/^([A-Za-z0-9][\.\?\!\-\sA-Za-z0-9]{2,})$/) == null){
+						if(y[i].value.trim() == ""){
+							valid = validationError(y[i], "Q_name_err", "Please enter a Questionnaire Name.");
+						}else if(y[i].value.trim().length < min_Quiz_Name_Length){
+							valid = validationError(y[i], "Q_name_err", "Questionnaire name must be at least "+min_Quiz_Name_Length+" characters long.");
+						}else{
+							valid = validationError(y[i], "Q_name_err", "Questionnaire Name cannot have any special characters except '. ? ! -'.");
 						}
 					}
 				}else if(currentTab == (num_Questions + 1)){ // Results Page Verification
 					reset_Validation_Error(y[i], "R_"+(i+1)+"_ERR");
 					// Checks to see if catagory name matches naming criteria
-					if(y[i].value.trim().match(/^([A-Za-z0-9]+[\sA-Za-z0-9]*)/) == null){
+					if(y[i].value.trim().match(/^([A-Za-z0-9]+[\sA-Za-z0-9]*)$/) == null){
 						if(y[i].value == ""){
 							// Empty String
 							valid = validationError(y[i], "R_"+(i+1)+"_ERR", "Please enter a catagory name.");
-						}else if(y[i].value.length < 2){
-							// String too short
-							valid = validationError(y[i], "R_"+(i+1)+"_ERR", "Please enter a longer catagory name.");
 						}else{
 							// String contains illegal characters
 							valid = validationError(y[i], "R_"+(i+1)+"_ERR", "Catagory name cannot have special characters.");
@@ -184,13 +263,13 @@ require_once "config.php";
 				}else if(currentTab != 0 && currentTab != (num_Questions+1)){
 					if(i==0){
 						reset_Validation_Error(y[i], "Q_"+currentTab+"_ERR");
-						if(y[i].value.trim().match(/^([A-Za-z0-9]+[\.\?\!\-\sA-Za-z0-9]*[\.\?\!\sA-Za-z0-9])/) == null){
+						if(y[i].value.trim().match(/^([A-Za-z0-9]+[\.\?\!\-\sA-Za-z0-9]*)$/) == null){
 							if(y[i].value.trim() == ""){
 								// Empty String
 								valid = validationError(y[i], "Q_"+currentTab+"_ERR", "Please enter a question.");
 							}else{
 								// String contains illegal characters
-								valid = validationError(y[i], "Q_"+currentTab+"_ERR", "Question can only have '. ! ? -' special characters.");
+								valid = validationError(y[i], "Q_"+currentTab+"_ERR", "Question cannot have any special characters except '. ? ! -'.");
 							}
 						}else{
 							for(j = 1; j < currentTab ; j++){
@@ -202,13 +281,13 @@ require_once "config.php";
 					}else{
 						reset_Validation_Error(y[i], "A_"+currentTab+"_"+i+"_ERR");
 						reset_Validation_Error(z[i-1], "A_"+currentTab+"_"+i+"_ERR");
-						if(y[i].value.trim().match(/^([A-Za-z0-9]+[\.\?\!\-\sA-Za-z0-9]*[\.\?\!\sA-Za-z0-9])/) == null){
+						if(y[i].value.trim().match(/^([A-Za-z0-9]+[\.\?\!\-\sA-Za-z0-9]*)$/) == null){
 							if(y[i].value.trim() == ""){
 								// Empty String
 								valid = validationError(y[i], "A_"+currentTab+"_"+i+"_ERR", "Please enter an answer.");
 							}else{
 								// String contains illegal characters
-								valid = validationError(y[i], "A_"+currentTab+"_"+i+"_ERR", "Answer can only have '. ! ? -' special characters.");
+								valid = validationError(y[i], "A_"+currentTab+"_"+i+"_ERR", "Answer cannot have any special characters except '. ? ! -'.");
 							}
 						}else{
 							for(j = 1; j < i; j++){
@@ -234,6 +313,7 @@ require_once "config.php";
 			  // If the valid status is true, mark the step as finished and valid:
 			  if (valid) {
 				document.getElementsByClassName("step")[currentTab].className += " finish";
+				document.getElementsByClassName("step")[currentTab].setAttribute("onclick","switch_to_Finished_Tab("+currentTab+")");
 			  }
 			  return valid; // return the valid status
 			}
@@ -294,7 +374,7 @@ require_once "config.php";
 				question_input.setAttribute("class", "form-control");
 				question_input.setAttribute("Name", "Q_"+(num_Questions+1));
 				question_input.setAttribute("id", "Q_"+(num_Questions+1));
-				question_input.setAttribute("style", "width:75%; font-family:Helvetica");
+				question_input.setAttribute("style", "font-family: Helvetica; width:50%");
 				
 				// Sub Span used to increase number of answers
 				var sub_span = document.createElement('span');
@@ -323,6 +403,9 @@ require_once "config.php";
 				// Setting up Attributes for the Page Indicator
 				page_indicator.setAttribute("class", "step");
 				page_indicator.setAttribute("id", "Q_page_"+(num_Questions+1));
+				page_indicator.setAttribute("data-tooltip", "");
+				page_indicator.setAttribute("data-tooltip-message", "Question #"+(num_Questions+1));
+				page_indicator.setAttribute("data-tooltip-position", "top");
 				
 				// Providing Sub Span with an ID for ease of Answer Insertion
 				sub_span.setAttribute("id", "add_Ans_field_"+(num_Questions+1));
@@ -406,10 +489,9 @@ require_once "config.php";
 					
 					// Assigns text input field attributes to be referenced when form is submitted
 					answer_input.setAttribute("type", "text");
-					
 					answer_input.setAttribute("Name", ("A_"+(current_question+1)+"_"+(num_Ans+1)));
 					answer_input.setAttribute("id", ("A_"+(current_question+1)+"_"+(num_Ans+1)));
-					answer_input.setAttribute("style", "width:70%; font-family:Helvetica");
+					answer_input.setAttribute("style", "font-family: Helvetica; width:50%");
 					
 					// Assigns id to Select List for reference later
 					tag_list.setAttribute("id", ("A_TAG_"+(current_question+1)+"_"+(num_Ans+1)));
