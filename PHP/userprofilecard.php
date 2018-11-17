@@ -69,7 +69,7 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 						<h2 style = "text-align: center;">
 						<img src="images/default-user2.png" alt="Default User Profile" width="70%"></center></h2>
 						<h4>
-							Name: 
+							<b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>
 						<br>
 							Age: 
 						<br>

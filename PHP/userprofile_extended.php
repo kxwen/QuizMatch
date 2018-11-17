@@ -43,41 +43,74 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 			{
 				background-color: #f2f2f2;
 			}
+			div.contentRoundBorders
+			{
+				border-radius:15px;
+				padding:1%;
+				background:white;
+				margin-bottom:1%;
+			}
+			div.buttonSide
+			{
+				display:flex;
+				justify-content: space-between;
+				padding: 0% 3% 0% 5%;
+			}
+			div.editProfileRight
+			{
+				display:flex;
+				justify-content: flex-end;
+				padding-right: 3%;
+			}
 		</style>
 	</head>
 	<body>
 		<div class = "content">
+			<div class = "container">
+				<div class = "fill">
+					<div class = "buttonSide">
+					<a href="userprofile.php" class="btn large pink rounded"><tt>Home&#x1F3E0;</tt></a>
+					<a href="quiz_home.php" class="btn large pink rounded"><tt>Quizzes!&#10004;</tt></a>
+					</div>
+				</div>
+			</div>
+			
 			<div class = "container center">
-				<div class = "quarter white rounded" style = "height:500px">
+				<div class = "quarter white rounded">
 					<div class = "padded">
 						<h2><center><img src="images/default-user2.png" alt="Default User Profile" width="75%"></center></h2><br>
 						<h3>
-						Name <br>
-						Age <br>
-						Gender <br>
+							<b><?php echo htmlspecialchars($_SESSION["username"]); ?></b><br>
+							Age <br>
+							Gender <br>
 						</h3>
 					</div>
 				</div>
-				<div class = "twothirds white rounded" style = "margin-left:1%; height: 500px;">
-					<div class = "container">
-						<div style = "padding:3%">
-							<h6>
-								Description:
-							</h6>
-							<p>
-								Hello, my name is Jim. I like to be a total creep on the internet. 
-								Why you ask? I dunno. The person writing this really needed some filler content to make sure that it 
-								hits the total character limit to see how much space is needed to incoporate for about... 500 characters? 
-								Did I hit it yet? No? Are we there yet? Are we there yet? Are we there yet? No? No? No? No?
-								Oh, ma ma ma mia figero! Beelzebub has a devil sights for me! For me! FOR ME!!! 
-								Play that Queen music! Hit the funky music white boy!1
-								----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-							</p>
-						</div>
+				<div class = "twothirds" style = "margin-left:1%;">
+					<div class = "contentRoundBorders">
+						<h6>
+							Bio:
+						</h6>
+						<p>
+							
+						</p>
 					</div>
-					<div class = "container">
+					
+					<div class = "contentRoundBorders">
+						<h6>
+							Quizzes Created:
+						</h6>
+					</div>
+					
+					<div class = "contentRoundBorders">
+						<h6>
+							Quizzes Taken:
+						</h6>
 					</div>
 				</div>
+			</div>
+			<div class = "editProfileRight">
+				<a href="edit_profile.php" class="btn large pink rounded"><tt>Edit Profile&#9998;</tt></a> 	
 			</div>
 		</div>
 	</body>
