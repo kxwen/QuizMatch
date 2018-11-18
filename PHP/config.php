@@ -47,12 +47,11 @@ $catagories = array(array("",""),array($traits[0], $traits[1]), array($traits[0]
 <html>
 		<script>
 			// Variables
-			// Variables for managing Tab pages; contains only "Constant" Variables
-			var min_num_Ans = 2; // Minimum number of answers that a question must have
-			var max_num_Ans = 5; // Maximum number of answers that a question may have
 			
 			// Variables for managing Quiz Creation/Edit
 			var min_Quiz_Name_Length = 3;
+			var min_num_Ans = 2; // Minimum number of answers that a question must have
+			var max_num_Ans = 5; // Maximum number of answers that a question may have
 			
 			// Functions
 			
@@ -75,8 +74,13 @@ $catagories = array(array("",""),array($traits[0], $traits[1]), array($traits[0]
 				document.getElementById("prevBtn").style.display = "inline";
 			  }
 			  if (n == (x.length - 1)) {
-				document.getElementById("nextBtn").innerHTML = "Submit";
+				if(document.getElementById("quizForm")!=null){
+					document.getElementById("nextBtn").innerHTML = "Submit";
+				}else{
+					document.getElementById("nextBtn").style.display = "none";
+				}
 			  } else {
+				document.getElementById("nextBtn").style.display = "inline";
 				document.getElementById("nextBtn").innerHTML = "Next";
 			  }
 			  // ... and run a function that displays the correct step indicator:
@@ -106,9 +110,9 @@ $catagories = array(array("",""),array($traits[0], $traits[1]), array($traits[0]
 			  // Increase or decrease the current tab by 1:
 			  if(n == -1) y[currentTab].className += " finish";
 			  currentTab = currentTab + n;
-			  if(currentTab < num_Questions+1) y[currentTab].className = y[currentTab].className.replace(" finish", "");
+			  y[currentTab].className = y[currentTab].className.replace(" finish", "");
 			  // if you have reached the end of the form... :
-			  if (currentTab >= x.length) {
+			  if (currentTab >= x.length && document.getElementByID("quizForm")!=null) {
 				//...the form gets submitted:
 				document.getElementById("quizForm").submit();
 				return false;
@@ -135,6 +139,7 @@ $catagories = array(array("",""),array($traits[0], $traits[1]), array($traits[0]
 			  // If the valid status is true, mark the step as finished and valid:
 			  if (valid) {
 				document.getElementsByClassName("step")[currentTab].className += " finish";
+				document.getElementsByClassName("step")[currentTab].setAttribute("onclick","switch_to_Finished_Tab("+currentTab+")");
 			  }
 			  return valid; // return the valid status
 			}
