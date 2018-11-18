@@ -25,7 +25,7 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 		<link href= "stupid.css" type = "text/css" rel = "stylesheet"/>
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<style>
-			html
+			body, html
 			{
 				height:100%;
 			}
@@ -49,6 +49,8 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 				padding:1%;
 				background:white;
 				margin-bottom:1%;
+				margin-top:1%;
+				box-shadow: 0 0 3px rgba(0,0,0,0.5);
 			}
 			div.buttonSide
 			{
@@ -62,7 +64,37 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 				justify-content: flex-end;
 				padding-right: 3%;
 			}
+			div.profileImage
+			{
+				width: 270px;
+				height: 270px;
+				position: relative;
+				overflow: hidden;
+				border-radius: 50%;
+			}
+			#avatar
+			{
+				background-image: url('images/mega.jpg');
+				height: 300px;
+				width: auto;
+				background-size: cover;
+				background-position: center;
+				border-radius: 50%;
+			}
+			div.child
+			{
+				width: 100%;
+				border:1px solid blue;
+			}
 		</style>
+		<script>
+			var cw = $('.child').width();
+			$('.child').css(
+			{
+				'height':cw + 'px'
+			});
+				
+		</script>
 	</head>
 	<body>
 		<div class = "content">
@@ -78,7 +110,10 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 			<div class = "container center">
 				<div class = "quarter white rounded">
 					<div class = "padded">
-						<h2><center><img src="images/default-user2.png" alt="Default User Profile" width="75%"></center></h2><br>
+					<!--	<div class = "child">
+							<center><div id="avatar"></div></center>
+						</div>
+							<!--<h2><center><img src="images/mega.jpg" alt="Default User Profile"></center></h2><br>-->
 						<h3>
 							<b><?php echo htmlspecialchars($_SESSION["username"]); ?></b><br>
 							Age <br>
@@ -99,12 +134,18 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 					<div class = "contentRoundBorders">
 						<h6>
 							Quizzes Created:
+							<div class = "contentRoundBorders">
+								<p>I go here!</p>
+							</div>
 						</h6>
 					</div>
 					
 					<div class = "contentRoundBorders">
 						<h6>
 							Quizzes Taken:
+							<div class = "contentRoundBorders">
+								<p>I go here!</p>
+							</div>
 						</h6>
 					</div>
 				</div>
