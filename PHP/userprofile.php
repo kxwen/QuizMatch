@@ -46,11 +46,11 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 			<center><img src="images/default-user2.png" alt="Default User Profile" width="15%" height="15%"></center>
 			<br>
 			<div class = "logoCenter">
-				<a href="userprofilecard.php" class="btn large white rounded"><tt>My Profile<i class="material-icons">person</i></tt></a> 	
+				<a href="userprofile_extended.php" class="btn large white rounded"><tt>My Profile<i class="material-icons">person</i></tt></a> 	
 			</div>
 				<div class = "buttonCenter">
 					<div class = "container">
-						<a class="btn large pink rounded"><tt>Matches&#x1F50D;</tt></a> 	
+						<a href="matches.php" class="btn large pink rounded"><tt>Matches&#x1F50D;</tt></a> 	
 						<a class="btn large pink rounded"><tt>Messages&#9993;</tt></a>
 						<a href="quiz_home.php" class="btn large pink rounded"><tt>Quizzes!&#10004 </tt></a>
 						<a href="logout.php" class="btn large pink rounded"><tt>Logout <i class="fa fa-sign-out"></i></tt></a>
