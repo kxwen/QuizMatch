@@ -29,16 +29,6 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 			{
 				height:100%;
 			}
-			div.content
-			{
-				margin:1%;
-				margin-right:2%;
-				word-wrap: break-word;
-			}
-			div.contentBarrier
-			{
-				padding:1%;
-			}
 			body
 			{
 				background-color: #f2f2f2;
@@ -51,6 +41,16 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 				margin-bottom:1%;
 				margin-top:1%;
 				box-shadow: 0 0 3px rgba(0,0,0,0.5);
+			}
+			div.content
+			{
+				margin:1%;
+				margin-right:2%;
+				word-wrap: break-word;
+			}
+			div.contentBarrier
+			{
+				padding:1%;
 			}
 			div.buttonSide
 			{
