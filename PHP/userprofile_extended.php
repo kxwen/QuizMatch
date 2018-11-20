@@ -9,6 +9,23 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 	header("location: login.php");
 	exit;
 }
+require_once "config.php";
+if(!isset($profile)){
+	$sql = "SELECT * FROM users WHERE id =".$_SESSION["id"];
+	$profile_entry = mysqli_query($link, $sql);
+	$profile = mysqli_fetch_assoc($profile_entry);
+}
+
+$current_username = $profile["username"];
+$current_email = $profile["email"];
+$current_desc = $profile["bio"];
+if($profile["gender"] == "male"){
+	$M_checked_curr = "checked";
+}else if($profile["gender"] == "female"){
+	$F_checked_curr = "checked";
+}else{ // gender is either selected as "other" or is null
+	$O_checked_curr = "checked";
+}
 ?>
 <!-- 
 This is the homepage for QuizMatch. It contains links to the login page and
@@ -28,9 +45,6 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 			body, html
 			{
 				height:100%;
-			}
-			body
-			{
 				background-color: #f2f2f2;
 			}
 			div.contentRoundBorders
@@ -41,16 +55,6 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 				margin-bottom:1%;
 				margin-top:1%;
 				box-shadow: 0 0 3px rgba(0,0,0,0.5);
-			}
-			div.content
-			{
-				margin:1%;
-				margin-right:2%;
-				word-wrap: break-word;
-			}
-			div.contentBarrier
-			{
-				padding:1%;
 			}
 			div.buttonSide
 			{
@@ -64,37 +68,21 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 				justify-content: flex-end;
 				padding-right: 3%;
 			}
-			div.profileImage
+			div.profileBlock
 			{
-				width: 270px;
-				height: 270px;
-				position: relative;
-				overflow: hidden;
-				border-radius: 50%;
+				text-align: center;
+				margin:4%;
 			}
 			#avatar
 			{
-				background-image: url('images/mega.jpg');
+				background-image: url('images/default-user2.png');
+				width: 300px;
 				height: 300px;
-				width: auto;
 				background-size: cover;
 				background-position: center;
-				border-radius: 50%;
-			}
-			div.child
-			{
-				width: 100%;
-				border:1px solid blue;
 			}
 		</style>
-		<script>
-			var cw = $('.child').width();
-			$('.child').css(
-			{
-				'height':cw + 'px'
-			});
-				
-		</script>
+		
 	</head>
 	<body>
 		<div class = "content">
@@ -108,16 +96,11 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 			</div>
 			
 			<div class = "container center">
-				<div class = "quarter white rounded">
-					<div class = "padded">
-					<!--	<div class = "child">
-							<center><div id="avatar"></div></center>
-						</div>
-							<!--<h2><center><img src="images/mega.jpg" alt="Default User Profile"></center></h2><br>-->
+				<div class = "quarter white rounded" style = "min-width:325px">
+					<div class = "profileBlock">
+						<div id="avatar"></div>
 						<h3>
-							<b><?php echo htmlspecialchars($_SESSION["username"]); ?></b><br>
-							Age <br>
-							Gender <br>
+							<b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>
 						</h3>
 					</div>
 				</div>
@@ -127,7 +110,7 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 							Bio:
 						</h6>
 						<p>
-							
+							<?php echo htmlspecialchars($profile["bio"]); ?>
 						</p>
 					</div>
 					
@@ -135,7 +118,7 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 						<h6>
 							Quizzes Created:
 							<div class = "contentRoundBorders">
-								<p>I go here!</p>
+								<p>No Quizzes Created Yet! And I Don't Work Yet!</p>
 							</div>
 						</h6>
 					</div>
@@ -144,7 +127,7 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 						<h6>
 							Quizzes Taken:
 							<div class = "contentRoundBorders">
-								<p>I go here!</p>
+								<p>No Quizzes Have Been Taken Yet! And I Don't Work Yet Either!</p>
 							</div>
 						</h6>
 					</div>
