@@ -193,6 +193,7 @@ require_once "config.php";
 				</form>
 				<center>
 			</div>
+		<script src="config.js"></script>
 		<script>
 			/* Javascript used to manage this specific page.
 			 * Functions used to add and remove questions and answers from page, as well as to increase/decrease progress "bar"
