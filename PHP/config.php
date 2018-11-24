@@ -41,5 +41,4 @@ $catagories = array(array("",""),array($traits[0], $traits[1]), array($traits[0]
 								 array($traits[1], $traits[0]), array($traits[1], $traits[2]), array($traits[1], $traits[3]),
 								 array($traits[2], $traits[0]), array($traits[2], $traits[1]), array($traits[2], $traits[3]),
 								 array($traits[3], $traits[0]), array($traits[3], $traits[1]), array($traits[3], $traits[2]));
-
 ?>

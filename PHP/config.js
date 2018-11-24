@@ -14,6 +14,20 @@ function confirmLeave(msg, path){
 	}
 }
 
+// Universal Function to be used to remove dynamically attached HTTP Elements 
+function deleteElement(parentDIV,childDIV){
+	if(parentDIV == childDIV)
+	{
+		alert("An Error has occured: Parent cannot be removed.");
+	}else if(document.getElementById(childDIV)){
+		var child = document.getElementById(childDIV);
+		var parent = document.getElementById(parentDIV);
+		parent.removeChild(child);
+	}else{
+		alert("An Error has occured: Child div not found.");
+	}
+}
+
 // Functions for managing Tab pages
 function showTab(n) {
   // This function will display the specified tab of the form ...
