@@ -1,28 +1,40 @@
 <?php
-/* associative array(acts like a hashtable) with each index being an array for a 
-given category, all initialized as empty */
-/* this associative multidimensional array might need to be stored elsewhere, separate from the function */
-$categories = array (
-    'Charmander' => array(),
-    'Squirtle' => array(),
-    'Bulbasaur' => array(),
-    'Torchic' => array(),
-    'Mudkip' => array(),
-    'Treecko' => array(),
-    'Chimchar' => array(),
-    'Piplup' => array(),
-    'Turtwig' => array(),
-    'Cyndaquil' => array(),
-    'Tododile' => array(),
-    'Chikorita' => array()
-);
+$link = mysqli_connect("localhost", "root", "", "QuizMatch"); 
+  
+if($link === false){ 
+    die("ERROR: Could not connect. " 
+                . mysqli_connect_error()); 
+} 
 
-/*function to add someone to a certain category, everyone who is in the same subarray
-will count as matches for each other */
-/* parameters for the function will be taken from string fields stored in SQL database */
-function matchMake($userName, $category){
-    /*push newest user into category subarray, assumes $category is string */
-    array_push($categories[$category], $userName);
-}
+  
+$sql = "SELECT username, age, gender, defaultCategory FROM QuizMatchUsers Where defaultCategory = 'Charmander' AND gender = 'Female';"; 
+if($res = mysqli_query($link, $sql)){ 
+    if(mysqli_num_rows($res) > 0){ 
+        echo "<table>"; 
+            echo "<tr>"; 
+                echo "<th>Username</th>"; 
+                echo "<th>Age</th>"; 
+                echo "<th>Gender</th>"; 
+                echo "<th>defaultCategory</th>"; 
+            echo "</tr>"; 
+        while($row = mysqli_fetch_array($res)){ 
+            echo "<tr>"; 
+                echo "<td>" . $row['username'] . "</td>"; 
+                echo "<td>" . $row['age'] . "</td>"; 
+                echo "<td>" . $row['gender'] . "</td>";
+                echo "<td>" . $row['defaultCategory'] . "</td>"; 
+            echo "</tr>"; 
+        } 
+        echo "</table>"; 
+        mysqli_free_result($res); 
+    } else{ 
+        echo "No Matches Found"; 
+    } 
+} else{ 
+    echo "ERROR: Could not able to execute $sql. "  
+                                . mysqli_error($link); 
+} 
+  
+mysqli_close($link);
 
 ?>
