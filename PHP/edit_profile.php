@@ -1,81 +1,88 @@
 <?php
-/* signup.php
- * The form for a new user to create a profile on
- * QuizMatch. Altered to elaborate on verification of
- * username, password, and email. Removed fields for
- * First/Last Name; will perhaps move to profile settings.
- *
- * Redirects to: Login.html/php
- *
- * Assumes that DB Table contains fields for Username, Email, and Password.
- *
- * References to the Database have been commented out, and replaced with writing to
- * a testing .txt file as a temporary Database.
- */
- 
-require_once "config.php";
-
-/* userprofilecard.php
+/* edit_profile.php
+ * Allows user to edit profile details
  * altered Richard's login verification to verify that user has signed in.
  * If they are not signed in, they are redirected to the login page.
  * This prevents the user from using the back button of their browser
  * to return here after they had already signed out.
  */
+ 
 session_start();
 if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 	header("location: login.php");
 	exit;
 }
  
-$email = $username = $password = $Cpassword = "";
-$email_err = $username_err = $password_err = $Cpassword_err = "";
-//$min_pw_len = 5;
+require_once "config.php";
+if(!isset($profile)){
+	$sql = "SELECT * FROM users WHERE id =".$_SESSION["id"];
+	$profile_entry = mysqli_query($link, $sql);
+	$profile = mysqli_fetch_assoc($profile_entry);
+}
+ 
+$new_email = $new_username = $new_desc = "";
+$email_err = $username_err = "";
+$M_checked_new = $F_checked_new = $O_checked_new = ""; // Used for radio inputs for gender
+$new_gender = "";
+
+$current_username = $profile["username"];
+$current_email = $profile["email"];
+$current_desc = $profile["bio"];
+$M_checked_curr = $F_checked_curr = $O_checked_curr = ""; // Used for radio inputs for gender
+if($profile["gender"] == "male"){
+	$M_checked_curr = "checked";
+}else if($profile["gender"] == "female"){
+	$F_checked_curr = "checked";
+}else{ // gender is either selected as "other" or is null
+	$O_checked_curr = "checked";
+}
+
 if($_SERVER["REQUEST_METHOD"] == "POST")
 {
-	// Username Entry and Verification
-	if(empty(trim($_POST["username"])))
-	{
-		//Empty Field Case
-		$username_err = "Please enter a username.";
-	}else{
-		//$username = trim($_POST["username"]);
-		// Perpare to search DB for existing user
-		$sql = "SELECT id FROM users WHERE username = ?";
-		if($stmt = mysqli_prepare($link, $sql))
-		{
-			mysqli_stmt_bind_param($stmt, "s", $param_username);
-			$param_username = htmlspecialchars(trim($_POST["username"]));
-			if(mysqli_stmt_execute($stmt))
-			{
-				// Successful execution
-				mysqli_stmt_store_result($stmt);
-				if(mysqli_stmt_num_rows($stmt) == 1)
+	if(preg_match('/^[A-Za-z0-9]+$/', trim($_POST["username"]))){
+		// Checks to see if username meets length requirements
+		if(strlen(trim($_POST["username"])) >= $min_username_len){
+			// Perpare to search DB for existing user
+			if(htmlspecialchars(trim($_POST["username"])) != $current_username){
+				$sql = "SELECT id FROM users WHERE username = ?";
+				if($stmt = mysqli_prepare($link, $sql))
 				{
-					// Username is taken; User already exists
-					$username_err = "This username is already taken.";
-				}else{
-					// Username is available; Profile does not exist
-					$username = htmlspecialchars(trim($_POST["username"]));
+					mysqli_stmt_bind_param($stmt, "s", $param_username);
+					$param_username = htmlspecialchars(trim($_POST["username"]));
+					if(mysqli_stmt_execute($stmt))
+					{
+						// Successful execution
+						mysqli_stmt_store_result($stmt);
+						if(mysqli_stmt_num_rows($stmt) == 1)
+						{
+							// Username is taken; User already exists
+							$username_err = "This username is already taken.";
+						}else{
+							// Username is available; Profile does not exist
+							$new_username = htmlspecialchars(trim($_POST["username"]));
+						}
+					}else{
+						// Unsuccessful Execution
+						echo "An error has occurred. Please try again later.";
+					}
 				}
+				mysqli_stmt_close($stmt);
 			}else{
-				// Unsuccessful Execution
-				echo "An error has occurred. Please try again later.";
+				$new_username = $current_username;
 			}
+		}else{
+			$username_err = "Username must be at least ".$min_username_len." characters long.";
 		}
-		mysqli_stmt_close($stmt);
+	}else{
+		$username_err = "Username can only have letters and numbers.";
 	}
 	
-	// Email Entry and Verification
-	if(empty(trim($_POST["email"])))
+	if(!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL))
 	{
-		$email_err = "Please enter an email.";
+		$email_err = "Please enter a valid email.";
 	}else{
-		if(!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL))
-		{
-			$email_err = "Please enter a valid email.";
-		}else{
-			//$email = trim($_POST["email"]);
-			// Prepare tp search DB for existing email
+		// Prepare tp search DB for existing email
+		if(htmlspecialchars(trim($_POST["email"])) != $current_email){
 			$sql = "SELECT id FROM users WHERE email = ?";
 			if($stmt = mysqli_prepare($link, $sql))
 			{
@@ -91,7 +98,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 						$email_err = "This email is already taken.";
 					}else{
 						// Email is available
-						$email = htmlspecialchars(trim($_POST["email"]));
+						$new_email = htmlspecialchars(trim($_POST["email"]));
 					}
 				}else{
 					// Unsuccessful Execution
@@ -99,68 +106,38 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 				}
 			}
 			mysqli_stmt_close($stmt);
+		}else{
+			$new_email = $current_email;
 		}
 	}
 	
-	// Password Entry
-	if(empty(trim($_POST["password"])))
-	{
-		// Empty Field Case
-		$password_err = "Please enter a password.";
-	}elseif(strlen(trim($_POST["password"])) < $min_pw_len){
-		// Password length is too short for security
-		$password_err = "Password must be at least " . $min_pw_len . " characters.";
-	}else{
-		// Password meets requirements
-		$password = htmlspecialchars(trim($_POST["password"]));
+	$new_desc = htmlspecialchars(trim($_POST["desc"]));
+	
+	if($_POST["gender"] == "male"){
+		$M_checked_new = "checked";
+	}else if($_POST["gender"] == "female"){
+		$F_checked_new = "checked";
+	}else if($_POST["gender"] == "other"){
+		$O_checked_new = "checked";
 	}
+	$new_gender = $_POST["gender"];
 	
-	// Confirm Password Entry
-	if(empty(trim($_POST["Cpassword"])))
-	{
-		// Empty Field Case
-		$Cpassword_err = "Please confirm password.";
-	}else{
-		// A String has been submitted
-		$Cpassword = htmlspecialchars(trim($_POST["Cpassword"]));
-		if(empty($password_err) && ($password != $Cpassword))
-		{
-			// Confirmation Field does not match Password Field
-			$Cpassword_err = "Password does not match.";
-		}
-	}
-	
-	
-	if(empty($username_err) && empty($email_err) && empty($password_err) && empty($Cpassword_err))
-	{
-		// If there are no errors, registers the new profile into database and redirects USER to Login
-		/*$local_file = "Testing_Form.txt";
-		$handle = fopen($local_file, 'a') or die('cannot open file: ' . $local_file);
-		$data = $username." ".$email." ".$password."\n";
-		fwrite($handle, $data);
-		fclose($handle);*/
-		$sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
-		if($stmt = mysqli_prepare($link, $sql))
-		{
-			mysqli_stmt_bind_param($stmt, "sss", $param_username, $param_email, $param_password);
-			$param_username = $username;
-			$param_email = $email;
-			$param_password = password_hash($password, PASSWORD_DEFAULT);
-			if(mysqli_stmt_execute($stmt))
-			{
-				// Emailing for Account Verification needs to be implemented.
-				//$to = $email;
-				//$subject = "QuizMatch Account Verification"
-				//$message = "
-				//Hello,
-				//Thank you for signing up with QuizMatch. Your registration is almost complete.
-				//Please click this link to activate your account:"
-				header("location: login.php");
+	if(empty($username_err) && empty($email_err)){
+		$sql = "UPDATE users SET username=?, email=?, bio=?, gender=? WHERE id=".$_SESSION["id"];
+		if($stmt = mysqli_prepare($link, $sql)){
+			mysqli_stmt_bind_param($stmt, "ssss", $param_username, $param_email, $param_bio, $param_gender);
+			$param_username = $new_username;
+			$param_email = $new_email;
+			$param_bio = $new_desc;
+			$param_gender = $new_gender;
+			if(mysqli_stmt_execute($stmt)){
+				$_SESSION["username"] = $new_username;
+				header("location: userprofile_extended.php");
 			}else{
 				echo "An Error has occurred. Please try again later.";
 			}
 		}
-		mysqli_close($stmt);
+		mysqli_stmt_close($stmt);
 	}
 	mysqli_close($link);
 }
@@ -190,24 +167,38 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	</head>
 	<body>
 		<div class = "buttonSpaceLeft">
-			<a href="userprofile.php" class="btn large pink rounded"><tt>Home&#x1F3E0;</tt></a>
+			<a class="btn large pink rounded" onclick="confirmLeave('Are you sure you want to leave?\nYou will lose all unsaved data.', 'userprofile.php')"><tt>Home&#x1F3E0;</tt></a>
 		</div>
 		<center>
 			<div class="inputBar">
-				<h2>Edit Profile
-				<br>
-				BTW, I don't work yet!
-				I'm just a modified Edit Profile Page!
-				</h2>
+				<h2>Edit Profile</h2>
 				<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
 					<div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
 					<br>
-						<label>Username</label>
+						<label>Username:</label>
 						<br><span class="help-block"><font color="red"><?php echo $username_err;?></font></span>
-						<input type="text" name="username" class="form-control" value="<?php echo $username; ?>">
+						<br><input type="text" style = "font-family: Helvetica" name="username" class="form-control" value="<?php if(isset($new_username) && !empty($new_username)){echo $new_username;}else{echo $current_username;}?>"><br><br>
+						
+						<label>Email:</label>
+						<br><span class="help-block"><font color="red"><?php echo $email_err;?></font></span>
+						<br><input type="text" style = "font-family: Helvetica" name="email" class="form-control" value="<?php if(isset($new_email) && !empty($new_email)){echo $new_email;}else{echo $current_email;}?>"><br><br>
+						
+						<label>Biography:</label>
+						<br><br><textarea style = "font-family: Helvetica" name="desc" rows="5" cols="33" maxlength="200" ><?php if(isset($new_desc) && !empty($new_desc)){echo $new_desc;}else{echo $current_desc;}?></textarea><br><br>
+						
+						<label>Gender:</label>
+							<input type="radio" name="gender" value="male" <?php if($M_checked_new != "" || $F_checked_new != "" || $O_checked_new != ""){echo $M_checked_new;}else{echo $M_checked_curr;}?>> Male
+							<input type="radio" name="gender" value="female" <?php if($M_checked_new != "" || $F_checked_new != "" || $O_checked_new != ""){echo $F_checked_new;}else{echo $F_checked_curr;}?>> Female 
+							<input type="radio" name="gender" value="other" <?php if($M_checked_new != "" || $F_checked_new != "" || $O_checked_new != ""){echo $O_checked_new;}else{echo $O_checked_curr;}?>> Non-binary/Other<br><br>
+						
+						<div class="form-group">
+						<br>
+							<input type="submit" class="btn pink rounded" value = "Submit" style = "font-family: Helvetica";>
+						</div>
 					</div>
 				</form>
 			</div>
 		</center>
+	<script src="config.js"></script>
 	</body>
 </html>
