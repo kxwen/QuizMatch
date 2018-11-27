@@ -74,26 +74,6 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 		<div class = "matches">
 			<h1><center>Matches&#x1F50D;</center></h1>
 		</div>
-		<div class = "container center">
-			<div class = "threequarters">
-				<div class = "contentRoundBorders">
-					<h2 style = "margin-top:-7px">
-						Quizzes Created:
-					</h2>
-					<div class = "contentRoundBorders">
-						<p>
-							I go here!
-						</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class = "container fill">
-		<div class = "buttonSide">
-			<a href="userprofile.php" class="btn large pink rounded"><tt>Home&#x1F3E0;</tt></a>
-			<a href="userprofile_extended.php" class="btn large pink rounded"><tt>My Profile<i class="material-icons">person</i></tt></a>
-		</div>
 	</div>
 	</body>
 </html>
