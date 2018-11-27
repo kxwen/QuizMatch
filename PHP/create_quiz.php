@@ -206,6 +206,29 @@ require_once "config.php";
 			updateQs();
 			showTab(currentTab); // Display the current tab
 			
+			// Override of same fucntion in config.php
+			function nextPrev(n) {
+			  // This function will figure out which tab to display
+			  var x = document.getElementsByClassName("tab");
+			  var y = document.getElementsByClassName("step");
+			  // Exit the function if any field in the current tab is invalid:
+			  if (n == 1 && !validateForm()) return false;
+			  // Hide the current tab:
+			  x[currentTab].style.display = "none";
+			  // Increase or decrease the current tab by 1:
+			  if(n == -1) y[currentTab].className += " finish";
+			  currentTab = currentTab + n;
+			  if(currentTab < num_Questions+1) y[currentTab].className = y[currentTab].className.replace(" finish", "");
+			  // if you have reached the end of the form... :
+			  if (currentTab >= x.length) {
+				//...the form gets submitted:
+				document.getElementById("quizForm").submit();
+				return false;
+			  }
+			  // Otherwise, display the correct tab:
+			  showTab(currentTab);
+			}
+			
 			// Used to reset error message regarding field & invalid flag on input field
 			function reset_Validation_Error(input_field, element_id){
 				document.getElementById(element_id).innerHTML = "";
@@ -239,7 +262,7 @@ require_once "config.php";
 						}else if(y[i].value.trim().length < min_Quiz_Name_Length){
 							valid = validationError(y[i], "Q_name_err", "Questionnaire name must be at least "+min_Quiz_Name_Length+" characters long.");
 						}else{
-							valid = validationError(y[i], "Q_name_err", "Questionnaire Name cannot have any special characters except '. ? ! ' -'.");
+							valid = validationError(y[i], "Q_name_err", "Questionnaire Name cannot have any special characters except \". ' ? ! -\".");
 						}
 					}
 				}else if(currentTab == (num_Questions + 1)){ // Results Page Verification
@@ -270,7 +293,7 @@ require_once "config.php";
 								valid = validationError(y[i], "Q_"+currentTab+"_ERR", "Please enter a question.");
 							}else{
 								// String contains illegal characters
-								valid = validationError(y[i], "Q_"+currentTab+"_ERR", "Question cannot have any special characters except '. ? ! ' -'.");
+								valid = validationError(y[i], "Q_"+currentTab+"_ERR", "Question cannot have any special characters except \". ' ? ! -\".");
 							}
 						}else{
 							for(j = 1; j < currentTab ; j++){
@@ -288,7 +311,7 @@ require_once "config.php";
 								valid = validationError(y[i], "A_"+currentTab+"_"+i+"_ERR", "Please enter an answer.");
 							}else{
 								// String contains illegal characters
-								valid = validationError(y[i], "A_"+currentTab+"_"+i+"_ERR", "Answer cannot have any special characters except '. ? ! ' -'.");
+								valid = validationError(y[i], "A_"+currentTab+"_"+i+"_ERR", "Answer cannot have any special characters except \". ' ? ! -\".");
 							}
 						}else{
 							for(j = 1; j < i; j++){
@@ -332,20 +355,6 @@ require_once "config.php";
 					for(;num_Questions > target_Questions; num_Questions--){
 						deleteQuestion();
 					}
-				}
-			}
-			
-			// Universal Function to be used by deleteQuestion() and removeAns(); assumes inputs are IDs to DIV Elements 
-			function deleteElement(parentDIV,childDIV){
-				if(parentDIV == childDIV)
-				{
-					alert("An Error has occured: Parent cannot be removed.");
-				}else if(document.getElementById(childDIV)){
-					var child = document.getElementById(childDIV);
-					var parent = document.getElementById(parentDIV);
-					parent.removeChild(child);
-				}else{
-					alert("An Error has occured: Child div not found.");
 				}
 			}
 			
