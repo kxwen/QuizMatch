@@ -153,16 +153,22 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		{
 			font: 14px sans-serif;
 		}
-		div.inputBar
-			{
-			width: 350px;
-			padding: 20px; 
-			}
 		div.buttonSpaceLeft
 		{
 			margin-left: 5%;
 			margin-top: 2%;
 		}
+		div.contentRoundBorders
+			{
+				border-radius:15px;
+				padding:1%;
+				background:white;
+				margin-bottom:1%;
+				margin-top:1%;
+				margin-left:5%;
+				margin-right:5%;
+				box-shadow: 0 0 3px rgba(0,0,0,0.5);
+			}
 		</style>
 	</head>
 	<body>
@@ -170,7 +176,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 			<a class="btn large pink rounded" onclick="confirmLeave('Are you sure you want to leave?\nYou will lose all unsaved data.', 'userprofile.php')"><tt>Home&#x1F3E0;</tt></a>
 		</div>
 		<center>
-			<div class="inputBar">
+			<div>
+				<div class = "contentRoundBorders">
 				<h2>Edit Profile</h2>
 				<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
 					<div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
@@ -197,6 +204,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 						</div>
 					</div>
 				</form>
+				</div>
 			</div>
 		</center>
 	<script src="config.js"></script>

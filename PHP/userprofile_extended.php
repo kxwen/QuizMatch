@@ -9,23 +9,20 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 	header("location: login.php");
 	exit;
 }
-require_once "config.php";
+require_once "quiz_DB_access_functions.php";
 if(!isset($profile)){
 	$sql = "SELECT * FROM users WHERE id =".$_SESSION["id"];
 	$profile_entry = mysqli_query($link, $sql);
 	$profile = mysqli_fetch_assoc($profile_entry);
 }
-
 $current_username = $profile["username"];
 $current_email = $profile["email"];
 $current_desc = $profile["bio"];
-if($profile["gender"] == "male"){
-	$M_checked_curr = "checked";
-}else if($profile["gender"] == "female"){
-	$F_checked_curr = "checked";
-}else{ // gender is either selected as "other" or is null
-	$O_checked_curr = "checked";
-}
+$current_gender = $profile["gender"];
+
+$quizzes_created = getMyQuizzes($link);
+
+$transfer_quizzes_created = json_encode($quizzes_created);
 ?>
 <!-- 
 This is the homepage for QuizMatch. It contains links to the login page and
@@ -100,7 +97,9 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 					<div class = "profileBlock">
 						<div id="avatar"></div>
 						<h3>
-							<b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>
+							<b><?php echo htmlspecialchars($current_username); ?></b><br>
+							<b><?php echo htmlspecialchars($current_email); ?></b><br>
+							<b><?php echo htmlspecialchars($current_gender); ?></b>
 						</h3>
 					</div>
 				</div>
@@ -110,7 +109,7 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 							Bio:
 						</h6>
 						<p>
-							<?php echo htmlspecialchars($profile["bio"]); ?>
+							<?php echo htmlspecialchars($current_desc); ?>
 						</p>
 					</div>
 					
@@ -118,7 +117,7 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 						<h6>
 							Quizzes Created:
 							<div class = "contentRoundBorders">
-								<p>No Quizzes Created Yet! And I Don't Work Yet!</p>
+								<span id="my_quizzes"></span>
 							</div>
 						</h6>
 					</div>
@@ -137,5 +136,24 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 				<a href="edit_profile.php" class="btn large pink rounded"><tt>Edit Profile&#9998;</tt></a> 	
 			</div>
 		</div>
+		<script src="config.js"></script>
+		<script>
+			var my_quizzes = [];
+			my_quizzes = <?= $transfer_quizzes_created?>;
+			createQuizzesList(my_quizzes, "my_quizzes");
+			
+			function createQuizzesList(quizzes, destination){
+				var num_quizzes = quizzes.length;
+				var list = document.createElement("DIV");
+				if(num_quizzes != 0){
+					for(var i = 0; i<num_quizzes; i++){
+						list.appendChild(createQuizBtn(quizzes, i));
+					}
+				}else{
+					list.innerHTML = "<p>You have not created any quizzes yet.</p>";
+				}
+				document.getElementById(destination).appendChild(list);
+			}
+		</script>
 	</body>
 </html>

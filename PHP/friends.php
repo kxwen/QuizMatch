@@ -28,6 +28,17 @@ $relationships = json_encode($total);
 		{
 			margin-top:5%;
 		}
+		div.contentRoundBorders
+		{
+			border-radius:15px;
+			padding:1%;
+			background:white;
+			margin-bottom:1%;
+			margin-top:1%;
+			margin-left:5%;
+			margin-right:5%;
+			box-shadow: 0 0 3px rgba(0,0,0,0.5);
+		}
 	</style>
 	<header>
 		<center>
@@ -42,8 +53,10 @@ $relationships = json_encode($total);
 			<div class = "bodyLayout">
 				<div class="wrapper">
 					<h2>My Friends</h2>
-					<span id="Friends_Pages"></span>
 				</div>
+			</div>
+			<div class="contentRoundBorders">
+				<span id="Friends_Pages"></span>
 			</div>
 			<div>
 				<button type="button" class ="btn pink rounded" id="prevBtn"
@@ -66,7 +79,7 @@ $relationships = json_encode($total);
 				var relationships = [];
 				
 				relationships = <?= $relationships?>;
-				var total = relationships.length
+				var total = relationships.length;
 				
 				displayFriendsByTab(currentTab);
 				
@@ -182,7 +195,7 @@ $relationships = json_encode($total);
 						var empty_friends = document.createElement("DIV");
 						var empty_friends_step = document.createElement("SPAN");
 						var empty_friends_pseudocard = document.createElement("DIV");
-						var empty_friends_btn = document.createElement("button");
+						var empty_friends_btn = document.createElement("a");
 						
 						empty_friends.setAttribute("class", "tab");
 						empty_friends_step.setAttribute("class", "step");
@@ -190,9 +203,9 @@ $relationships = json_encode($total);
 						empty_friends_pseudocard.setAttribute("class", "btn large silver rounded");
 						empty_friends_pseudocard.innerHTML = "There is no one here.<br><br>"
 						
-						empty_friends_btn.setAttribute("type", "button");
 						empty_friends_btn.setAttribute("class", "btn large pink rounded");
 						empty_friends_btn.innerHTML = "Click here to Matchmake & make friends";
+						empty_friends_btn.setAttribute("href", "matches.php");
 						
 						empty_friends_pseudocard.appendChild(empty_friends_btn);
 						empty_friends.appendChild(empty_friends_pseudocard);
