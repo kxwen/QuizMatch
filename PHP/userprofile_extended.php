@@ -47,7 +47,7 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 			div.contentRoundBorders
 			{
 				border-radius:15px;
-				padding:1%;
+				padding:2%;
 				background:white;
 				margin-bottom:1%;
 				margin-top:1%;
@@ -99,6 +99,7 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 			<div class = "container center">
 				<div class = "quarter white rounded" style = "min-width:325px">
 					<div class = "profileBlock">
+						<center>
 						<div id="avatar"></div>
 						<h3>
 							<b><?php echo htmlspecialchars($current_username); ?></b><br>
@@ -107,6 +108,7 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 							<?php echo htmlspecialchars($current_email); ?><br>
 							<?php echo htmlspecialchars($current_gender); ?>
 						</h4>
+						</center>
 					</div>
 				</div>
 				<div class = "twothirds" style = "margin-left:1%;">
@@ -121,19 +123,15 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 					
 					<div class = "contentRoundBorders">
 						<h6>
-							Quizzes Created:
-							<div class = "contentRoundBorders">
+							Quizzes Created:<br><br>
 								<span id="my_quizzes"></span>
-							</div>
 						</h6>
 					</div>
 					
 					<div class = "contentRoundBorders">
 						<h6>
-							Quizzes Taken:
-							<div class = "contentRoundBorders">
-								<p>No Quizzes Have Been Taken Yet! And I Don't Work Yet Either!</p>
-							</div>
+							Quizzes Taken: <br><br>
+							<p>No Quizzes Have Been Taken Yet! And I Don't Work Yet Either!</p>
 						</h6>
 					</div>
 				</div>
@@ -153,7 +151,7 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 				var list = document.createElement("DIV");
 				if(num_quizzes != 0){
 					for(var i = 0; i<num_quizzes; i++){
-						list.appendChild(createQuizBtn(quizzes, i));
+						list.appendChild(createQuizBtnProfile(quizzes, i));
 					}
 				}else{
 					list.innerHTML = "<p>You have not created any quizzes yet.</p>";

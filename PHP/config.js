@@ -41,6 +41,19 @@ function createQuizBtn(quizzes, quiz_number){
 	return quiz_btn; 
 }
 
+// Functions for Quiz Button for extended Profile
+function createQuizBtnProfile(quizzes, quiz_number){
+	var quiz_name = document.createTextNode(quizzes[quiz_number]["name"]+"\n");
+	var quiz_desc = document.createTextNode(quizzes[quiz_number]["description"]);
+	var quiz_btn = document.createElement("button");
+	quiz_btn.setAttribute("id", "quiz "+quiz_number);
+	quiz_btn.setAttribute("value", quizzes[quiz_number]["id"]);
+	quiz_btn.setAttribute("class", "btn pink rounded");
+	quiz_btn.appendChild(quiz_name);
+	//quiz_btn.appendChild(quiz_desc);
+	return quiz_btn; 
+}
+
 // Functions for managing Tab pages
 function showTab(n) {
   // This function will display the specified tab of the form ...
