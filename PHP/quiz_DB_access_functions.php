@@ -70,6 +70,16 @@ function getOtherQuizzes($link){
 	return $total;
 }
 
+function getSortedOtherQuizzes($link, $order, $phrase){
+	$sql = "SELECT * FROM quizzes WHERE NOT owner_id = ".$_SESSION["id"]." AND name LIKE '%".$phrase."%' ORDER BY ".$order;
+	$results = mysqli_query($link, $sql);
+	$total = array();
+	while($row = mysqli_fetch_assoc($results)){
+		$total[] = $row;
+	}
+	return $total;
+}
+
 // Gets a complete list of all quizzes that the logged in user created
 // Returns a double array. 1st array is standard numerical index starting at 0.
 // second array is an associative array. I.E. index of "username" --> some string
