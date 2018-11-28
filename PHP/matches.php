@@ -61,15 +61,25 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 				justify-content: space-between;
 				padding: 1% 3% 1% 5%;
 			}
+			
+			div.topBarLayout
+			{
+				margin-top:2%;
+			}
 		</style>
+		
 	</head>
+		<header>
+		<center>
+			<div class = "topBarLayout">
+				<a href="userprofile.php" class="btn pink rounded"><tt>Home <i class="fa fa-home"></i></tt></a>
+				<a href="quiz_home.php" class="btn pink rounded"><tt>Quizzes!&#10004;</tt></a>
+				<a href="logout.php" class="btn pink rounded"><tt>Logout <i class="fa fa-sign-out"></i></tt></a>
+			</div>
+		</center>
+	</header>
+	
 	<body>
-	<div class = "container fill">
-		<div class = "buttonSide">
-			<a href="userprofile.php" class="btn large pink rounded"><tt>Home&#x1F3E0;</tt></a>
-			<a href="userprofile_extended.php" class="btn large pink rounded"><tt>My Profile<i class="material-icons">person</i></tt></a>
-		</div>
-	</div>
 	<div class = "container">
 		<div class = "matches">
 			<h1><center>Matches&#x1F50D;</center></h1>

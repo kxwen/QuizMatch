@@ -78,29 +78,35 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 				background-size: cover;
 				background-position: center;
 			}
+			div.topBarLayout
+			{
+				margin-top:2%;
+			}
 		</style>
 		
 	</head>
+	<header>
+		<center>
+			<div class = "topBarLayout">
+				<a href="userprofile.php" class="btn pink rounded"><tt>Home <i class="fa fa-home"></i></tt></a>
+				<a href="quiz_home.php" class="btn pink rounded"><tt>Quizzes!&#10004;</tt></a>
+				<a href="logout.php" class="btn pink rounded"><tt>Logout <i class="fa fa-sign-out"></i></tt></a>
+			</div>
+		</center>
+	</header>
 	<body>
 		<div class = "content">
-			<div class = "container">
-				<div class = "fill">
-					<div class = "buttonSide">
-					<a href="userprofile.php" class="btn large pink rounded"><tt>Home&#x1F3E0;</tt></a>
-					<a href="quiz_home.php" class="btn large pink rounded"><tt>Quizzes!&#10004;</tt></a>
-					</div>
-				</div>
-			</div>
-			
 			<div class = "container center">
 				<div class = "quarter white rounded" style = "min-width:325px">
 					<div class = "profileBlock">
 						<div id="avatar"></div>
 						<h3>
 							<b><?php echo htmlspecialchars($current_username); ?></b><br>
-							<b><?php echo htmlspecialchars($current_email); ?></b><br>
-							<b><?php echo htmlspecialchars($current_gender); ?></b>
 						</h3>
+						<h4>
+							<?php echo htmlspecialchars($current_email); ?><br>
+							<?php echo htmlspecialchars($current_gender); ?>
+						</h4>
 					</div>
 				</div>
 				<div class = "twothirds" style = "margin-left:1%;">
