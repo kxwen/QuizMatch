@@ -1,0 +1,39 @@
+users
+		id --> Auto-Increment int
+		username --> Unique varchar(50)
+		email --> Unique varchar(50)
+		password -->varchar(255)
+		bio --> varchar(255)
+		gender --> varchar(15)
+		DoB --> Date
+		created_at -->DateTime Current_Timestamp
+quizzes
+		id --> Auto-Increment int
+		owner_id --> int		<--from User Session
+		name --> varchar(50)
+		description --> varchar(255)
+		size --> varchar(15)
+questions
+		id --> Auto-Increment int
+		quiz_id --> int			<--from Owning Quiz
+		question  --> varchar(127)
+answers
+		id --> Auto-Increment int
+		question_id --> int		<--from Owning Question
+		answer --> varchar(50)
+		trait  --> varchar(15)
+quiz_results
+		id --> Auto-Increment int
+		quiz_id --> int			<--from Owning Quiz
+		catagory_name --> varchar(50)
+		primary_trait --> varchar(50)
+		secondary_trait --> varchar(50)
+relationships
+		user_one_id-->int
+		user_two_id-->int
+		status--> tinyint
+		last_user_id-->int
+user_results
+		user_id-->int
+		quiz_id-->int
+		result_id-->int
