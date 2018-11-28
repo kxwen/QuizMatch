@@ -1,22 +1,14 @@
 <?php
 /* signup.php
- * The form for a new user to create a profile on
- * QuizMatch. Altered to elaborate on verification of
- * username, password, and email. Removed fields for
- * First/Last Name; will perhaps move to profile settings.
- *
- * Redirects to: Login.html/php
- *
- * Assumes that DB Table contains fields for Username, Email, and Password.
- *
- * References to the Database have been commented out, and replaced with writing to
- * a testing .txt file as a temporary Database.
+ * The form for a new user to create a profile on QuizMatch.
  */
  
 require_once "config.php";
  
-$email = $username = $password = $Cpassword = "";
-$email_err = $username_err = $password_err = $Cpassword_err = "";
+$email = $username = $password = $Cpassword = $DoB = "";
+$email_err = $username_err = $password_err = $Cpassword_err = $DoB_err = "";
+$M_checked = $F_checked = $O_checked = "";
+$M_P_checked = $F_P_checked = $O_P_checked = $N_P_checked = "";
 if($_SERVER["REQUEST_METHOD"] == "POST")
 {
 	// Username Entry and Verification
@@ -125,17 +117,49 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		}
 	}
 	
+	if(empty($_POST["DoB"])){
+		$DoB_err = "Please enter your Date of Birth.";
+	}else{
+		$DoB = $_POST["DoB"];
+		$DoB_temp = explode("-", $DoB);
+		$current_date = explode("-",date("Y-m-d"));
+		
+		if(($current_date[0]-$DoB_temp[0]) < 18){
+			$DoB_err = "You must be 18 years or older to join.";
+		}
+	}
 	
-	if(empty($username_err) && empty($email_err) && empty($password_err) && empty($Cpassword_err))
+	if($_POST["gender"] == "male"){
+		$M_checked = "checked";
+	}else if($_POST["gender"] == "female"){
+		$F_checked = "checked";
+	}else{
+		$O_checked = "checked";
+	}
+	
+	if($_POST["gender_pref"] == "male"){
+		$M_P_checked = "checked";
+	}else if($_POST["gender_pref"] == "female"){
+		$F_P_checked = "checked";
+	}else if($_POST["gender_pref"] == "other"){
+		$O_P_checked = "checked";
+	}else{
+		$N_P_checked = "checked";
+	}
+	
+	if(empty($username_err) && empty($email_err) && empty($password_err) && empty($Cpassword_err) && empty($DoB_err))
 	{
 		// If there are no errors, registers the new profile into database and redirects USER to Login
-		$sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+		$sql = "INSERT INTO users (username, email, password, gender, gender_pref, DoB) VALUES (?, ?, ?, ?, ?, ?)";
 		if($stmt = mysqli_prepare($link, $sql))
 		{
-			mysqli_stmt_bind_param($stmt, "sss", $param_username, $param_email, $param_password);
+			mysqli_stmt_bind_param($stmt, "ssssss", $param_username, $param_email, $param_password, $param_gender, $param_gender_pref, $param_DoB);
 			$param_username = $username;
 			$param_email = $email;
 			$param_password = password_hash($password, PASSWORD_DEFAULT);
+			$param_gender = $_POST["gender"];
+			$param_gender_pref = $_POST["gender_pref"];
+			$param_DoB = $DoB;
 			if(mysqli_stmt_execute($stmt))
 			{
 				// Emailing for Account Verification needs to be implemented.
@@ -154,6 +178,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	}
 	mysqli_close($link);
 }
+
+if(empty($M_checked) && empty($F_checked) && empty($O_checked)) $O_checked = "checked";
+if(empty($M_P_checked) && empty($F_P_checked) && empty($O_P_checked) && empty($N_P_checked)) $N_P_checked = "checked";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -161,11 +188,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	<link href= "stupid.css" type = "text/css" rel = "stylesheet"/>
 		<meta charset = "UTF-8">
 		<title>QuizMatch: Sign Up</title>
-		<!--<link rel ="stylesheet" href="stupid.css">
-		<!--<style type="text/css">
-			body{ font: 14px sans-serif; }
-			.wrapper{ width: 350px; padding: 20px; }
-		</style>!-->
 		<style>
 		body
 		{
@@ -173,10 +195,27 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		}
 		div.inputBar
 		{
-			width: 350px;
+			width: 40%;
 			padding: 20px; 
 		}
 		</style>
+		<script type="text/javascript">
+			var datefield=document.createElement("input")
+			datefield.setAttribute("type", "date")
+			if (datefield.type!="date"){ //if browser doesn't support input type="date", load files for jQuery UI Date Picker
+				document.write('<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />\n')
+				document.write('<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"><\/script>\n')
+				document.write('<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"><\/script>\n') 
+			}
+		</script>
+		 
+		<script>
+		if (datefield.type!="date"){ //if browser doesn't support input type="date", initialize date picker widget:
+			jQuery(function($){ //on document.ready
+				$('#birthday').datepicker();
+			})
+		}
+		</script>
 	</head>
 	<body>
 		<center>
@@ -206,13 +245,26 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 					<br>
 						<label>Confirm Password</label>
 						<br><span class="help-block"><font color="red"><?php echo $Cpassword_err;?></font></span>
-						<input type="password" name="Cpassword" class="form-control" value="<?php echo $Cpassword; ?>">
+						<input type="password" name="Cpassword" class="form-control" value="<?php echo $Cpassword; ?>"><br><br>
 					</div>
-					<!--<div class="form-group <?php echo (!empty($gender_err)) ? 'has-error' : ''; ?>">
-						<label>Gender(M/F)</label>
-						<br><span class="help-block"><font color="red"><?php echo $gender_err;?></font></span>
-						<input type="text" name="gender" class="form-control" value="<?php echo $gender; ?>">
-					</div>-->
+					<div class="form-group">
+					<label>Gender:</label>
+						<input type="radio" name="gender" value="male" <?php echo $M_checked;?>> Male
+						<input type="radio" name="gender" value="female" <?php echo $F_checked;?>> Female 
+						<input type="radio" name="gender" value="other" <?php echo $O_checked;?>> Non-binary/Other<br><br>
+					</div>
+					<div class="form-group">
+					<label>Gender Preference:</label>
+						<input type="radio" name="gender_pref" value="male" <?php echo $M_P_checked;?>> Male
+						<input type="radio" name="gender_pref" value="female" <?php echo $F_P_checked;?>> Female 
+						<input type="radio" name="gender_pref" value="other" <?php echo $O_P_checked;?>> Non-binary/Other
+						<input type="radio" name="gender_pref" value="" <?php echo $N_P_checked;?>>No Preference<br><br>
+					</div>
+					<div class="form-group">
+					<label>Date of Birth:</label>
+						<br><span class="help-block"><font color="red"><?php echo $DoB_err;?></font></span>
+						<input type="date" id="birthday" name="DoB" size="20" style="width:50%;" value=<?php echo $DoB;?>>
+					</div>
 					<div class="form-group">
 					<br>
 						<input type="submit" class="btn pink rounded" value = "Submit" style = "font-family: Helvetica";>
