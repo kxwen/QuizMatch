@@ -23,6 +23,7 @@ if(!isset($profile)){
 $new_email = $new_username = $new_desc = "";
 $email_err = $username_err = "";
 $M_checked_new = $F_checked_new = $O_checked_new = ""; // Used for radio inputs for gender
+$M_P_checked_new = $F_P_checked_new = $O_P_checked_new = $N_P_checked_new = "";
 $new_gender = "";
 
 $current_username = $profile["username"];
@@ -35,6 +36,16 @@ if($profile["gender"] == "male"){
 	$F_checked_curr = "checked";
 }else{ // gender is either selected as "other" or is null
 	$O_checked_curr = "checked";
+}
+$M_P_checked_curr = $F_P_checked_curr = $O_P_checked_curr = $N_P_checked_curr = "";
+if($profile["gender_pref"] == "male"){
+	$M_P_checked_curr = "checked";
+}else if($profile["gender_pref"] == "female"){
+	$F_P_checked_curr = "checked";
+}else if($profile["gender_pref"] == "female"){ // gender is either selected as "other" or is null
+	$O_P_checked_curr = "checked";
+}else{
+	$N_P_checked_curr = "checked";
 }
 
 if($_SERVER["REQUEST_METHOD"] == "POST")
@@ -122,14 +133,26 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	}
 	$new_gender = $_POST["gender"];
 	
+	if($_POST["gender_pref"] == "male"){
+		$M_P_checked_new = "checked";
+	}else if($_POST["gender_pref"] == "female"){
+		$F_P_checked_new = "checked";
+	}else if($_POST["gender_pref"] == "other"){
+		$O_P_checked_new = "checked";
+	}else if($_POST["gender_pref"] == ""){
+		$N_P_checked_new = "checked";
+	}
+	$new_gender_pref = $_POST["gender_pref"];
+	
 	if(empty($username_err) && empty($email_err)){
-		$sql = "UPDATE users SET username=?, email=?, bio=?, gender=? WHERE id=".$_SESSION["id"];
+		$sql = "UPDATE users SET username=?, email=?, bio=?, gender=?, gender_pref=? WHERE id=".$_SESSION["id"];
 		if($stmt = mysqli_prepare($link, $sql)){
-			mysqli_stmt_bind_param($stmt, "ssss", $param_username, $param_email, $param_bio, $param_gender);
+			mysqli_stmt_bind_param($stmt, "sssss", $param_username, $param_email, $param_bio, $param_gender, $param_gender_pref);
 			$param_username = $new_username;
 			$param_email = $new_email;
 			$param_bio = $new_desc;
 			$param_gender = $new_gender;
+			$param_gender_pref = $new_gender_pref;
 			if(mysqli_stmt_execute($stmt)){
 				$_SESSION["username"] = $new_username;
 				header("location: userprofile_extended.php");
@@ -190,6 +213,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 							<input type="radio" name="gender" value="male" <?php if($M_checked_new != "" || $F_checked_new != "" || $O_checked_new != ""){echo $M_checked_new;}else{echo $M_checked_curr;}?>> Male
 							<input type="radio" name="gender" value="female" <?php if($M_checked_new != "" || $F_checked_new != "" || $O_checked_new != ""){echo $F_checked_new;}else{echo $F_checked_curr;}?>> Female 
 							<input type="radio" name="gender" value="other" <?php if($M_checked_new != "" || $F_checked_new != "" || $O_checked_new != ""){echo $O_checked_new;}else{echo $O_checked_curr;}?>> Non-binary/Other<br><br>
+						
+						<label>Gender Preference:</label>
+							<input type="radio" name="gender_pref" value="male" <?php if($M_P_checked_new != "" || $F_P_checked_new != "" || $O_P_checked_new != "" || $N_P_checked_new != ""){echo $M_P_checked_new;}else{echo $M_P_checked_curr;}?>> Male
+							<input type="radio" name="gender_pref" value="female" <?php if($M_P_checked_new != "" || $F_P_checked_new != "" || $O_P_checked_new != "" || $N_P_checked_new != ""){echo $F_P_checked_new;}else{echo $F_P_checked_curr;}?>> Female 
+							<input type="radio" name="gender_pref" value="other" <?php if($M_P_checked_new != "" || $F_P_checked_new != "" || $O_P_checked_new != "" || $N_P_checked_new != ""){echo $O_P_checked_new;}else{echo $O_P_checked_curr;}?>> Non-binary/Other
+							<input type="radio" name="gender_pref" value="" <?php if($M_P_checked_new != "" || $F_P_checked_new != "" || $O_P_checked_new != "" || $N_P_checked_new != ""){echo $N_P_checked_new;}else{echo $N_P_checked_curr;}?>>No Preference<br><br>
 						
 						<div class="form-group">
 						<br>
