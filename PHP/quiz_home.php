@@ -67,6 +67,22 @@ $count = 0;
 		<div class="bodyLayout">
 			<h2>Questionaire List</h2>
 			<a href="create_quiz.php" class="btn large pink rounded"><tt>Create your own!&#x2611;</tt></a>
+			<a href="matches.php" class="btn large pink rounded"><tt>Let's get Matched!&#x1F50D;</tt></a>
+		</div>
+		<div>
+		Filter:
+		<select style="width:10%" id="target">
+			<option value="name">Name</option>
+			<option value="size">Size</option>
+		</select>
+		<select style = "width:10%" id="order">
+			<option value="asc">Descending</option>
+			<option value="desc">Ascending</option>
+		</select>
+		Search:
+		<input type="text" value="" placeholder="Quiz Name" style="width:15%" id="phrase">
+		<button type="button" class ="btn small pink rounded" id="search"
+				onclick="searchDB();">Go</button>
 		</div>
 		<div class="contentRoundBorders">
 			<span id="Quiz_Pages"></span>
@@ -88,14 +104,11 @@ $count = 0;
 			var total_quizzes = quizzes.length;
 			var max_quiz_page = 10; // number of quizzes that can be diplayed per page
 			displayQuizByTab(currentTab);
-			// Displays the set of quizzes according to the tab
-			// Only 10 quizzes are displayed at a time
+			
 			function displayQuizByTab(currentTab) {
 				createQuizPages();
 				showTab(currentTab); // Display the current tab
 			}
-	
-			//// Richard's Code
 			
 			function createQuizList(start, end){
 				var quiz_list = document.createElement("DIV");
@@ -105,12 +118,18 @@ $count = 0;
 				for(var i = start; i<end; i++){
 					quiz_list.appendChild(createQuizBtn(quizzes, i));
 				}
-				document.getElementById("Quiz_Pages").appendChild(quiz_list);
-				document.getElementById("Quiz_Page_Steps").appendChild(quiz_list_step);
+				document.getElementById("total_pages").appendChild(quiz_list);
+				document.getElementById("total_steps").appendChild(quiz_list_step);
 			}
 			
 			function createQuizPages(){
 				var upper_bound = 0;
+				var total_pages = document.createElement("DIV");
+				var total_steps = document.createElement("DIV");
+				total_pages.setAttribute("id", "total_pages");
+				total_steps.setAttribute("id", "total_steps");
+				document.getElementById("Quiz_Pages").appendChild(total_pages);
+				document.getElementById("Quiz_Page_Steps").appendChild(total_steps);
 				if(total_quizzes != 0){
 					for(var lower_bound = 0; lower_bound < total_quizzes; lower_bound+=max_quiz_page) {
 						if(total_quizzes-lower_bound < max_quiz_page){
@@ -122,8 +141,31 @@ $count = 0;
 					}
 				}else{
 					createQuizList(0,0);
-					document.getElementById("Quiz_Pages").innerHTML +="<p>No quizzes have been created yet. You can help by clicking the button above!</p>";
+					document.getElementById("total_pages").innerHTML +="<p>No quizzes have been created yet with searched phrase. You can help by clicking the button above!</p>";
 				}
+			}
+			
+			function refreshList(){
+				deleteElement("Quiz_Pages", "total_pages");
+				deleteElement("Quiz_Page_Steps", "total_steps");
+				currentTab=0;
+				displayQuizByTab(currentTab);
+			}
+			
+			function searchDB(){
+				var phrase = document.getElementById("phrase").value;
+				var order = document.getElementById("order").value;
+				var target = document.getElementById("target").value;
+				xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function(){
+					if(this.readyState==4 && this.status==200){
+						quizzes = JSON.parse(this.responseText)
+						total_quizzes = quizzes.length;
+						refreshList();
+					}
+				}
+				xmlhttp.open("GET", "searchDB.php?q="+target+"_"+order+"_"+phrase, true);
+				xmlhttp.send();
 			}
 		</script>
 		</center>
