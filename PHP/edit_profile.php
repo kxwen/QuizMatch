@@ -19,12 +19,41 @@ if(!isset($profile)){
 	$profile_entry = mysqli_query($link, $sql);
 	$profile = mysqli_fetch_assoc($profile_entry);
 }
+
+if(isset($_POST['submit'])){
+    $name       = $_FILES['file']['name'];  
+    $temp_name  = $_FILES['file']['tmp_name'];  
+	
+    if(isset($name)){
+        if(!empty($name)){      
+            $location = 'images/';      
+            if(move_uploaded_file($temp_name, $location.$profile["id"].'.png' //'images/default-user2.png' //$location.$name
+			)){
+                echo 'File uploaded successfully';
+            }
+        }       
+    }  else {
+        echo 'You should select a file to upload !!';
+    }
+}
  
 $new_email = $new_username = $new_desc = "";
 $email_err = $username_err = "";
 $M_checked_new = $F_checked_new = $O_checked_new = ""; // Used for radio inputs for gender
 $M_P_checked_new = $F_P_checked_new = $O_P_checked_new = $N_P_checked_new = "";
 $new_gender = "";
+
+$location = 'images/'; 
+$image_name = $location.$profile["id"].'.png';
+
+if(file_exists($image_name))
+{
+	echo "";
+}
+else
+{
+	$image_name = $location.'default-user1.png';
+}
 
 $current_username = $profile["username"];
 $current_email = $profile["email"];
@@ -155,7 +184,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 			$param_gender_pref = $new_gender_pref;
 			if(mysqli_stmt_execute($stmt)){
 				$_SESSION["username"] = $new_username;
-				header("location: userprofile_extended.php");
+				header("location: edit_profile.php");
 			}else{
 				echo "An Error has occurred. Please try again later.";
 			}
@@ -178,7 +207,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		}
 		div.inputBar
 			{
-			width:40%;
+			width: 350px;
 			padding: 20px; 
 			}
 		div.buttonSpaceLeft
@@ -186,16 +215,34 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 			margin-left: 5%;
 			margin-top: 2%;
 		}
+		#avatar
+		{
+			background-image: url(<?php echo ($image_name);?>);
+			width: 300px;
+			height: 300px;
+			background-size: cover;
+			background-position: center;
+			border-radius:50%;
+		}
+		div.topBarLayout
+		{
+			margin-top:2%;
+			text-align:center;
+		}
 		</style>
 	</head>
 	<body>
-		<div class = "buttonSpaceLeft">
-			<a class="btn large pink rounded" onclick="confirmLeave('Are you sure you want to leave?\nYou will lose all unsaved data.', 'userprofile.php')"><tt>Home&#x1F3E0;</tt></a>
+		<div class = "topBarLayout">
+			<a class="btn pink rounded" onclick="confirmLeave('Are you sure you want to leave?\nYou will lose all unsaved data if you haven't submiited the form.', 'userprofile.php')"><tt>Home&#x1F3E0;</tt></a>
 		</div>
 		<center>
 			<div class="inputBar">
 				<h2>Edit Profile</h2>
-				<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+				<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
+					<div id="avatar"></div>
+					<br>
+					<input type="file" name="file" id="file"><br><br>
+
 					<div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
 					<br>
 						<label>Username:</label>
@@ -222,7 +269,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 						
 						<div class="form-group">
 						<br>
-							<input type="submit" class="btn pink rounded" value = "Submit" style = "font-family: Helvetica";>
+							<input type="submit" class="btn pink rounded" value = "Submit" name="submit" style = "font-family: Helvetica";>
 						</div>
 					</div>
 				</form>
