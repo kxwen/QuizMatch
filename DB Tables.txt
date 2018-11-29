@@ -5,6 +5,7 @@ users
 		password -->varchar(255)
 		bio --> varchar(255)
 		gender --> varchar(15)
+		gender_pref --> varchar(15)
 		DoB --> Date
 		created_at -->DateTime Current_Timestamp
 quizzes
