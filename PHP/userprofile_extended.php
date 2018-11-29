@@ -19,6 +19,8 @@ $current_username = $profile["username"];
 $current_email = $profile["email"];
 $current_desc = $profile["bio"];
 $current_gender = $profile["gender"];
+$location = 'images/'; 
+$image_name = $location.$profile["id"].'.png';
 
 $quizzes_created = getMyQuizzes($link);
 
@@ -72,27 +74,27 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 			}
 			#avatar
 			{
-				background-image: url('images/default-user2.png');
+				background-image: url(<?php echo ($image_name);?>);
 				width: 300px;
 				height: 300px;
 				background-size: cover;
 				background-position: center;
+				border-radius:50%;
 			}
 			div.topBarLayout
 			{
 				margin-top:2%;
+				text-align:center;
 			}
 		</style>
 		
 	</head>
 	<header>
-		<center>
-			<div class = "topBarLayout">
-				<a href="userprofile.php" class="btn pink rounded"><tt>Home <i class="fa fa-home"></i></tt></a>
-				<a href="quiz_home.php" class="btn pink rounded"><tt>Quizzes!&#10004;</tt></a>
-				<a href="logout.php" class="btn pink rounded"><tt>Logout <i class="fa fa-sign-out"></i></tt></a>
-			</div>
-		</center>
+		<div class = "topBarLayout">
+			<a href="userprofile.php" class="btn pink rounded"><tt>Home <i class="fa fa-home"></i></tt></a>
+			<a href="quiz_home.php" class="btn pink rounded"><tt>Quizzes!&#10004;</tt></a>
+			<a href="logout.php" class="btn pink rounded"><tt>Logout <i class="fa fa-sign-out"></i></tt></a>
+		</div>
 	</header>
 	<body>
 		<div class = "content">

@@ -19,12 +19,39 @@ if(!isset($profile)){
 	$profile_entry = mysqli_query($link, $sql);
 	$profile = mysqli_fetch_assoc($profile_entry);
 }
+
+ if(isset($_POST['submit'])){
+    $name       = $_FILES['file']['name'];  
+    $temp_name  = $_FILES['file']['tmp_name'];  
+    if(isset($name)){
+        if(!empty($name)){      
+            $location = 'images/';      
+            if(move_uploaded_file($temp_name, $location.$profile["id"].'.png' //'images/default-user2.png' //$location.$name
+			)){
+                echo 'File uploaded successfully';
+            }
+        }       
+    }  else {
+        echo 'You should select a file to upload !!';
+    }
+}
  
 $new_email = $new_username = $new_desc = "";
 $email_err = $username_err = "";
 $M_checked_new = $F_checked_new = $O_checked_new = ""; // Used for radio inputs for gender
-$M_P_checked_new = $F_P_checked_new = $O_P_checked_new = $N_P_checked_new = "";
 $new_gender = "";
+
+$location = 'images/'; 
+$image_name = $location.$profile["id"].'.png';
+
+if(file_exists($image_name))
+{
+	echo "";
+}
+else
+{
+	$image_name = $location.'default-user1.png';
+}
 
 $current_username = $profile["username"];
 $current_email = $profile["email"];
@@ -36,16 +63,6 @@ if($profile["gender"] == "male"){
 	$F_checked_curr = "checked";
 }else{ // gender is either selected as "other" or is null
 	$O_checked_curr = "checked";
-}
-$M_P_checked_curr = $F_P_checked_curr = $O_P_checked_curr = $N_P_checked_curr = "";
-if($profile["gender_pref"] == "male"){
-	$M_P_checked_curr = "checked";
-}else if($profile["gender_pref"] == "female"){
-	$F_P_checked_curr = "checked";
-}else if($profile["gender_pref"] == "female"){ // gender is either selected as "other" or is null
-	$O_P_checked_curr = "checked";
-}else{
-	$N_P_checked_curr = "checked";
 }
 
 if($_SERVER["REQUEST_METHOD"] == "POST")
@@ -133,26 +150,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	}
 	$new_gender = $_POST["gender"];
 	
-	if($_POST["gender_pref"] == "male"){
-		$M_P_checked_new = "checked";
-	}else if($_POST["gender_pref"] == "female"){
-		$F_P_checked_new = "checked";
-	}else if($_POST["gender_pref"] == "other"){
-		$O_P_checked_new = "checked";
-	}else if($_POST["gender_pref"] == ""){
-		$N_P_checked_new = "checked";
-	}
-	$new_gender_pref = $_POST["gender_pref"];
-	
 	if(empty($username_err) && empty($email_err)){
-		$sql = "UPDATE users SET username=?, email=?, bio=?, gender=?, gender_pref=? WHERE id=".$_SESSION["id"];
+		$sql = "UPDATE users SET username=?, email=?, bio=?, gender=? WHERE id=".$_SESSION["id"];
 		if($stmt = mysqli_prepare($link, $sql)){
-			mysqli_stmt_bind_param($stmt, "sssss", $param_username, $param_email, $param_bio, $param_gender, $param_gender_pref);
+			mysqli_stmt_bind_param($stmt, "ssss", $param_username, $param_email, $param_bio, $param_gender);
 			$param_username = $new_username;
 			$param_email = $new_email;
 			$param_bio = $new_desc;
 			$param_gender = $new_gender;
-			$param_gender_pref = $new_gender_pref;
 			if(mysqli_stmt_execute($stmt)){
 				$_SESSION["username"] = $new_username;
 				header("location: userprofile_extended.php");
@@ -172,30 +177,50 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		<meta charset = "UTF-8">
 		<title>QuizMatch: Edit Profile</title>
 		<style>
-		body
-		{
-			font: 14px sans-serif;
-		}
-		div.inputBar
+			body
 			{
-			width: 350px;
-			padding: 20px; 
+				font: 14px sans-serif;
 			}
-		div.buttonSpaceLeft
-		{
-			margin-left: 5%;
-			margin-top: 2%;
-		}
+			div.inputBar
+			{
+				width: 350px;
+				padding: 20px; 
+			}
+			div.buttonSpaceLeft
+			{
+				margin-left: 5%;
+				margin-top: 2%;
+			}
+			#avatar
+			{
+				background-image: url(<?php echo ($image_name);?>);
+				width: 300px;
+				height: 300px;
+				background-size: cover;
+				background-position: center;
+				border-radius:50%;
+			}
+			div.topBarLayout
+			{
+				margin-top:2%;
+				text-align:center;
+			}
 		</style>
+		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	</head>
 	<body>
-		<div class = "buttonSpaceLeft">
-			<a class="btn large pink rounded" onclick="confirmLeave('Are you sure you want to leave?\nYou will lose all unsaved data.', 'userprofile.php')"><tt>Home&#x1F3E0;</tt></a>
+	<span id="printHere"></span>
+		<div class = "topBarLayout">
+			<a class="btn pink rounded" onclick="confirmLeave('Are you sure you want to leave?\nYou will lose all unsaved data.', 'userprofile.php')"><tt>Home&#x1F3E0;</tt></a>
 		</div>
 		<center>
 			<div class="inputBar">
 				<h2>Edit Profile</h2>
-				<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+				<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
+					<div id="avatar"></div>
+					<br>
+					<input type="file" name="file" id="file"><br><br>
+					
 					<div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
 					<br>
 						<label>Username:</label>
@@ -214,20 +239,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 							<input type="radio" name="gender" value="female" <?php if($M_checked_new != "" || $F_checked_new != "" || $O_checked_new != ""){echo $F_checked_new;}else{echo $F_checked_curr;}?>> Female 
 							<input type="radio" name="gender" value="other" <?php if($M_checked_new != "" || $F_checked_new != "" || $O_checked_new != ""){echo $O_checked_new;}else{echo $O_checked_curr;}?>> Non-binary/Other<br><br>
 						
-						<label>Gender Preference:</label>
-							<input type="radio" name="gender_pref" value="male" <?php if($M_P_checked_new != "" || $F_P_checked_new != "" || $O_P_checked_new != "" || $N_P_checked_new != ""){echo $M_P_checked_new;}else{echo $M_P_checked_curr;}?>> Male
-							<input type="radio" name="gender_pref" value="female" <?php if($M_P_checked_new != "" || $F_P_checked_new != "" || $O_P_checked_new != "" || $N_P_checked_new != ""){echo $F_P_checked_new;}else{echo $F_P_checked_curr;}?>> Female 
-							<input type="radio" name="gender_pref" value="other" <?php if($M_P_checked_new != "" || $F_P_checked_new != "" || $O_P_checked_new != "" || $N_P_checked_new != ""){echo $O_P_checked_new;}else{echo $O_P_checked_curr;}?>> Non-binary/Other
-							<input type="radio" name="gender_pref" value="" <?php if($M_P_checked_new != "" || $F_P_checked_new != "" || $O_P_checked_new != "" || $N_P_checked_new != ""){echo $N_P_checked_new;}else{echo $N_P_checked_curr;}?>>No Preference<br><br>
-						
 						<div class="form-group">
 						<br>
-							<input type="submit" class="btn pink rounded" value = "Submit" style = "font-family: Helvetica";>
+							<input type="submit" class="btn pink rounded" value = "Submit" name="submit" style = "font-family: Helvetica";>
 						</div>
 					</div>
 				</form>
 			</div>
 		</center>
 	<script src="config.js"></script>
+	<script>
+		
+	</script>
 	</body>
 </html>
