@@ -1,2 +1,3 @@
-  This is the image resource folders. Do as you wish.
-  Temporary storage until placing images into database.
+This is the image resource folder.
+User profile images go in here.
+User profile images are named after their ids.
