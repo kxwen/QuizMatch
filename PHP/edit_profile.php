@@ -22,8 +22,18 @@ if(!isset($profile)){
 
 if(isset($_POST['submit'])){
     $name       = $_FILES['file']['name'];  
-    $temp_name  = $_FILES['file']['tmp_name'];  
+    $temp_name  = $_FILES['file']['tmp_name'];
+	$uploadOk = 1;
+	$imageFileType = strtolower(pathinfo($name,PATHINFO_EXTENSION));
 	
+	$check = getimagesize($_FILES["file"]["tmp_name"]);
+	if($check !== false) {
+        $uploadOk = 1;
+    } else {
+        echo "File is not an image.";
+        $uploadOk = 0;
+    }
+	/*
     if(isset($name)){
         if(!empty($name)){      
             $location = 'images/';      
@@ -35,6 +45,29 @@ if(isset($_POST['submit'])){
     }  else {
         echo 'You should select a file to upload !!';
     }
+	*/
+	// Check file size
+	if ($_FILES["file"]["size"] > 500000) {
+    echo "Sorry, your file is too large.";
+    $uploadOk = 0;
+	}
+	// Allow certain file formats
+	if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+	&& $imageFileType != "gif" ) {
+		echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+		$uploadOk = 0;
+	}
+	// Check if $uploadOk is set to 0 by an error
+	if ($uploadOk == 0) {
+		echo "Sorry, your file was not uploaded.";
+	// if everything is ok, try to upload file
+	} else {
+		$location = 'images/';
+		if (move_uploaded_file($temp_name, $location.$profile["id"].'.png')) {
+		} else {
+			echo "Sorry, there was an error uploading your file.";
+		}
+	}
 }
  
 $new_email = $new_username = $new_desc = "";
@@ -232,8 +265,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		</style>
 	</head>
 	<body>
-		<div class = "topBarLayout">
-			<a class="btn pink rounded" onclick="confirmLeave('Are you sure you want to leave?\nYou will lose all unsaved data if you haven't submiited the form.', 'userprofile.php')"><tt>Home&#x1F3E0;</tt></a>
+		<div class = "buttonSpaceLeft">
+			<a class="btn large pink rounded" onclick="confirmLeave('Are you sure you want to leave?\nYou will lose all unsaved data.', 'userprofile.php')"><tt>Home&#x1F3E0;</tt></a>
 		</div>
 		<center>
 			<div class="inputBar">
@@ -242,6 +275,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 					<div id="avatar"></div>
 					<br>
 					<input type="file" name="file" id="file"><br><br>
+					<input type="submit" value="submit" name="submit">
 
 					<div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
 					<br>
@@ -276,5 +310,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 			</div>
 		</center>
 	<script src="config.js"></script>
+	
 	</body>
 </html>
