@@ -131,29 +131,15 @@ require_once "config.php";
 		<link rel="stylesheet" href="stupid.css">
 		<style type="text/css"></style>
 	</head>
-	<style>
-	div.contentRoundBorders
-	{
-		border-radius:15px;
-		padding:1%;
-		background:white;
-		margin-bottom:1%;
-		margin-top:1%;
-		margin-left:5%;
-		margin-right:5%;
-		box-shadow: 0 0 3px rgba(0,0,0,0.5);
-	}
-	</style>
 	<body>
-			<div class="container">
+		<div class="container">
 			<center>
 				<form id="quizForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
 					<h2>Create a Questionnaire:</h2>
 					Number of Questions: <span style = "border-radius:10px; background:#ee6e73; padding:3px; color: white; font-weight:bold;" id="num_Qs"></span>
-					<div class="contentRoundBorders">
 						<div class="tab"><h3>Theme and Details:</h3>
 							<br><b>Questionnaire Name:</b><br><span class="help-block"><font color="red" id="Q_name_err"></font></span><br> <input style = "font-family: Helvetica" type="text" name="Q_name" class="form-control"><br><br>
-							<b>Description:</b><br><br> <textarea style = "font-family: Helvetica" name="DESC" rows="5" cols="33" maxlength="200"></textarea><br><br>
+							<b>Description:</b><br><br> <textarea style = "font-family: Helvetica" name="DESC" rows="4" cols="33" maxlength="200"></textarea><br><br>
 							<b>Size:</b> <input type="radio" name="size" value="small" checked onclick="updateQs()">Small 
 								<input type="radio" name="size" value="medium" onclick="updateQs()">Medium 
 								<input type="radio" name="size" value="large" onclick="updateQs()">Large<br><br>
@@ -177,7 +163,7 @@ require_once "config.php";
 							<br><b>Result #11:</b> <input type="text" name="R_11" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[3].'/'.$traits[1])?>><span class="help-block"><font color="red" id="R_11_ERR"></font></span><br>
 							<br><b>Result #12:</b> <input type="text" name="R_12" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[3].'/'.$traits[2])?>><span class="help-block"><font color="red" id="R_12_ERR"></font></span><br>
 						</div>
-					</div>
+					
 					
 					<!--Buttons that control Navigation of page and website-->
 					<div style="float:left;">
@@ -195,7 +181,7 @@ require_once "config.php";
 						</div>
 					</div>
 					<!--Controls Progress "bar"-->
-					<div style="text-align:center;margin-top:40px;">
+					<div style="text-align:center;margin-top:10px;">
 						<div class="step" data-tooltip="" data-tooltip-message="Theme & Details" data-tooltip-position="top"></div><!--Area where page indicators will be placed by Javascript--><span id="num_pages"></span><!--End of Insertion Area--><div class="step" data-tooltip="" data-tooltip-message="Catagory Names" data-tooltip-position="top"></div>
 					</div>
 					<div>
@@ -206,8 +192,8 @@ require_once "config.php";
 						<a class ="btn pink rounded" href="https://psychologia.co/melancholic-personality/" target="_blank" data-tooltip="" data-tooltip-position="bottom" data-tooltip-message="People with the Melancholic trait are often loyal, calm, and patient. Click this button to learn more.">Melancholic</a>
 					</div>
 				</form>
-				<center>
-			</div>
+			</center>
+		</div>
 		<script src="config.js"></script>
 		<script>
 			/* Javascript used to manage this specific page.

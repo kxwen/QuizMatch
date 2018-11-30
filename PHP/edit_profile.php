@@ -19,7 +19,6 @@ if(!isset($profile)){
 	$profile_entry = mysqli_query($link, $sql);
 	$profile = mysqli_fetch_assoc($profile_entry);
 }
-
 if(isset($_POST['submit'])){
     $name       = $_FILES['file']['name'];  
     $temp_name  = $_FILES['file']['tmp_name'];
@@ -33,19 +32,6 @@ if(isset($_POST['submit'])){
         echo "File is not an image.";
         $uploadOk = 0;
     }
-	/*
-    if(isset($name)){
-        if(!empty($name)){      
-            $location = 'images/';      
-            if(move_uploaded_file($temp_name, $location.$profile["id"].'.png' //'images/default-user2.png' //$location.$name
-			)){
-                echo 'File uploaded successfully';
-            }
-        }       
-    }  else {
-        echo 'You should select a file to upload !!';
-    }
-	*/
 	// Check file size
 	if ($_FILES["file"]["size"] > 500000) {
     echo "Sorry, your file is too large.";
@@ -75,10 +61,8 @@ $email_err = $username_err = "";
 $M_checked_new = $F_checked_new = $O_checked_new = ""; // Used for radio inputs for gender
 $M_P_checked_new = $F_P_checked_new = $O_P_checked_new = $N_P_checked_new = "";
 $new_gender = "";
-
 $location = 'images/'; 
 $image_name = $location.$profile["id"].'.png';
-
 if(file_exists($image_name))
 {
 	echo "";
@@ -87,29 +71,27 @@ else
 {
 	$image_name = $location.'default-user1.png';
 }
-
 $current_username = $profile["username"];
 $current_email = $profile["email"];
 $current_desc = $profile["bio"];
 $M_checked_curr = $F_checked_curr = $O_checked_curr = ""; // Used for radio inputs for gender
-if($profile["gender"] == "male"){
+if($profile["gender"] == "Male"){
 	$M_checked_curr = "checked";
-}else if($profile["gender"] == "female"){
+}else if($profile["gender"] == "Female"){
 	$F_checked_curr = "checked";
 }else{ // gender is either selected as "other" or is null
 	$O_checked_curr = "checked";
 }
 $M_P_checked_curr = $F_P_checked_curr = $O_P_checked_curr = $N_P_checked_curr = "";
-if($profile["gender_pref"] == "male"){
+if($profile["gender_pref"] == "Male"){
 	$M_P_checked_curr = "checked";
-}else if($profile["gender_pref"] == "female"){
+}else if($profile["gender_pref"] == "Female"){
 	$F_P_checked_curr = "checked";
-}else if($profile["gender_pref"] == "female"){ // gender is either selected as "other" or is null
+}else if($profile["gender_pref"] == "Non-Binary/Other"){ // gender is either selected as "other" or is null
 	$O_P_checked_curr = "checked";
 }else{
 	$N_P_checked_curr = "checked";
 }
-
 if($_SERVER["REQUEST_METHOD"] == "POST")
 {
 	if(preg_match('/^[A-Za-z0-9]+$/', trim($_POST["username"]))){
@@ -186,20 +168,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	
 	$new_desc = htmlspecialchars(trim($_POST["desc"]));
 	
-	if($_POST["gender"] == "male"){
+	if($_POST["gender"] == "Male"){
 		$M_checked_new = "checked";
-	}else if($_POST["gender"] == "female"){
+	}else if($_POST["gender"] == "Female"){
 		$F_checked_new = "checked";
-	}else if($_POST["gender"] == "other"){
+	}else if($_POST["gender"] == "Non-Binary/Other"){
 		$O_checked_new = "checked";
 	}
 	$new_gender = $_POST["gender"];
 	
-	if($_POST["gender_pref"] == "male"){
+	if($_POST["gender_pref"] == "Male"){
 		$M_P_checked_new = "checked";
-	}else if($_POST["gender_pref"] == "female"){
+	}else if($_POST["gender_pref"] == "Female"){
 		$F_P_checked_new = "checked";
-	}else if($_POST["gender_pref"] == "other"){
+	}else if($_POST["gender_pref"] == "Non-Binary/Other"){
 		$O_P_checked_new = "checked";
 	}else if($_POST["gender_pref"] == ""){
 		$N_P_checked_new = "checked";
@@ -217,7 +199,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 			$param_gender_pref = $new_gender_pref;
 			if(mysqli_stmt_execute($stmt)){
 				$_SESSION["username"] = $new_username;
-				header("location: edit_profile.php");
+				header("location: userprofile_extended.php");
 			}else{
 				echo "An Error has occurred. Please try again later.";
 			}
@@ -265,8 +247,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		</style>
 	</head>
 	<body>
-		<div class = "buttonSpaceLeft">
-			<a class="btn large pink rounded" onclick="confirmLeave('Are you sure you want to leave?\nYou will lose all unsaved data.', 'userprofile.php')"><tt>Home&#x1F3E0;</tt></a>
+		<div class = "topBarLayout">
+			<a class="btn large pink rounded" onclick="confirmLeave('Are you sure you want to leave?\nYou will lose all unsaved data.', 'userprofile_extended.php')"><tt>Home&#x1F3E0;</tt></a>
 		</div>
 		<center>
 			<div class="inputBar">
@@ -290,14 +272,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 						<br><br><textarea style = "font-family: Helvetica" name="desc" rows="5" cols="33" maxlength="200" ><?php if(isset($new_desc) && !empty($new_desc)){echo $new_desc;}else{echo $current_desc;}?></textarea><br><br>
 						
 						<label>Gender:</label>
-							<input type="radio" name="gender" value="male" <?php if($M_checked_new != "" || $F_checked_new != "" || $O_checked_new != ""){echo $M_checked_new;}else{echo $M_checked_curr;}?>> Male
-							<input type="radio" name="gender" value="female" <?php if($M_checked_new != "" || $F_checked_new != "" || $O_checked_new != ""){echo $F_checked_new;}else{echo $F_checked_curr;}?>> Female 
-							<input type="radio" name="gender" value="other" <?php if($M_checked_new != "" || $F_checked_new != "" || $O_checked_new != ""){echo $O_checked_new;}else{echo $O_checked_curr;}?>> Non-binary/Other<br><br>
+							<input type="radio" name="gender" value="Male" <?php if($M_checked_new != "" || $F_checked_new != "" || $O_checked_new != ""){echo $M_checked_new;}else{echo $M_checked_curr;}?>> Male
+							<input type="radio" name="gender" value="Female" <?php if($M_checked_new != "" || $F_checked_new != "" || $O_checked_new != ""){echo $F_checked_new;}else{echo $F_checked_curr;}?>> Female 
+							<input type="radio" name="gender" value="Non-Binary/Other" <?php if($M_checked_new != "" || $F_checked_new != "" || $O_checked_new != ""){echo $O_checked_new;}else{echo $O_checked_curr;}?>> Non-binary/Other<br><br>
 						
 						<label>Gender Preference:</label>
-							<input type="radio" name="gender_pref" value="male" <?php if($M_P_checked_new != "" || $F_P_checked_new != "" || $O_P_checked_new != "" || $N_P_checked_new != ""){echo $M_P_checked_new;}else{echo $M_P_checked_curr;}?>> Male
-							<input type="radio" name="gender_pref" value="female" <?php if($M_P_checked_new != "" || $F_P_checked_new != "" || $O_P_checked_new != "" || $N_P_checked_new != ""){echo $F_P_checked_new;}else{echo $F_P_checked_curr;}?>> Female 
-							<input type="radio" name="gender_pref" value="other" <?php if($M_P_checked_new != "" || $F_P_checked_new != "" || $O_P_checked_new != "" || $N_P_checked_new != ""){echo $O_P_checked_new;}else{echo $O_P_checked_curr;}?>> Non-binary/Other
+							<input type="radio" name="gender_pref" value="Male" <?php if($M_P_checked_new != "" || $F_P_checked_new != "" || $O_P_checked_new != "" || $N_P_checked_new != ""){echo $M_P_checked_new;}else{echo $M_P_checked_curr;}?>> Male
+							<input type="radio" name="gender_pref" value="Female" <?php if($M_P_checked_new != "" || $F_P_checked_new != "" || $O_P_checked_new != "" || $N_P_checked_new != ""){echo $F_P_checked_new;}else{echo $F_P_checked_curr;}?>> Female 
+							<input type="radio" name="gender_pref" value="Non-Binary/Other" <?php if($M_P_checked_new != "" || $F_P_checked_new != "" || $O_P_checked_new != "" || $N_P_checked_new != ""){echo $O_P_checked_new;}else{echo $O_P_checked_curr;}?>> Non-binary/Other
 							<input type="radio" name="gender_pref" value="" <?php if($M_P_checked_new != "" || $F_P_checked_new != "" || $O_P_checked_new != "" || $N_P_checked_new != ""){echo $N_P_checked_new;}else{echo $N_P_checked_curr;}?>>No Preference<br><br>
 						
 						<div class="form-group">

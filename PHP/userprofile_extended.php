@@ -17,7 +17,11 @@ if(!isset($profile)){
 }
 $current_username = $profile["username"];
 $current_email = $profile["email"];
-$current_desc = $profile["bio"];
+if(!empty($profile["bio"])){
+	$current_desc = $profile["bio"];
+}else{
+	$current_desc = "No biography yet. You can make one through the edit profile button below.";
+}
 $current_gender = $profile["gender"];
 $location = 'images/'; 
 $image_name = $location.$profile["id"].'.png';
@@ -38,7 +42,7 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 	<head>
 		<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-		<title>QuizMatch: Profile Extended</title>
+		<title>QuizMatch: My Profile</title>
 		<link href= "stupid.css" type = "text/css" rel = "stylesheet"/>
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<style>
@@ -108,7 +112,7 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 							<b><?php echo htmlspecialchars($current_username); ?></b><br>
 						</h3>
 						<h4>
-							<?php echo htmlspecialchars($current_email); ?><br>
+							<?php echo htmlspecialchars($current_email); ?><br><br>
 							<?php echo htmlspecialchars($current_gender); ?>
 						</h4>
 						</center>
