@@ -105,4 +105,10 @@ function getAllQuizzes($link){
 	}
 	return $total;
 }
+
+function searchRandom($link){
+	$sql = "SELECT id FROM quizzes WHERE NOT owner_id =".$_SESSION["id"]." ORDER BY RAND() LIMIT 1";
+	$results = mysqli_query($link, $sql);
+	return mysqli_fetch_assoc($results)["id"];
+}
 ?>
