@@ -19,6 +19,56 @@ if(!isset($profile)){
 	$profile_entry = mysqli_query($link, $sql);
 	$profile = mysqli_fetch_assoc($profile_entry);
 }
+
+if(isset($_POST['submit'])){
+    $name       = $_FILES['file']['name'];  
+    $temp_name  = $_FILES['file']['tmp_name'];
+	$uploadOk = 1;
+	$imageFileType = strtolower(pathinfo($name,PATHINFO_EXTENSION));
+	
+	$check = getimagesize($_FILES["file"]["tmp_name"]);
+	if($check !== false) {
+        $uploadOk = 1;
+    } else {
+        echo "File is not an image.";
+        $uploadOk = 0;
+    }
+	/*
+    if(isset($name)){
+        if(!empty($name)){      
+            $location = 'images/';      
+            if(move_uploaded_file($temp_name, $location.$profile["id"].'.png' //'images/default-user2.png' //$location.$name
+			)){
+                echo 'File uploaded successfully';
+            }
+        }       
+    }  else {
+        echo 'You should select a file to upload !!';
+    }
+	*/
+	// Check file size
+	if ($_FILES["file"]["size"] > 500000) {
+    echo "Sorry, your file is too large.";
+    $uploadOk = 0;
+	}
+	// Allow certain file formats
+	if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+	&& $imageFileType != "gif" ) {
+		echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+		$uploadOk = 0;
+	}
+	// Check if $uploadOk is set to 0 by an error
+	if ($uploadOk == 0) {
+		echo "Sorry, your file was not uploaded.";
+	// if everything is ok, try to upload file
+	} else {
+		$location = 'images/';
+		if (move_uploaded_file($temp_name, $location.$profile["id"].'.png')) {
+		} else {
+			echo "Sorry, there was an error uploading your file.";
+		}
+	}
+}
  
 $new_email = $new_username = $new_desc = "";
 $email_err = $username_err = "";
@@ -26,67 +76,42 @@ $M_checked_new = $F_checked_new = $O_checked_new = ""; // Used for radio inputs 
 $M_P_checked_new = $F_P_checked_new = $O_P_checked_new = $N_P_checked_new = "";
 $new_gender = "";
 
+$location = 'images/'; 
+$image_name = $location.$profile["id"].'.png';
+
+if(file_exists($image_name))
+{
+	echo "";
+}
+else
+{
+	$image_name = $location.'default-user1.png';
+}
+
 $current_username = $profile["username"];
 $current_email = $profile["email"];
 $current_desc = $profile["bio"];
 $M_checked_curr = $F_checked_curr = $O_checked_curr = ""; // Used for radio inputs for gender
-if($profile["gender"] == "Male"){
+if($profile["gender"] == "male"){
 	$M_checked_curr = "checked";
-}else if($profile["gender"] == "Female"){
+}else if($profile["gender"] == "female"){
 	$F_checked_curr = "checked";
 }else{ // gender is either selected as "other" or is null
 	$O_checked_curr = "checked";
 }
 $M_P_checked_curr = $F_P_checked_curr = $O_P_checked_curr = $N_P_checked_curr = "";
-if($profile["gender_pref"] == "Male"){
+if($profile["gender_pref"] == "male"){
 	$M_P_checked_curr = "checked";
-}else if($profile["gender_pref"] == "Female"){
+}else if($profile["gender_pref"] == "female"){
 	$F_P_checked_curr = "checked";
-}else if($profile["gender_pref"] == "Non-Binary/Other"){
+}else if($profile["gender_pref"] == "female"){ // gender is either selected as "other" or is null
 	$O_P_checked_curr = "checked";
 }else{
 	$N_P_checked_curr = "checked";
 }
 
-$location = 'images/'; 
-$image_name = $location.$profile["id"].'.png';
-$image_error = "";
-
-if(!file_exists($image_name)) $image_name = $location.'default-user2.png';
-
 if($_SERVER["REQUEST_METHOD"] == "POST")
 {
-	 if(isset($_POST['submit'])){
-		$name       = $_FILES['file']['name'];  
-		$temp_name  = $_FILES['file']['tmp_name'];
-		$uploadOk = 1;
-		$imageFileType = strtolower(pathinfo($temp_name,PATHINFO_EXTENSION));
-		
-		$check = getimagesize($_FILES["file"]["tmp_name"]);
-		if($check !== false) {
-			$uploadOk = 1;
-		} else {
-			$image_error = "File is not an image.";
-			$uploadOk = 0;
-		}
-		if ($_FILES["file"]["size"] > 500000) {
-			$image_error = "Sorry, your file is too large.";
-			$uploadOk = 0;
-		}
-		// Allow certain file formats
-		if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
-			$image_error = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-			$uploadOk = 0;
-		}
-		// Check if $uploadOk is set to 0 by an error
-		if ($uploadOk) {
-			$location = 'images/';
-			if (move_uploaded_file($temp_name, $location.$profile["id"].'.png')) {
-			} else {
-				$image_error = "Sorry, there was an error uploading your file.";
-			}
-		}
-	}
 	if(preg_match('/^[A-Za-z0-9]+$/', trim($_POST["username"]))){
 		// Checks to see if username meets length requirements
 		if(strlen(trim($_POST["username"])) >= $min_username_len){
@@ -161,20 +186,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 	
 	$new_desc = htmlspecialchars(trim($_POST["desc"]));
 	
-	if($_POST["gender"] == "Male"){
+	if($_POST["gender"] == "male"){
 		$M_checked_new = "checked";
-	}else if($_POST["gender"] == "Female"){
+	}else if($_POST["gender"] == "female"){
 		$F_checked_new = "checked";
-	}else if($_POST["gender"] == "Non-Binary/Other"){
+	}else if($_POST["gender"] == "other"){
 		$O_checked_new = "checked";
 	}
 	$new_gender = $_POST["gender"];
 	
-	if($_POST["gender_pref"] == "Male"){
+	if($_POST["gender_pref"] == "male"){
 		$M_P_checked_new = "checked";
-	}else if($_POST["gender_pref"] == "Female"){
+	}else if($_POST["gender_pref"] == "female"){
 		$F_P_checked_new = "checked";
-	}else if($_POST["gender_pref"] == "Non-Binary/Other"){
+	}else if($_POST["gender_pref"] == "other"){
 		$O_P_checked_new = "checked";
 	}else if($_POST["gender_pref"] == ""){
 		$N_P_checked_new = "checked";
@@ -192,9 +217,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 			$param_gender_pref = $new_gender_pref;
 			if(mysqli_stmt_execute($stmt)){
 				$_SESSION["username"] = $new_username;
-				if(empty($image_error)){
-					header("location: userprofile_extended.php");
-				}
+				header("location: edit_profile.php");
 			}else{
 				echo "An Error has occurred. Please try again later.";
 			}
@@ -212,48 +235,47 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		<title>QuizMatch: Edit Profile</title>
 		<style>
 		body
+		{
+			font: 14px sans-serif;
+		}
+		div.inputBar
 			{
-				font: 14px sans-serif;
+			width: 350px;
+			padding: 20px; 
 			}
-			div.inputBar
-			{
-				width: 350px;
-				padding: 20px; 
-			}
-			div.buttonSpaceLeft
-			{
-				margin-left: 5%;
-				margin-top: 2%;
-			}
-			#avatar
-			{
-				background-image: url(<?php echo ($image_name);?>);
-				width: 300px;
-				height: 300px;
-				background-size: cover;
-				background-position: center;
-				border-radius:50%;
-			}
-			div.topBarLayout
-			{
-				margin-top:2%;
-				text-align:center;
-			}
+		div.buttonSpaceLeft
+		{
+			margin-left: 5%;
+			margin-top: 2%;
+		}
+		#avatar
+		{
+			background-image: url(<?php echo ($image_name);?>);
+			width: 300px;
+			height: 300px;
+			background-size: cover;
+			background-position: center;
+			border-radius:50%;
+		}
+		div.topBarLayout
+		{
+			margin-top:2%;
+			text-align:center;
+		}
 		</style>
-		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	</head>
 	<body>
-	<span id="printHere"></span>
-		<div class = "topBarLayout">
-			<a class="btn pink rounded" onclick="confirmLeave('Are you sure you want to leave?\nYou will lose all unsaved data.', 'userprofile_extended.php')"><tt>Home&#x1F3E0;</tt></a>
+		<div class = "buttonSpaceLeft">
+			<a class="btn large pink rounded" onclick="confirmLeave('Are you sure you want to leave?\nYou will lose all unsaved data.', 'userprofile.php')"><tt>Home&#x1F3E0;</tt></a>
 		</div>
 		<center>
 			<div class="inputBar">
 				<h2>Edit Profile</h2>
-				<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+				<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
 					<div id="avatar"></div>
 					<br>
 					<input type="file" name="file" id="file"><br><br>
+
 					<div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
 					<br>
 						<label>Username:</label>
@@ -268,24 +290,25 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 						<br><br><textarea style = "font-family: Helvetica" name="desc" rows="5" cols="33" maxlength="200" ><?php if(isset($new_desc) && !empty($new_desc)){echo $new_desc;}else{echo $current_desc;}?></textarea><br><br>
 						
 						<label>Gender:</label>
-							<input type="radio" name="gender" value="Male" <?php if($M_checked_new != "" || $F_checked_new != "" || $O_checked_new != ""){echo $M_checked_new;}else{echo $M_checked_curr;}?>> Male
-							<input type="radio" name="gender" value="Female" <?php if($M_checked_new != "" || $F_checked_new != "" || $O_checked_new != ""){echo $F_checked_new;}else{echo $F_checked_curr;}?>> Female 
-							<input type="radio" name="gender" value="Non-Binary/Other" <?php if($M_checked_new != "" || $F_checked_new != "" || $O_checked_new != ""){echo $O_checked_new;}else{echo $O_checked_curr;}?>> Non-binary/Other<br><br>
+							<input type="radio" name="gender" value="male" <?php if($M_checked_new != "" || $F_checked_new != "" || $O_checked_new != ""){echo $M_checked_new;}else{echo $M_checked_curr;}?>> Male
+							<input type="radio" name="gender" value="female" <?php if($M_checked_new != "" || $F_checked_new != "" || $O_checked_new != ""){echo $F_checked_new;}else{echo $F_checked_curr;}?>> Female 
+							<input type="radio" name="gender" value="other" <?php if($M_checked_new != "" || $F_checked_new != "" || $O_checked_new != ""){echo $O_checked_new;}else{echo $O_checked_curr;}?>> Non-binary/Other<br><br>
 						
 						<label>Gender Preference:</label>
-							<input type="radio" name="gender_pref" value="Male" <?php if($M_P_checked_new != "" || $F_P_checked_new != "" || $O_P_checked_new != "" || $N_P_checked_new != ""){echo $M_P_checked_new;}else{echo $M_P_checked_curr;}?>> Male
-							<input type="radio" name="gender_pref" value="Female" <?php if($M_P_checked_new != "" || $F_P_checked_new != "" || $O_P_checked_new != "" || $N_P_checked_new != ""){echo $F_P_checked_new;}else{echo $F_P_checked_curr;}?>> Female 
-							<input type="radio" name="gender_pref" value="Non-Binary/Other" <?php if($M_P_checked_new != "" || $F_P_checked_new != "" || $O_P_checked_new != "" || $N_P_checked_new != ""){echo $O_P_checked_new;}else{echo $O_P_checked_curr;}?>> Non-binary/Other
+							<input type="radio" name="gender_pref" value="male" <?php if($M_P_checked_new != "" || $F_P_checked_new != "" || $O_P_checked_new != "" || $N_P_checked_new != ""){echo $M_P_checked_new;}else{echo $M_P_checked_curr;}?>> Male
+							<input type="radio" name="gender_pref" value="female" <?php if($M_P_checked_new != "" || $F_P_checked_new != "" || $O_P_checked_new != "" || $N_P_checked_new != ""){echo $F_P_checked_new;}else{echo $F_P_checked_curr;}?>> Female 
+							<input type="radio" name="gender_pref" value="other" <?php if($M_P_checked_new != "" || $F_P_checked_new != "" || $O_P_checked_new != "" || $N_P_checked_new != ""){echo $O_P_checked_new;}else{echo $O_P_checked_curr;}?>> Non-binary/Other
 							<input type="radio" name="gender_pref" value="" <?php if($M_P_checked_new != "" || $F_P_checked_new != "" || $O_P_checked_new != "" || $N_P_checked_new != ""){echo $N_P_checked_new;}else{echo $N_P_checked_curr;}?>>No Preference<br><br>
 						
 						<div class="form-group">
 						<br>
-							<input type="submit" class="btn pink rounded" value = "Submit" style = "font-family: Helvetica";>
+							<input type="submit" class="btn pink rounded" value = "Submit" name="submit" style = "font-family: Helvetica";>
 						</div>
 					</div>
 				</form>
 			</div>
 		</center>
 	<script src="config.js"></script>
+	
 	</body>
 </html>
