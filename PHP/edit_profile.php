@@ -52,11 +52,7 @@ $location = 'images/';
 $image_name = $location.$profile["id"].'.png';
 $image_error = "";
 
-if(file_exists($image_name)){
-	echo "";
-}else{
-	$image_name = $location.'default-user1.png';
-}
+if(!file_exists($image_name)) $image_name = $location.'default-user2.png';
 
 if($_SERVER["REQUEST_METHOD"] == "POST")
 {

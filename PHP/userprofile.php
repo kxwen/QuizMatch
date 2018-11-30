@@ -20,6 +20,7 @@ if(!isset($profile)){
 
 $location = 'images/'; 
 $image_name = $location.$profile["id"].'.png';
+if(!file_exists($image_name)) $image_name = $location.'default-user2.png';
 ?>
 <!-- 
 This is the homepage for QuizMatch. It contains links to the login page and

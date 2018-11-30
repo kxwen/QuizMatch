@@ -21,6 +21,7 @@ $current_desc = $profile["bio"];
 $current_gender = $profile["gender"];
 $location = 'images/'; 
 $image_name = $location.$profile["id"].'.png';
+if(!file_exists($image_name)) $image_name = $location.'default-user2.png';
 
 $quizzes_created = getMyQuizzes($link);
 
