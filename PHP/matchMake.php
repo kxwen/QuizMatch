@@ -1,39 +1,27 @@
 <?php
-$link = mysqli_connect("localhost", "root", "", "QuizMatch"); 
-  
-if($link === false){ 
-    die("ERROR: Could not connect. " 
-                . mysqli_connect_error()); 
-} 
+session_start();
+if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
+	//header("location: login.php");
+	exit;
+}
+require_once "funct_user_info.php";
 
-  
-$sql = "SELECT username, age, gender, defaultCategory FROM QuizMatchUsers Where defaultCategory = 'Charmander' AND gender = 'Female';"; 
-if($res = mysqli_query($link, $sql)){ 
-    if(mysqli_num_rows($res) > 0){ 
-        echo "<table>"; 
-            echo "<tr>"; 
-                echo "<th>Username</th>"; 
-                echo "<th>Age</th>"; 
-                echo "<th>Gender</th>"; 
-                echo "<th>defaultCategory</th>"; 
-            echo "</tr>"; 
-        while($row = mysqli_fetch_array($res)){ 
-            echo "<tr>"; 
-                echo "<td>" . $row['username'] . "</td>"; 
-                echo "<td>" . $row['age'] . "</td>"; 
-                echo "<td>" . $row['gender'] . "</td>";
-                echo "<td>" . $row['defaultCategory'] . "</td>"; 
-            echo "</tr>"; 
-        } 
-        echo "</table>"; 
-        mysqli_free_result($res); 
-    } else{ 
-        echo "No Matches Found"; 
-    } 
-} else{ 
-    echo "ERROR: Could not able to execute $sql. "  
-                                . mysqli_error($link); 
-} 
-  
-mysqli_close($link);
+function getMatches($result_id){
+	$user_current = getUserInfo($_SESSION["id"]);
+	$user_current_age = calculateUserAge($user_current["DoB"]);
+	$sql = "SELECT * FROM user_results WHERE result_id = ".$result_id." AND NOT $user_id = "$_SESSION["id"];
+	$results = mysqli_query($link, $sql);
+	$total = array();
+	while($row = mysqli_fetch_assoc($results)){
+		$user_other = getUserInfo($row["user_id"]);
+		$user_other_age = calculateUserAge($user_other["DoB"]);
+		if($user_other_age >= (($user_current_age/2)+7) && $user_other_age <= (($user_current_age-7)*2)){
+			if((empty($user_other["gender_pref"]) || $user_other["gender_pref"] == $user_current["gender"])
+			 && (empty($user_current["gender_pref"]) || $user_current["gender_pref"] == $user_other["gender"])){
+				$total[]=$user_other;
+			}
+		}
+	}
+	return $total;
+}
 ?>
