@@ -32,10 +32,10 @@ function deleteElement(parentDIV,childDIV){
 function createQuizBtn(quizzes, quiz_number){
 	var quiz_name = document.createTextNode(quizzes[quiz_number]["name"]+":\n");
 	var quiz_desc = document.createTextNode(quizzes[quiz_number]["description"]);
-	var quiz_btn = document.createElement("button");
+	var quiz_btn = document.createElement("a");
 	quiz_btn.setAttribute("id", "quiz "+quiz_number);
-	quiz_btn.setAttribute("value", quizzes[quiz_number]["id"]);
 	quiz_btn.setAttribute("class", "btn large pink rounded");
+	quiz_btn.setAttribute("href", "quiz_take.php?q="+quizzes[quiz_number]["id"]);
 	quiz_btn.appendChild(quiz_name);
 	quiz_btn.appendChild(quiz_desc);
 	return quiz_btn; 

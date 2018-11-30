@@ -13,50 +13,35 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 	exit;
 }
 require_once "quiz_DB_access_functions.php";
-
+$q = htmlspecialchars($_GET["q"]);
 if(!isset($quiz)){
-	$sql = "SELECT * FROM quizzes WHERE owner_id =".$_SESSION["id"];
+	$sql = "SELECT * FROM quizzes WHERE id =".$q;
 	$quiz_entry = mysqli_query($link, $sql);
-	$quiz = mysqli_fetch_assoc($quiz_entry);
+	if(!($quiz = mysqli_fetch_assoc($quiz_entry))){
+		echo "<script>alert('Quiz does not exist or has been removed'); window.location.href='quiz_home.php';</script>";
+	}
 }
-
 $current_quiz = $quiz["id"];
 $current_owner = $quiz["owner_id"];
 $current_name = $quiz["name"];
 $current_desc = $quiz["description"];
 $current_size = $quiz["size"];
-
 $num_questions = 0;
-
 if ($current_size == "small")
 	$num_questions = 5;
 else if ($current_size == "medium")
 	$num_questions = 10;
 else if ($current_size == "large")
 	$num_questions = 15;
-
 // Array containing each question from specified quiz
 $quiz_questions = getQuizQuestions($link, $current_quiz);
-
 // Array containing each set of answers for specified question
 $quiz_answers = array();
-
 // For each question, retrieve set of answers for specified quiz id
 // quiz
 for ($i = 0; $i < $num_questions; $i++) {
-
-	if(!isset($question)){
-		$sql = "SELECT * FROM questions WHERE quiz_id = ".$current_quiz;
-		$question_entry = mysqli_query($link, $sql);
-		$question = mysqli_fetch_assoc($question_entry);
-	}
-
-	$current_question_id = $question["id"];
-	// $current_quiz_id = $question["quiz_id"];
-	// $current_question = $question["question"];
-	$quiz_answers[$i] = getQuestionAnswers($link, $current_question_id);
+	$quiz_answers[] = getQuestionAnswers($link, $quiz_questions[$i]["id"]);
 }
-
 ?>
 
 
@@ -65,7 +50,35 @@ for ($i = 0; $i < $num_questions; $i++) {
 	<title>Quiz Match</title>
 	<link href="stupid.css" type="text/css" rel="stylesheet" />
 </head>
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+	div.topBarLayout
+	{
+		margin-top:2%;
+	}
+	div.contentRoundBorders
+	{
+		border-radius:15px;
+		padding:1%;
+		background:white;
+		margin-bottom:1%;
+		margin-top:1%;
+		margin-left:5%;
+		margin-right:5%;
+		box-shadow: 0 0 3px rgba(0,0,0,0.5);
+	}
+</style>
+<header>
+	<center>
+		<div class = "topBarLayout">
+			<a href="quiz_home.php" class="btn pink rounded"><tt>Cancel </tt></a>
+			<a href="userprofile.php" class="btn pink rounded"><tt>Home <i class="fa fa-home"></i></tt></a>
+			<a href="logout.php" class="btn pink rounded"><tt>Logout <i class="fa fa-sign-out"></i></tt></a>
+		</div>
+	</center>
+</header>
 <body>
 	<center>
 
@@ -73,6 +86,7 @@ for ($i = 0; $i < $num_questions; $i++) {
 		<form class="form" method="POST" enctype="application/x-www-form-urlencoded" action="questions_result.php" name="quiz">
 			<h2> <?php echo "Quiz: " . $current_name;?> </h2>
 			<h4> <?php echo $current_desc;?> </h4><br><br>
+			
 			<span id="Quiz_Pages"></span>
 
 			<button type="button" class ="btn pink rounded" id="prevBtn"
@@ -94,17 +108,12 @@ for ($i = 0; $i < $num_questions; $i++) {
 			questions = <?= json_encode($quiz_questions)?>;
 			var answers = [];
 			answers = <?= json_encode($quiz_answers)?>;
-
 			
-
 			displayQuestionsByTab(currentTab, questions, answers);
-
 			function displayQuestionsByTab(currentTab, questions, answers) {
 				createQuestionPages(currentTab, questions, answers);
 				showTab(currentTab);
-
 			}
-
 			function createQuestion() {
 				var question_tab;
 				var question_step;
@@ -115,12 +124,9 @@ for ($i = 0; $i < $num_questions; $i++) {
 					question_content = document.createTextNode(questions[i]["question"]);
 					question_tab.appendChild(question_content);
 					question_tab.innerHTML += "<br>";
-
 					for (var j = 0; j < answers[i].length; j++) {
-
 						var ans_content = document.createTextNode(" "+answers[i][j]["answer"]);
 						var radio = document.createElement("input");
-
 						radio.setAttribute("type", "radio");
 						radio.setAttribute("name", "q_" + i + "_a");
 						radio.setAttribute("value", answers[i][j]["trait"]);
@@ -128,16 +134,14 @@ for ($i = 0; $i < $num_questions; $i++) {
 						question_tab.appendChild(ans_content);
 						question_tab.innerHTML += "<br>";
 					}
-
+					question_tab.innerHTML +="<br>";
 					question_step = document.createElement("DIV");
 					question_tab.setAttribute("class", "tab");
 					question_step.setAttribute("class", "step");
 					document.getElementById("total_pages").appendChild(question_tab);
 					document.getElementById("total_steps").appendChild(question_step);
 				}
-
 			}
-
 			function createQuestionPages(currentTab, questions, answers) {
 				var total_pages = document.createElement("DIV");
 				var total_steps = document.createElement("DIV");
@@ -147,11 +151,7 @@ for ($i = 0; $i < $num_questions; $i++) {
 				document.getElementById("Quiz_Page_Steps").appendChild(total_steps);
 				createQuestion();
 			}
-
-
 			
-
-
 	</script>
 </center>
 </body>
