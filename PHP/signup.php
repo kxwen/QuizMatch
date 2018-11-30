@@ -129,19 +129,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 		}
 	}
 	
-	if($_POST["gender"] == "male"){
+	if($_POST["gender"] == "Male"){
 		$M_checked = "checked";
-	}else if($_POST["gender"] == "female"){
+	}else if($_POST["gender"] == "Female"){
 		$F_checked = "checked";
 	}else{
 		$O_checked = "checked";
 	}
 	
-	if($_POST["gender_pref"] == "male"){
+	if($_POST["gender_pref"] == "Male"){
 		$M_P_checked = "checked";
-	}else if($_POST["gender_pref"] == "female"){
+	}else if($_POST["gender_pref"] == "Female"){
 		$F_P_checked = "checked";
-	}else if($_POST["gender_pref"] == "other"){
+	}else if($_POST["gender_pref"] == "Non-Binary/Other"){
 		$O_P_checked = "checked";
 	}else{
 		$N_P_checked = "checked";
@@ -249,15 +249,15 @@ if(empty($M_P_checked) && empty($F_P_checked) && empty($O_P_checked) && empty($N
 					</div>
 					<div class="form-group">
 					<label>Gender:</label>
-						<input type="radio" name="gender" value="male" <?php echo $M_checked;?>> Male
-						<input type="radio" name="gender" value="female" <?php echo $F_checked;?>> Female 
-						<input type="radio" name="gender" value="other" <?php echo $O_checked;?>> Non-binary/Other<br><br>
+						<input type="radio" name="gender" value="Male" <?php echo $M_checked;?>> Male
+						<input type="radio" name="gender" value="Female" <?php echo $F_checked;?>> Female 
+						<input type="radio" name="gender" value="Non-Binary/Other" <?php echo $O_checked;?>> Non-binary/Other<br><br>
 					</div>
 					<div class="form-group">
 					<label>Gender Preference:</label>
-						<input type="radio" name="gender_pref" value="male" <?php echo $M_P_checked;?>> Male
-						<input type="radio" name="gender_pref" value="female" <?php echo $F_P_checked;?>> Female 
-						<input type="radio" name="gender_pref" value="other" <?php echo $O_P_checked;?>> Non-binary/Other
+						<input type="radio" name="gender_pref" value="Male" <?php echo $M_P_checked;?>> Male
+						<input type="radio" name="gender_pref" value="Female" <?php echo $F_P_checked;?>> Female 
+						<input type="radio" name="gender_pref" value="Non-Binary/Other" <?php echo $O_P_checked;?>> Non-binary/Other
 						<input type="radio" name="gender_pref" value="" <?php echo $N_P_checked;?>>No Preference<br><br>
 					</div>
 					<div class="form-group">
