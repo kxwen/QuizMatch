@@ -131,37 +131,52 @@ require_once "config.php";
 		<link rel="stylesheet" href="stupid.css">
 		<style type="text/css"></style>
 	</head>
+	<style>
+	div.contentRoundBorders
+	{
+		border-radius:15px;
+		padding:1%;
+		background:white;
+		margin-bottom:1%;
+		margin-top:1%;
+		margin-left:5%;
+		margin-right:5%;
+		box-shadow: 0 0 3px rgba(0,0,0,0.5);
+	}
+	</style>
 	<body>
 			<div class="container">
 			<center>
 				<form id="quizForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
 					<h2>Create a Questionnaire:</h2>
 					Number of Questions: <span style = "border-radius:10px; background:#ee6e73; padding:3px; color: white; font-weight:bold;" id="num_Qs"></span>
-					<div class="tab"><h3>Theme and Details:</h3>
-						<br><b>Questionnaire Name:</b><br><span class="help-block"><font color="red" id="Q_name_err"></font></span><br> <input style = "font-family: Helvetica" type="text" name="Q_name" class="form-control"><br><br>
-						<b>Description:</b><br><br> <textarea style = "font-family: Helvetica" name="DESC" rows="5" cols="33" maxlength="200"></textarea><br><br>
-						<b>Size:</b> <input type="radio" name="size" value="small" checked onclick="updateQs()">Small 
-							<input type="radio" name="size" value="medium" onclick="updateQs()">Medium 
-							<input type="radio" name="size" value="large" onclick="updateQs()">Large<br><br>
-					</div>
-					
-					<!--Area where the question tabs will be placed by Javascript-->
-					<span id="questions"></span>
-					
-					<!--Area for Final Results-->
-					<div class="tab" style="white-space:nowrap"><h3>Catagory Names:</h3>
-						<br><b>Result #1:</b> <input type="text" name="R_1" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[0].'/'.$traits[1])?>><span class="help-block"><font color="red" id="R_1_ERR"></font></span><br>
-						<br><b>Result #2:</b> <input type="text" name="R_2" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[0].'/'.$traits[2])?>><span class="help-block"><font color="red" id="R_2_ERR"></font></span><br>
-						<br><b>Result #3:</b> <input type="text" name="R_3" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[0].'/'.$traits[3])?>><span class="help-block"><font color="red" id="R_3_ERR"></font></span><br>
-						<br><b>Result #4:</b> <input type="text" name="R_4" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[1].'/'.$traits[0])?>><span class="help-block"><font color="red" id="R_4_ERR"></font></span><br>
-						<br><b>Result #5:</b> <input type="text" name="R_5" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[1].'/'.$traits[2])?>><span class="help-block"><font color="red" id="R_5_ERR"></font></span><br>
-						<br><b>Result #6:</b> <input type="text" name="R_6" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[1].'/'.$traits[3])?>><span class="help-block"><font color="red" id="R_6_ERR"></font></span><br>
-						<br><b>Result #7:</b> <input type="text" name="R_7" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[2].'/'.$traits[0])?>><span class="help-block"><font color="red" id="R_7_ERR"></font></span><br>
-						<br><b>Result #8:</b> <input type="text" name="R_8" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[2].'/'.$traits[1])?>><span class="help-block"><font color="red" id="R_8_ERR"></font></span><br>
-						<br><b>Result #9:</b> <input type="text" name="R_9" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[2].'/'.$traits[3])?>><span class="help-block"><font color="red" id="R_9_ERR"></font></span><br>
-						<br><b>Result #10:</b> <input type="text" name="R_10" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[3].'/'.$traits[0])?>><span class="help-block"><font color="red" id="R_10_ERR"></font></span><br>
-						<br><b>Result #11:</b> <input type="text" name="R_11" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[3].'/'.$traits[1])?>><span class="help-block"><font color="red" id="R_11_ERR"></font></span><br>
-						<br><b>Result #12:</b> <input type="text" name="R_12" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[3].'/'.$traits[2])?>><span class="help-block"><font color="red" id="R_12_ERR"></font></span><br>
+					<div class="contentRoundBorders">
+						<div class="tab"><h3>Theme and Details:</h3>
+							<br><b>Questionnaire Name:</b><br><span class="help-block"><font color="red" id="Q_name_err"></font></span><br> <input style = "font-family: Helvetica" type="text" name="Q_name" class="form-control"><br><br>
+							<b>Description:</b><br><br> <textarea style = "font-family: Helvetica" name="DESC" rows="5" cols="33" maxlength="200"></textarea><br><br>
+							<b>Size:</b> <input type="radio" name="size" value="small" checked onclick="updateQs()">Small 
+								<input type="radio" name="size" value="medium" onclick="updateQs()">Medium 
+								<input type="radio" name="size" value="large" onclick="updateQs()">Large<br><br>
+						</div>
+						
+						<!--Area where the question tabs will be placed by Javascript-->
+						<span id="questions"></span>
+						
+						<!--Area for Final Results-->
+						<div class="tab" style="white-space:nowrap"><h3>Catagory Names:</h3>
+							<br><b>Result #1:</b> <input type="text" name="R_1" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[0].'/'.$traits[1])?>><span class="help-block"><font color="red" id="R_1_ERR"></font></span><br>
+							<br><b>Result #2:</b> <input type="text" name="R_2" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[0].'/'.$traits[2])?>><span class="help-block"><font color="red" id="R_2_ERR"></font></span><br>
+							<br><b>Result #3:</b> <input type="text" name="R_3" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[0].'/'.$traits[3])?>><span class="help-block"><font color="red" id="R_3_ERR"></font></span><br>
+							<br><b>Result #4:</b> <input type="text" name="R_4" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[1].'/'.$traits[0])?>><span class="help-block"><font color="red" id="R_4_ERR"></font></span><br>
+							<br><b>Result #5:</b> <input type="text" name="R_5" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[1].'/'.$traits[2])?>><span class="help-block"><font color="red" id="R_5_ERR"></font></span><br>
+							<br><b>Result #6:</b> <input type="text" name="R_6" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[1].'/'.$traits[3])?>><span class="help-block"><font color="red" id="R_6_ERR"></font></span><br>
+							<br><b>Result #7:</b> <input type="text" name="R_7" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[2].'/'.$traits[0])?>><span class="help-block"><font color="red" id="R_7_ERR"></font></span><br>
+							<br><b>Result #8:</b> <input type="text" name="R_8" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[2].'/'.$traits[1])?>><span class="help-block"><font color="red" id="R_8_ERR"></font></span><br>
+							<br><b>Result #9:</b> <input type="text" name="R_9" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[2].'/'.$traits[3])?>><span class="help-block"><font color="red" id="R_9_ERR"></font></span><br>
+							<br><b>Result #10:</b> <input type="text" name="R_10" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[3].'/'.$traits[0])?>><span class="help-block"><font color="red" id="R_10_ERR"></font></span><br>
+							<br><b>Result #11:</b> <input type="text" name="R_11" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[3].'/'.$traits[1])?>><span class="help-block"><font color="red" id="R_11_ERR"></font></span><br>
+							<br><b>Result #12:</b> <input type="text" name="R_12" class="form-control" style="font-family: Helvetica; width:50%" placeholder=<?php echo ($traits[3].'/'.$traits[2])?>><span class="help-block"><font color="red" id="R_12_ERR"></font></span><br>
+						</div>
 					</div>
 					
 					<!--Buttons that control Navigation of page and website-->

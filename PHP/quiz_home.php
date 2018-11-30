@@ -67,7 +67,7 @@ $count = 0;
 		<div class="bodyLayout">
 			<h2>Questionaire List</h2>
 			<a href="create_quiz.php" class="btn large pink rounded"><tt>Create your own!&#x2611;</tt></a>
-			<a href="matches.php" class="btn large pink rounded"><tt>Let's get Matched!&#x1F50D;</tt></a>
+			<button class="btn large pink rounded" onclick="selectRandom();"><tt>Take a random Quiz!</tt></button>
 		</div>
 		<div>
 		Filter:
@@ -156,7 +156,7 @@ $count = 0;
 				var phrase = document.getElementById("phrase").value;
 				var order = document.getElementById("order").value;
 				var target = document.getElementById("target").value;
-				xmlhttp = new XMLHttpRequest();
+				var xmlhttp = new XMLHttpRequest();
 				xmlhttp.onreadystatechange = function(){
 					if(this.readyState==4 && this.status==200){
 						quizzes = JSON.parse(this.responseText)
@@ -165,6 +165,17 @@ $count = 0;
 					}
 				}
 				xmlhttp.open("GET", "searchDB.php?q="+target+"_"+order+"_"+phrase, true);
+				xmlhttp.send();
+			}
+			
+			function selectRandom(){
+				xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function(){
+					if(this.readyState==4 && this.status==200){
+						window.location.href="quiz_take.php?q="+this.responseText;
+					}
+				}
+				xmlhttp.open("GET", "searchRandom.php", true);
 				xmlhttp.send();
 			}
 		</script>
