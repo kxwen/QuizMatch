@@ -42,6 +42,10 @@ $quiz_answers = array();
 for ($i = 0; $i < $num_questions; $i++) {
 	$quiz_answers[] = getQuestionAnswers($link, $quiz_questions[$i]["id"]);
 }
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+ 	header("quiz_results.php");
+}
+
 ?>
 
 
@@ -83,7 +87,7 @@ for ($i = 0; $i < $num_questions; $i++) {
 	<center>
 
 	<div class="contentRoundBorders" id="quizForm">
-		<form class="form" method="POST" enctype="application/x-www-form-urlencoded" action="questions_result.php" name="quiz">
+		<form class="form" method="POST" enctype="application/x-www-form-urlencoded" action="quiz_results.php" name="quiz">
 			<h2> <?php echo "Quiz: " . $current_name;?> </h2>
 			<h4> <?php echo $current_desc;?> </h4><br><br>
 			
@@ -109,9 +113,9 @@ for ($i = 0; $i < $num_questions; $i++) {
 			var answers = [];
 			answers = <?= json_encode($quiz_answers)?>;
 			
-			displayQuestionsByTab(currentTab, questions, answers);
-			function displayQuestionsByTab(currentTab, questions, answers) {
-				createQuestionPages(currentTab, questions, answers);
+			displayQuestionsByTab();
+			function displayQuestionsByTab() {
+				createQuestionPages();
 				showTab(currentTab);
 			}
 			function createQuestion() {
@@ -142,7 +146,7 @@ for ($i = 0; $i < $num_questions; $i++) {
 					document.getElementById("total_steps").appendChild(question_step);
 				}
 			}
-			function createQuestionPages(currentTab, questions, answers) {
+			function createQuestionPages() {
 				var total_pages = document.createElement("DIV");
 				var total_steps = document.createElement("DIV");
 				total_pages.setAttribute("id", "total_pages");
@@ -150,6 +154,10 @@ for ($i = 0; $i < $num_questions; $i++) {
 				document.getElementById("Quiz_Pages").appendChild(total_pages);
 				document.getElementById("Quiz_Page_Steps").appendChild(total_steps);
 				createQuestion();
+			}
+
+			function getNumQuestions() {
+				return total_questions;
 			}
 			
 	</script>
