@@ -1,4 +1,10 @@
 <?php
+session_start();
+if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
+	header("location: login.php");
+	exit;
+}
+
 /*connection to user database to store results of categorization */
 require_once "config.php";
 if(!isset($profile)){
