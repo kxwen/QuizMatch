@@ -213,49 +213,6 @@ $relationships = json_encode($total);
 						total_steps.appendChild(empty_friends_step);
 					}
 				}
-				
-				// AJAX Related Functions
-				
-				// Function used to call PHP function of the same name; Updates relation with target_id
-				function updateRelation(target_id, new_status, httpElemId, parentDiv, msg){
-					xmlhttp = new XMLHttpRequest();
-					xmlhttp.onreadystatechange = function(){
-						if(this.readyState==4 && this.status ==200){
-							deleteElement(parentDiv, httpElemId);
-							document.getElementById(parentDiv).innerHTML += msg;
-						}
-					};
-					xmlhttp.open("GET", "updateRelation.php?q="+target_id+"_"+new_status, true);
-					xmlhttp.send();
-				}
-				
-				// Function used to call PHP function of the same name; Deletes relation with target_id
-				function deleteRelation(target_id, httpElemId, parentDiv, msg){
-					xmlhttp = new XMLHttpRequest();
-					xmlhttp.onreadystatechange = function(){
-						if(this.readyState==4 && this.status==200){
-							deleteElement(parentDiv, httpElemId);
-							document.getElementById(parentDiv).innerHTML += msg;
-						}
-					};
-					xmlhttp.open("GET", "deleteRelation.php?q="+target_id, true);
-					xmlhttp.send();
-				}
-				
-				// Function used to call PHP function of the same name; Grabs all relationships, excluding
-				// relations where current user is blocked
-				function getRelations(){
-					xmlhttp = new XMLHttpRequest();
-					xmlhttp.onreadystatechange = function(){
-						if(this.readyState==4 && this.status==200){
-							relationships = JSON.parse(this.responseText);
-							total = relationships.length;
-							refreshFriendsByTab();
-						}
-					};
-					xmlhttp.open("GET", "getRelations.php", true);
-					xmlhttp.send();
-				}
 			</script>
 		</center>
 	</body>
