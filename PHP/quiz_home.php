@@ -30,7 +30,6 @@ $count = 0;
 		<link href= "stupid.css" type = "text/css" rel = "stylesheet"/>
 	</head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<style>
 		div.topBarLayout
@@ -64,12 +63,12 @@ $count = 0;
 	<body>
 		<div class="container">
 		<center>
-		<div class="bodyLayout">
-			<h2>Questionaire List</h2>
+			<b><h2>Questionaire List&#10004</h2></b>
+			<br>
 			<a href="create_quiz.php" class="btn large pink rounded"><tt>Create your own!&#x2611;</tt></a>
-			<button class="btn large pink rounded" onclick="selectRandom();"><tt>Take a random Quiz!</tt></button>
-		</div>
+			<button class="btn large pink rounded" onclick="selectRandom();"><tt>Take a random Quiz!&#127922;</tt></button>
 		<div>
+		<br>
 		Filter:
 		<select style="width:10%" id="target">
 			<option value="name">Name</option>
@@ -80,10 +79,11 @@ $count = 0;
 			<option value="desc">Ascending</option>
 		</select>
 		Search:
-		<input type="text" value="" placeholder="Quiz Name" style="width:15%" id="phrase">
+		<input type="text" value="" placeholder="Quiz Name" style="width:15%; font-family: Helvetica" id="phrase">
 		<button type="button" class ="btn small pink rounded" id="search"
 				onclick="searchDB();">Go</button>
 		</div>
+		<br>
 		<div class="contentRoundBorders">
 			<span id="Quiz_Pages"></span>
 		</div>
