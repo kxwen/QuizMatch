@@ -45,7 +45,6 @@ for ($i = 0; $i < $num_questions; $i++) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
  	header("quiz_results.php");
 }
-
 ?>
 
 
@@ -86,8 +85,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
 	<center>
 
-	<div class="contentRoundBorders" id="quizForm">
-		<form class="form" method="POST" enctype="application/x-www-form-urlencoded" action="quiz_results.php" name="quiz">
+	<div class="contentRoundBorders">
+		<form id="quizForm" class="form" method="POST" enctype="application/x-www-form-urlencoded" action="quiz_results.php" name="quiz">
 			<h2> <?php echo "Quiz: " . $current_name;?> </h2>
 			<h4> <?php echo $current_desc;?> </h4><br><br>
 			
@@ -100,6 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			<div style="text-align:center;margin-top:40px;">
 				<span id="Quiz_Page_Steps"></span>
 			</div>
+			<input type="hidden" name="num_questions" value="<?=$num_questions?>">
 		</form>
 
 	</div>	
@@ -155,7 +155,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				document.getElementById("Quiz_Page_Steps").appendChild(total_steps);
 				createQuestion();
 			}
-
 			function getNumQuestions() {
 				return total_questions;
 			}
