@@ -143,6 +143,13 @@ $relationships = json_encode($total);
 						
 						friend_action_btns.appendChild(unblock_btn);
 					}
+					if(status != 2){
+						var chat_btn = document.createElement("a");
+						chat_btn.innerHTML = "Chat";
+						chat_btn.setAttribute("class", "btn small pink rounded");
+						chat_btn.setAttribute("href", "messages.php?q="+other_user);
+						friend_action_btns.appendChild(chat_btn);
+					}
 					return friend_action_btns;
 				}
 				
