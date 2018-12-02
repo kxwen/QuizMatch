@@ -72,7 +72,7 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 					<div class = "container">
 						<a href="friends.php" class="btn large pink rounded"><tt>Friends&#128214;</tt></a> 
 						<a href = "matches.php" class="btn large pink rounded"><tt>Matches&#x1F50D;</tt></a> 	
-						<a class="btn large pink rounded"><tt>Messages&#9993;</tt></a>
+						<a href = "messages.php" class="btn large pink rounded"><tt>Messages&#9993;</tt></a>
 						<a href="quiz_home.php" class="btn large pink rounded"><tt>Quizzes!&#10004 </tt></a>
 						<a href="logout.php" class="btn large pink rounded"><tt>Logout <i class="fa fa-sign-out"></i></tt></a>
 					</div>
