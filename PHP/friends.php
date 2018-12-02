@@ -95,7 +95,7 @@ $relationships = json_encode($total);
 				}
 				
 				function createActionBtns(status, last_editor, other_user){
-					var friend_action_btns = document.createElement("SPAN");
+					var friend_action_btns = document.createElement("DIV");
 					friend_action_btns.setAttribute("id", "friend_btn_actions_"+currentFriend);
 					if(status == 0){
 						// Friend Request
@@ -153,11 +153,12 @@ $relationships = json_encode($total);
 				}
 				
 				function createFriendBtn(name, status, last_editor, other_user, parentDiv){
-					var friend_name = document.createTextNode(name);
+					var friend_name_text = document.createTextNode(name);
+					var friend_name = document.createElement("h3");
+					friend_name.appendChild(friend_name_text);
 					var friend_btn = document.createElement("DIV");
 					var action_btns = createActionBtns(status, last_editor, other_user);
 					friend_btn.appendChild(friend_name);
-					friend_btn.innerHTML += "<br>";
 					friend_btn.setAttribute("class", "contentRoundBorders");
 					friend_btn.setAttribute("id", "friend_btn_"+currentFriend);
 					friend_btn.appendChild(action_btns);
