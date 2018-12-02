@@ -46,6 +46,30 @@ function categorizeUser($traits, $quiz_id){
     /* output the key lookup value */
     echo $category[$keyString];
 }
+
+function categorizeUserTraits($traits){
+    $category = array();
+    $category['01'] = 'SANGUINE and PHLEGMATIC';
+    $category['02'] = 'SANGUINE and CHOLERIC';
+    $category['03'] = 'SANGUINE and MELANCHOLIC';
+    $category['10'] = 'PHLEGMATIC and SANGUINE';
+    $category['12'] = 'PHLEGMATIC and CHOLERIC';
+    $category['13'] = 'PHLEGMATIC and MELANCHOLIC';
+    $category['20'] = 'CHOLERIC and SANGUINE';
+    $category['21'] = 'CHOLERIC and PHLEGMATIC';
+    $category['23'] = 'CHOLERIC and MELANCHOLIC';
+    $category['30'] = 'MELANCHOLIC and SANGUINE';
+    $category['31'] = 'MELANCHOLIC and PHLEGMATIC';
+    $category['32'] = 'MELANCHOLIC and CHOLERIC';
+    /* not sure if initializing variables is needed in php */
+    global $firstMax, $secondMax;
+    /* concatenate the two maxes */
+    $keyString = $firstMax . $secondMax;
+    
+    /* output the key lookup value */
+    echo $category[$keyString];
+}
+
 //function to write results of quiz to database
 function writeUser_results($quiz_id){
     //calls global variables from this file and config.php to establish mysql connection

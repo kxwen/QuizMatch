@@ -12,6 +12,7 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 	exit;
 } 
 require_once "categorize.php";
+
 $num_traits = 4;
 $num_questions = $_POST["num_questions"];
 for ($i = 0; $i < $num_traits; $i++)
@@ -23,10 +24,7 @@ for ($i = 0; $i < $num_questions; $i++) {
 	else if ($answers[$i]== "CHOLERIC") { $values[2]++; }
 	else if ($answers[$i] == "MELANCHOLIC") { $values[3]++; }
 }
-categorizeUser($values, $_POST["quiz_id"]);
-writeUser_results($_POST["quiz_id"]);
-echo "<br> Your personality values are:  <br><br>";
-echo "SANGUINE +" . $values[0] . "<br>PHLEGMATIC + " . $values[1] . "<br>CHOLERIC +" . $values[2] . "<br>MELANCHOLIC +" . $values[3];
+
 ?>
 <html>
 <head>
@@ -46,7 +44,9 @@ echo "SANGUINE +" . $values[0] . "<br>PHLEGMATIC + " . $values[1] . "<br>CHOLERI
 <body>
 <center>
 <div class="form">
-	<h2>Quiz Match Results</h2> 
+	<h2> <?php echo "Results for ". $_POST["quiz_name"];?> </h2>
+	<h1> <?php categorizeUser($values, $_POST["quiz_id"]);?> </h1><br><br>
+	<h4> <?php categorizeUserTraits($values);?> </h4> <br><br> 
 	<a class="btn pink rounded" href="quiz_home.php">Return to Quiz List</a>
 	<a class="btn pink rounded" href="matches.php">See your Matches</a>
 </div>
