@@ -1,13 +1,8 @@
 <?php
-session_start();
-if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
-	//header("location: login.php");
-	exit;
-}
 require_once "config.php";
 
 // Returns an associative array if successful, and FALSE if unsuccessful
-function getUserInfo($user_id){
+function getUserInfo($link, $user_id){
 	$sql = "SELECT * FROM users WHERE id = ".$user_id;
 	$results = mysqli_query($link, $sql);
 	return mysqli_fetch_assoc($results);
@@ -22,7 +17,7 @@ function calculateUserAge($DoB){
 }
 
 // Returns an array of associative arrays. Will return an empty array if none are found.
-function getMyResults(){
+function getMyResults($link){
 	$sql = "SELECT quiz_id, result_id FROM user_results WHERE user_id = ".$_SESSION["id"];
 	$results = mysqli_query($link, $sql);
 	$total = array();
