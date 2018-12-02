@@ -23,7 +23,7 @@ for ($i = 0; $i < $num_questions; $i++) {
 	else if ($answers[$i]== "CHOLERIC") { $values[2]++; }
 	else if ($answers[$i] == "MELANCHOLIC") { $values[3]++; }
 }
-categorizeUser($values);
+categorizeUser($values, $_POST["quiz_id"]);
 writeUser_results($_POST["quiz_id"]);
 echo "<br> Your personality values are:  <br><br>";
 echo "SANGUINE +" . $values[0] . "<br>PHLEGMATIC + " . $values[1] . "<br>CHOLERIC +" . $values[2] . "<br>MELANCHOLIC +" . $values[3];

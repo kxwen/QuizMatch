@@ -60,6 +60,7 @@ $transfer_matches = json_encode($matches);
 				margin-bottom:1%;
 				margin-top:1%;
 				box-shadow: 0 0 3px rgba(0,0,0,0.5);
+				width:90%;
 			}
 			div.buttonSide
 			{
@@ -91,7 +92,9 @@ $transfer_matches = json_encode($matches);
 			<center>
 				<br><h2>Matches&#x1F50D;</h2>
 				
-				<span id="Matches_Pages"></span>
+				<div class="contentRoundBorders">
+					<span id="Matches_Pages"></span>
+				</div>
 				
 				<button type="button" class ="btn pink rounded" id="prevBtn"
 					onclick="nextPrev(-1);">Previous</button>
@@ -138,7 +141,7 @@ $transfer_matches = json_encode($matches);
 		function createMatchBtn(name, id){
 			var match_name = document.createTextNode(name);
 			var match_btn = document.createElement("DIV");
-			match_btn.setAttribute("class", "btn large silver rounded");
+			match_btn.setAttribute("class", "contentRoundBorders");
 			match_btn.setAttribute("id", "match_btn_"+currentMatch);
 			match_btn.appendChild(match_name);
 			match_btn.innerHTML += "<br>";
@@ -189,7 +192,7 @@ $transfer_matches = json_encode($matches);
 					empty_friends.setAttribute("class", "tab");
 					empty_friends_step.setAttribute("class", "step");
 					
-					empty_friends_pseudocard.setAttribute("class", "btn large silver rounded");
+					empty_friends_pseudocard.setAttribute("class", "contentRoundBorders");
 					empty_friends_pseudocard.innerHTML = "There is no one here.<br><br>"
 					
 					empty_friends_btn.setAttribute("class", "btn large pink rounded");

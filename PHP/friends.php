@@ -35,9 +35,8 @@ $relationships = json_encode($total);
 			background:white;
 			margin-bottom:1%;
 			margin-top:1%;
-			margin-left:5%;
-			margin-right:5%;
 			box-shadow: 0 0 3px rgba(0,0,0,0.5);
+			width:90%;
 		}
 	</style>
 	<header>
@@ -159,7 +158,7 @@ $relationships = json_encode($total);
 					var action_btns = createActionBtns(status, last_editor, other_user);
 					friend_btn.appendChild(friend_name);
 					friend_btn.innerHTML += "<br>";
-					friend_btn.setAttribute("class", "btn large silver rounded");
+					friend_btn.setAttribute("class", "contentRoundBorders");
 					friend_btn.setAttribute("id", "friend_btn_"+currentFriend);
 					friend_btn.appendChild(action_btns);
 					currentFriend++;
@@ -207,7 +206,7 @@ $relationships = json_encode($total);
 						empty_friends.setAttribute("class", "tab");
 						empty_friends_step.setAttribute("class", "step");
 						
-						empty_friends_pseudocard.setAttribute("class", "btn large silver rounded");
+						empty_friends_pseudocard.setAttribute("class", "contentRoundBorders");
 						empty_friends_pseudocard.innerHTML = "There is no one here.<br><br>"
 						
 						empty_friends_btn.setAttribute("class", "btn large pink rounded");
