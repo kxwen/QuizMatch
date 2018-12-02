@@ -51,10 +51,10 @@ echo "SANGUINE +" . $values[0] . "<br>PHLEGMATIC + " . $values[1] . "<br>CHOLERI
 </div>
 <div class="extra">
 	<br>Find out more about each: <br><br>
-	<a class="btn pink rounded" href="https://psychologia.co/sanguine-personality/" target="_blank">SANGUINE </a>
-	<a class="btn pink rounded" href="https://psychologia.co/phlegmatic-personality/" target="_blank">PHLEGMATIC </a>
-	<a class="btn pink rounded" href="https://psychologia.co/choleric-personality/" target="_blank">CHOLERIC </a>
-	<a class="btn pink rounded" href="https://psychologia.co/melancholic-personality/" target="_blank">MELANCHOLIC </a>
+	<a class ="btn pink rounded" href="https://psychologia.co/sanguine-personality/" target="_blank" data-tooltip="" data-tooltip-position="bottom"</ data-tooltip-message="People with the Sanguine trait are often cheerful, creative, and optimistic. Click this button to learn more.">Sanguine</a>
+	<a class ="btn pink rounded" href="https://psychologia.co/phlegmatic-personality/" target="_blank" data-tooltip="" data-tooltip-position="bottom" data-tooltip-message="People with the Phlegmatic trait are often agreeable, cooperative, and considerate. Click this button to learn more.">Phlegmatic</a>
+	<a class ="btn pink rounded" href="https://psychologia.co/choleric-personality/" target="_blank" data-tooltip="" data-tooltip-position="bottom" data-tooltip-message="People with the Choleric trait are often practical, independent, and tough-minded. Click this button to learn more.">Choleric</a>
+	<a class ="btn pink rounded" href="https://psychologia.co/melancholic-personality/" target="_blank" data-tooltip="" data-tooltip-position="bottom" data-tooltip-message="People with the Melancholic trait are often loyal, calm, and patient. Click this button to learn more.">Melancholic</a>
 </div>
 
 </center>
