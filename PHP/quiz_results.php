@@ -11,64 +11,50 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 	header("location: login.php");
 	exit;
 } 
-
 require_once "categorize.php";
-require_once "quiz_take.php";
-
 $num_traits = 4;
-$num_questions = getNumQuestions();
-
+$num_questions = $_POST["num_questions"];
 for ($i = 0; $i < $num_traits; $i++)
 		$values[$i] = 0;
-
 for ($i = 0; $i < $num_questions; $i++) {
-	$answers[$i] = $_POST['q_ ' + i + '_a'];
-
+	$answers[$i] = $_POST['q_'.$i.'_a'];
 	if ($answers[$i] == "SANGUINE") { $values[0]++; }
 	else if ($answers[$i] == "PHLEGMATIC") { $values[1]++; }
 	else if ($answers[$i]== "CHOLERIC") { $values[2]++; }
 	else if ($answers[$i] == "MELANCHOLIC") { $values[3]++; }
 }
-
 categorizeUser($values);
-
-
 echo "<br> Your personality values are:  <br><br>";
 echo "SANGUINE +" . $values[0] . "<br>PHLEGMATIC + " . $values[1] . "<br>CHOLERIC +" . $values[2] . "<br>MELANCHOLIC +" . $values[3];
-
 ?>
 <html>
 <head>
-	<style>
-	
-	.form {
-	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-	font-size: 1.2em;
-	width: 30em;
-	padding: 3em;
-	border: 2px solid #ccc;
-	}
-
-	.extra {
-	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-	font-size: 0.8em;
-	}
-
-	.tab { margin-left: 30px; }
-
-	</style>
+	<meta charset="UTF-8">
+	<title>QuizMatch: Your Results!</title>
+	<link rel="stylesheet" href="stupid.css">
+	<style type="text/css"></style>
 </head>
+<header>
+	<center>
+		<div class = "topBarLayout">
+			<a href="userprofile.php" class="btn pink rounded"><tt>Home <i class="fa fa-home"></i></tt></a>
+			<a href="logout.php" class="btn pink rounded"><tt>Logout <i class="fa fa-sign-out"></i></tt></a>
+		</div>
+	</center>
+</header>
 <body>
 <center>
 <div class="form">
-<h1>Quiz Match Results</h1> 
+	<h2>Quiz Match Results</h2> 
+	<a class="btn pink rounded" href="quiz_home.php">Return to Quiz List</a>
+	<a class="btn pink rounded" href="matches.php">See your Matches</a>
 </div>
 <div class="extra">
-<br>Find out more about each: <br><br>
-<a href="https://psychologia.co/sanguine-personality/">SANGUINE </a>
-<a class="tab" href="https://psychologia.co/phlegmatic-personality/">PHLEGMATIC </a>
-<a class="tab" href="https://psychologia.co/choleric-personality/">CHOLERIC </a>
-<a class="tab" href="https://psychologia.co/melancholic-personality/">MELANCHOLIC </a>
+	<br>Find out more about each: <br><br>
+	<a class="btn pink rounded" href="https://psychologia.co/sanguine-personality/" target="_blank">SANGUINE </a>
+	<a class="btn pink rounded" href="https://psychologia.co/phlegmatic-personality/" target="_blank">PHLEGMATIC </a>
+	<a class="btn pink rounded" href="https://psychologia.co/choleric-personality/" target="_blank">CHOLERIC </a>
+	<a class="btn pink rounded" href="https://psychologia.co/melancholic-personality/" target="_blank">MELANCHOLIC </a>
 </div>
 
 </center>
