@@ -100,6 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				<span id="Quiz_Page_Steps"></span>
 			</div>
 			<input type="hidden" name="num_questions" value="<?=$num_questions?>">
+			<input type="hidden" name="quiz_id" value="<?=$current_quiz?>">
 		</form>
 
 	</div>	
