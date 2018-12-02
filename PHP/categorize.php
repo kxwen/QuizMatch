@@ -31,17 +31,19 @@ function categorizeUser($traits, $passedInQuiz){
     $category['31'] = 'Tododile';
     $category['32'] = 'Chikorita';
     /* not sure if initializing variables is needed in php */
-    $firstMax = 0;
+    $firstMax = 1;
     $secondMax = 0;
     for($x = 0; $x < 4; $x++){
          /*check for index of 2 largest numbers*/
-        if ($traits[$x] >= $traits[$firstMax]){
-            $secondMax = $firstMax;
-            $firstMax = $x;
-        }
-        else if($traits[$x] >= $traits[$secondMax] ){
-            $secondMax = $x;
-        }
+	if($x != $firstMax){
+		if ($traits[$x] >= $traits[$firstMax]){
+		    $secondMax = $firstMax;
+		    $firstMax = $x;
+		}
+		else if($traits[$x] >= $traits[$secondMax] ){
+		    $secondMax = $x;
+		}
+	}
     }
     /* concatenate the two maxes */
     $keyString = $firstMax . $secondMax;
