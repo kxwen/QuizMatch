@@ -172,7 +172,11 @@ $count = 0;
 				xmlhttp = new XMLHttpRequest();
 				xmlhttp.onreadystatechange = function(){
 					if(this.readyState==4 && this.status==200){
-						window.location.href="quiz_take.php?q="+this.responseText;
+						if(this.responseText != ""){
+							window.location.href="quiz_take.php?q="+this.responseText;
+						}else{
+							alert("No quizzes are available at this time.\nPlease try again later.");
+						}
 					}
 				}
 				xmlhttp.open("GET", "searchRandom.php", true);
