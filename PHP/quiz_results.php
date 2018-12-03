@@ -25,6 +25,9 @@ for ($i = 0; $i < $num_questions; $i++) {
 	else if ($answers[$i] == "MELANCHOLIC") { $values[3]++; }
 }
 
+$category = categorizeUser($values, $_POST["quiz_id"]);
+writeUser_results($_POST["quiz_id"]);
+
 ?>
 <html>
 <head>
@@ -45,7 +48,7 @@ for ($i = 0; $i < $num_questions; $i++) {
 <center>
 <div class="form">
 	<h2> <?php echo "Results for ". $_POST["quiz_name"];?> </h2>
-	<h1> <?php categorizeUser($values, $_POST["quiz_id"]);?> </h1><br><br>
+	<h1> <?=$category?> </h1><br><br>
 	<h4> <?php categorizeUserTraits($values);?> </h4> <br><br> 
 	<a class="btn pink rounded" href="quiz_home.php">Return to Quiz List</a>
 	<a class="btn pink rounded" href="matches.php">See your Matches</a>

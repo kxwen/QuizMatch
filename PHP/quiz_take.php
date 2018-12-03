@@ -101,6 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			</div>
 			<input type="hidden" name="num_questions" value="<?=$num_questions?>">
 			<input type="hidden" name="quiz_id" value="<?=$current_quiz?>">
+			<input type="hidden" name="quiz_name" value="<?=$current_name?>">
 		</form>
 
 	</div>	
