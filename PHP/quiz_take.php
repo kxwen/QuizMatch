@@ -136,6 +136,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 						radio.setAttribute("type", "radio");
 						radio.setAttribute("name", "q_" + i + "_a");
 						radio.setAttribute("value", answers[i][j]["trait"]);
+						if(j == 0) radio.setAttribute("checked", "");
 						question_tab.appendChild(radio);
 						question_tab.appendChild(ans_content);
 						question_tab.innerHTML += "<br>";
