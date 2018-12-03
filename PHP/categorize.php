@@ -44,7 +44,7 @@ function categorizeUser($traits, $quiz_id){
     $keyString = $firstMax . $secondMax;
     
     /* output the key lookup value */
-    echo $category[$keyString];
+    return $category[$keyString];
 }
 
 function categorizeUserTraits($traits){
