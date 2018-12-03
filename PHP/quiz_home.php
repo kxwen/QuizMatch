@@ -11,11 +11,8 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 	exit;
 }
 require_once "quiz_DB_access_functions.php";
-
 $quizzes = getOtherQuizzes($link);
-
 $transfer = json_encode($quizzes);
-
 $count = 0;
  for ($i = 0; $i < 46; $i++) { 
 		$names[$i] = "Quiz #" . $i;

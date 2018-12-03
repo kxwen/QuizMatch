@@ -36,14 +36,10 @@ function getQuizResults($link, $quiz_id){
 }
 
 // Gets and return the result from specified quiz with specified traits
-function getQuizResult($link, $quiz_id, $first_trait, $second_trait){
-	$sql = "SELECT * FROM quiz_results WHERE quiz_id = ".$quiz_id." AND primary_trait = ".$first_trait." AND secondary_trait = ".$second_trait;
+function getQuizResult($link, $result_id){
+	$sql = "SELECT * FROM quiz_results WHERE id = ".$result_id;
 	$results = mysqli_query($link, $sql);
-	$total = array();
-	while($row = mysqli_fetch_assoc($results)){
-		$total[] = $row;
-	}
-	return $total;
+	return mysqli_fetch_assoc($results);
 }
 
 // Returns all answers associated with given question
@@ -65,6 +61,7 @@ function getOtherQuizzes($link){
 	$results = mysqli_query($link, $sql);
 	$total = array();
 	while($row = mysqli_fetch_assoc($results)){
+		if(empty($row["description"])) $row["description"] = "No Description";
 		$total[] = $row;
 	}
 	return $total;
@@ -75,6 +72,7 @@ function getSortedOtherQuizzes($link, $order, $phrase){
 	$results = mysqli_query($link, $sql);
 	$total = array();
 	while($row = mysqli_fetch_assoc($results)){
+		if(empty($row["description"])) $row["description"] = "No Description";
 		$total[] = $row;
 	}
 	return $total;

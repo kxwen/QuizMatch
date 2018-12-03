@@ -10,6 +10,7 @@ if(!isset($_SESSION["loggedin"])||$_SESSION["loggedin"] !== true){
 	exit;
 }
 require_once "quiz_DB_access_functions.php";
+require_once "funct_user_info.php";
 if(!isset($profile)){
 	$sql = "SELECT * FROM users WHERE id =".$_SESSION["id"];
 	$profile_entry = mysqli_query($link, $sql);
@@ -28,8 +29,17 @@ $image_name = $location.$profile["id"].'.png';
 if(!file_exists($image_name)) $image_name = $location.'default-user2.png';
 
 $quizzes_created = getMyQuizzes($link);
+$my_results_raw = getMyResults($link);
+$quizzes_taken = array();
+$my_results = array();
+for($i = 0; $i < sizeof($my_results_raw); $i++){
+	$quizzes_taken[] = getQuizInfo($link, $my_results_raw[$i]["quiz_id"]);
+	$my_results[] = getQuizResult($link, $my_results_raw[$i]["result_id"]);
+}
 
 $transfer_quizzes_created = json_encode($quizzes_created);
+$transfer_quizzes_taken = json_encode($quizzes_taken);
+$transfer_my_results = json_encode($my_results);
 ?>
 <!-- 
 This is the homepage for QuizMatch. It contains links to the login page and
@@ -130,16 +140,20 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 					
 					<div class = "contentRoundBorders">
 						<h6>
-							Quizzes Created:<br><br>
-								<span id="my_quizzes"></span>
+							Quizzes Created:
 						</h6>
+						<p>
+							<span id="my_quizzes"></span>
+						</p>
 					</div>
 					
 					<div class = "contentRoundBorders">
 						<h6>
-							Quizzes Taken: <br><br>
-							<p>No Quizzes Have Been Taken Yet! And I Don't Work Yet Either!</p>
+							Quizzes Taken:
 						</h6>
+						<p>
+							<span id="taken_quizzes"></span>
+						</p>
 					</div>
 				</div>
 			</div>
@@ -150,8 +164,13 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 		<script src="config.js"></script>
 		<script>
 			var my_quizzes = [];
+			var taken_quizzes = [];
+			var my_results = [];
 			my_quizzes = <?= $transfer_quizzes_created?>;
+			taken_quizzes = <?= $transfer_quizzes_taken?>;
+			my_results = <?=$transfer_my_results?>;
 			createQuizzesList(my_quizzes, "my_quizzes");
+			createTakenQuizzesList(taken_quizzes, my_results, "taken_quizzes");
 			
 			function createQuizzesList(quizzes, destination){
 				var num_quizzes = quizzes.length;
@@ -161,7 +180,20 @@ Hovering over the card QuizMatch will produce one of many random anecdotes.
 						list.appendChild(createQuizBtnProfile(quizzes, i));
 					}
 				}else{
-					list.innerHTML = "<p>You have not created any quizzes yet.</p>";
+					list.innerHTML = "You have not created any quizzes yet.";
+				}
+				document.getElementById(destination).appendChild(list);
+			}
+			
+			function createTakenQuizzesList(quizzes, results, destination){
+				var num_quizzes = quizzes.length;
+				var list = document.createElement("DIV");
+				if(num_quizzes != 0){
+					for(var i = 0; i<num_quizzes; i++){
+						list.appendChild(createTakenQuizBtn(quizzes, results, i));
+					}
+				}else{
+					list.innerHTML = "You have not taken any quizzes yet.";
 				}
 				document.getElementById(destination).appendChild(list);
 			}

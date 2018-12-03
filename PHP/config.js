@@ -88,27 +88,44 @@ function createRelation(target_id, status, httpElemId, parentDIV, msg){
 
 // Functions for Quiz Button
 function createQuizBtn(quizzes, quiz_number){
-	var quiz_name = document.createTextNode(quizzes[quiz_number]["name"]+":\n");
+	var quiz_name = document.createTextNode(quizzes[quiz_number]["name"]+":");
 	var quiz_desc = document.createTextNode(quizzes[quiz_number]["description"]);
+	var quiz_size = document.createTextNode("Size: "+quizzes[quiz_number]["size"]);
 	var quiz_btn = document.createElement("a");
 	quiz_btn.setAttribute("id", "quiz "+quiz_number);
 	quiz_btn.setAttribute("class", "btn large pink rounded");
+	quiz_btn.setAttribute("style", "width:90%");
 	quiz_btn.setAttribute("href", "quiz_take.php?q="+quizzes[quiz_number]["id"]);
 	quiz_btn.appendChild(quiz_name);
+	quiz_btn.innerHTML += "<br>";
 	quiz_btn.appendChild(quiz_desc);
+	quiz_btn.innerHTML += "<br>";
+	quiz_btn.appendChild(quiz_size);
 	return quiz_btn; 
 }
 
 // Functions for Quiz Button for extended Profile
 function createQuizBtnProfile(quizzes, quiz_number){
-	var quiz_name = document.createTextNode(quizzes[quiz_number]["name"]+"\n");
-	var quiz_desc = document.createTextNode(quizzes[quiz_number]["description"]);
+	var quiz_name = document.createTextNode(quizzes[quiz_number]["name"]);
 	var quiz_btn = document.createElement("button");
 	quiz_btn.setAttribute("id", "quiz "+quiz_number);
 	quiz_btn.setAttribute("value", quizzes[quiz_number]["id"]);
 	quiz_btn.setAttribute("class", "btn pink rounded");
 	quiz_btn.appendChild(quiz_name);
-	//quiz_btn.appendChild(quiz_desc);
+	return quiz_btn; 
+}
+
+function createTakenQuizBtn(quizzes, results, quiz_number){
+	var quiz_name = document.createTextNode(quizzes[quiz_number]["name"]);
+	var quiz_result = document.createTextNode("Result: "+results[quiz_number]["catagory_name"]);
+	var quiz_btn = document.createElement("a");
+	quiz_btn.setAttribute("id", "quiz "+quiz_number);
+	quiz_btn.setAttribute("value", quizzes[quiz_number]["id"]);
+	quiz_btn.setAttribute("class", "btn pink rounded");
+	quiz_btn.setAttribute("href", "quiz_take.php?q="+quizzes[quiz_number]["id"]);
+	quiz_btn.appendChild(quiz_name);
+	quiz_btn.innerHTML += "<br>";
+	quiz_btn.appendChild(quiz_result);
 	return quiz_btn; 
 }
 
