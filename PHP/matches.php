@@ -90,7 +90,9 @@ $transfer_matches = json_encode($matches);
 	<div class = "container">
 		<div class = "matches">
 			<center>
+				<br>
 				<br><h2>Matches&#x1F50D;</h2>
+				<br>
 				
 				<div class="contentRoundBorders">
 					<span id="Matches_Pages"></span>
